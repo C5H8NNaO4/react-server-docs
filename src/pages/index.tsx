@@ -1,4 +1,11 @@
-import { Paper, Container, CardActions, Link, Grid } from '@mui/material';
+import {
+  Paper,
+  Container,
+  CardActions,
+  Link,
+  Grid,
+  Hidden,
+} from '@mui/material';
 import Typography from '@mui/material/Typography';
 
 import { Alert, Button, Box } from '@mui/material';
@@ -16,6 +23,7 @@ import { navigation } from '../global';
 import { getGHPath, getRawPath } from '../components/CollabEditButton';
 import { Poll } from '../server-components/examples/Polls';
 import { Comments } from '../server-components/examples/Comments';
+import { TwitterTimelineEmbed } from 'react-twitter-embed';
 
 export const IndexPage = () => {
   const [value, setValue, localInfo] = useServerState('Hello World', {
@@ -69,6 +77,17 @@ export const IndexPage = () => {
           </Grid>
           <Grid item xs={12}>
             <Comments />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sx={{ display: { xl: 'none', xs: 'block' }, mt: 1 }}
+          >
+            <TwitterTimelineEmbed
+              sourceType="profile"
+              screenName="statelesscloud"
+              options={{ height: 600 }}
+            />
           </Grid>
         </Grid>
       </Grid>
@@ -125,6 +144,20 @@ export const IndexPage = () => {
             <NavigationButton2D next />
           </Box>
         </Paper>
+      </Grid>
+
+      <Grid
+        item
+        xs={12}
+        md={4}
+        xl={3}
+        sx={{ display: { xl: 'block', xs: 'none' }, mt: 1 }}
+      >
+        <TwitterTimelineEmbed
+          sourceType="profile"
+          screenName="statelesscloud"
+          options={{ height: 600 }}
+        />
       </Grid>
     </Grid>
   );
