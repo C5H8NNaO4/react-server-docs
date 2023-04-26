@@ -10,6 +10,7 @@ export const VotingApp = () => {
 
   return (
     <>
+      {error && <Alert severity="error">{error.message}</Alert>}
       <Typography variant="h4" align="center" sx={{ my: 2 }} gutterBottom>
         Voting App
       </Typography>
@@ -20,7 +21,6 @@ export const VotingApp = () => {
         flexDirection={'row'}
         sx={{ my: 2 }}
       >
-        {error && <Alert severity="error">{error.message}</Alert>}
         <Button
           variant="contained"
           color="success"
