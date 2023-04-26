@@ -1,6 +1,7 @@
 import {
   Alert,
   Avatar,
+  Box,
   Button,
   Card,
   CardActions,
@@ -15,6 +16,7 @@ import { authContext, useComponent } from '@state-less/react-client';
 import { useContext, useState } from 'react';
 import GoogleIcon from '@mui/icons-material/Google';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { UpDownButtons, VotingApp } from './VotingApp';
 
 export const Comments = ({ id = 'comments' }) => {
   const [component, { error, loading }] = useComponent(id, {});
@@ -23,7 +25,8 @@ export const Comments = ({ id = 'comments' }) => {
 
   const canComment = component?.props?.permissions.comment;
   const canDelete = component?.props?.permissions.delete;
-
+  const { children } = component || {};
+  // return <>{JSON.stringify(component)}</>;
   return (
     <Card>
       {loading && <Alert severity="info">Loading...</Alert>}
@@ -32,10 +35,10 @@ export const Comments = ({ id = 'comments' }) => {
         <Alert severity="info">You need to be logged in to comment.</Alert>
       )}
 
-      {comments.map((comment, index) => {
+      {(component?.children || []).map((child, index) => {
         return (
           <Comment
-            comment={comment}
+            comment={child}
             del={() => component?.props?.del(index)}
             canDelete={canDelete}
           />
@@ -77,16 +80,24 @@ const StrategyIcons = {
 };
 const Comment = ({ comment, del, canDelete }) => {
   const { session } = useContext(authContext);
+  const [component, { error, loading }] = useComponent(comment.key, {
+    data: comment,
+  });
+  const props = component?.props;
   const isOwnComment =
-    comment.identity.email === session?.strategies?.[session.strategy]?.email ||
-    (comment.identity.strategy === 'anonymous' &&
-      comment.identity.id === JSON.parse(localStorage.id));
-  const Icon = StrategyIcons[comment.strategy];
+    props.identity.email === session?.strategies?.[session.strategy]?.email ||
+    (props.identity.strategy === 'anonymous' &&
+      props.identity.id === JSON.parse(localStorage.id));
+  const Icon = StrategyIcons[props.strategy];
+  // return <>{component?.children[0].key}</>;
   return (
     <Card sx={{ m: 1 }}>
-      <CardContent sx={{ display: 'flex' }}>
-        <Typography variant="body1">{comment.message}</Typography>
-      </CardContent>
+      <Box sx={{ display: 'flex', ml: 1, mt: 1 }}>
+        <UpDownButtons id={component?.children[0].key} random />
+        <CardContent sx={{ display: 'flex' }}>
+          <Typography variant="body1">{props?.message}</Typography>
+        </CardContent>
+      </Box>
       <CardActions>
         {(canDelete || isOwnComment) && (
           <IconButton onClick={del}>
@@ -95,13 +106,13 @@ const Comment = ({ comment, del, canDelete }) => {
         )}
         <Chip
           avatar={
-            comment.identity.picture && (
-              <Avatar src={comment.identity.picture}>
+            props?.identity.picture && (
+              <Avatar src={props?.identity.picture}>
                 <Icon />
               </Avatar>
             )
           }
-          label={comment.identity.name}
+          label={props?.identity.name}
           sx={{ ml: 'auto' }}
         ></Chip>
       </CardActions>
