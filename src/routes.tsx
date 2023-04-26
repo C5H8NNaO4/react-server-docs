@@ -11,6 +11,7 @@ import { ServerPage } from './pages/server';
 import { StoresPage } from './pages/stores';
 import { Poll } from './server-components/examples/Polls';
 import { TodoApp } from './server-components/examples/TodoApp';
+import { VotingApp } from './server-components/examples/VotingApp';
 import { CommentsPage } from './pages/examples/comments';
 import { InstallationPage } from './pages/installation';
 
@@ -25,6 +26,7 @@ export const navigation = [
   ['/SSR', 'SSR', 'src/examples/SSR.md'],
   ['/examples', 'Examples', 'src/examples'],
   ['/examples/comments', 'Comments', 'src/examples/comments.md'],
+  ['/examples/votings', 'Voting', 'src/examples/voting.md'],
   ['/examples/cms', 'CMS (Navigation)', 'src/examples/cms'],
   ['/examples/cms/pages', 'CMS (Pages)', 'src/examples/cms/pages.md'],
   [
@@ -77,4 +79,6 @@ export const routes = [
       </div>
     )}
   />,
+  <Route path="/examples/votings" Component={() => <VotingApp />} />,
+
 ];
