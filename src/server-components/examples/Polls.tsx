@@ -48,6 +48,7 @@ export const Poll = ({
               />
               <ListItemSecondaryAction>
                 <IconButton
+                  color="success"
                   onClick={() => component?.props?.vote(i)}
                   disabled={
                     component?.props?.voted > -1 &&
