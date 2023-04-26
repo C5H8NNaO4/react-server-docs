@@ -48,13 +48,12 @@ export const Poll = ({
               />
               <ListItemSecondaryAction>
                 <IconButton
-                  color="success"
                   onClick={() => component?.props?.vote(i)}
                   disabled={
                     component?.props?.voted > -1 &&
                     component?.props?.voted !== i
                   }
-                  color={component.props.voted === i ? 'primary' : 'default'}
+                  color={component.props.voted === i ? 'success' : 'default'}
                 >
                   <HeartIcon />
                 </IconButton>
