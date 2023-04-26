@@ -30,7 +30,14 @@ export const VotingApp = () => {
           {component?.props?.upvotes || 0}
         </Button>
         <Typography variant="h5" align="center" sx={{ mx: 2 }}>
-          {component?.props?.title}
+          {Math.round(
+            (component?.props?.upvotes || 0) *
+              (component?.props?.score?.upvote || 0)
+          ) -
+            Math.round(
+              (component?.props?.downvotes || 0) *
+                (component?.props?.score?.downvote || 0)
+            )}
         </Typography>
         <Button
           variant="contained"
@@ -44,11 +51,11 @@ export const VotingApp = () => {
 
       <Box display="block" alignItems="center" columnGap={4}>
         <Typography variant="h6" align="center" sx={{ mx: 2 }}>
-          Left Bound: {component?.props?.score?.leftBound.toFixed(2)}
+          Upvote Bound: {component?.props?.score?.upvote.toFixed(2)}
         </Typography>
 
         <Typography variant="h6" align="center" sx={{ mx: 2 }}>
-          Right Bound: {component?.props?.score?.rightBound.toFixed(2)}
+          Downvote Bound: {component?.props?.score?.downvote.toFixed(2)}
         </Typography>
       </Box>
     </>
