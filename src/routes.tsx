@@ -14,6 +14,7 @@ import { TodoApp } from './server-components/examples/TodoApp';
 import { VotingApp } from './server-components/examples/VotingApp';
 import { CommentsPage } from './pages/examples/comments';
 import { InstallationPage } from './pages/installation';
+import { VotingPage } from './pages/examples/voting';
 
 export const navigation = [
   ['/', 'Home'],
@@ -79,6 +80,5 @@ export const routes = [
       </div>
     )}
   />,
-  <Route path="/examples/votings" Component={() => <VotingApp />} />,
-
+  <Route path="/examples/votings" Component={VotingPage} />,
 ];
