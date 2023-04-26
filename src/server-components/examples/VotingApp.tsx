@@ -27,18 +27,18 @@ export const VotingApp = () => {
           onClick={() => component?.props.upvote()}
           startIcon={<ThumbUpIcon />}
         >
-          ({component?.props?.upvotes || 0})
+          {component?.props?.upvotes || 0}
         </Button>
         <Typography variant="h5" align="center" sx={{ mx: 2 }}>
           {component?.props?.title}
         </Typography>
         <Button
           variant="contained"
-          color="secondary"
+          color="error"
           onClick={() => component?.props.downvote()}
           endIcon={<ThumbDownIcon />}
         >
-          ({component?.props?.downvotes || 0})
+          {component?.props?.downvotes || 0}
         </Button>
       </Box>
 
