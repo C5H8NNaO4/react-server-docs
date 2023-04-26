@@ -23,11 +23,11 @@ export const VotingApp = () => {
         {error && <Alert severity="error">{error.message}</Alert>}
         <Button
           variant="contained"
-          color="primary"
+          color="success"
           onClick={() => component?.props.upvote()}
           startIcon={<ThumbUpIcon />}
         >
-          Upvotes ({component?.props?.upvotes})
+          ({component?.props?.upvotes || 0})
         </Button>
         <Typography variant="h5" align="center" sx={{ mx: 2 }}>
           {component?.props?.title}
@@ -38,7 +38,7 @@ export const VotingApp = () => {
           onClick={() => component?.props.downvote()}
           endIcon={<ThumbDownIcon />}
         >
-          Downvotes ({component?.props?.downvotes})
+          ({component?.props?.downvotes || 0})
         </Button>
       </Box>
 
