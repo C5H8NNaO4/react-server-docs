@@ -72,7 +72,6 @@ export const VotingApp = ({
         </Typography>
         {hideVotes ? (
           <IconButton
-            variant="contained"
             color="error"
             onClick={() => component?.props.downvote()}
             disabled={voted === 1 && policies.includes('single-vote')}
