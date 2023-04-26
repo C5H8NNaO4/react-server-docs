@@ -1,10 +1,13 @@
 import { Avatar, Button } from '@mui/material';
 import { authContext } from '@state-less/react-client';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import GoogleIcon from '@mui/icons-material/Google';
 import { GOOGLE_ID } from '../config';
 import { stateContext } from '../provider/StateProvider';
+
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 const logError = () => {};
 
@@ -12,8 +15,17 @@ const isGoogleLoginResponse = (val: any): val is GoogleLoginResponse => {
   return val?.tokenId !== undefined && val.accessToken !== undefined;
 };
 export const LoggedInGoogleButton = () => {
-  const { session } = useContext(authContext);
+  const { session, logout } = useContext(authContext);
   const { state } = useContext(stateContext);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   if (session.strategy !== 'google') {
     return null;
@@ -21,13 +33,33 @@ export const LoggedInGoogleButton = () => {
 
   const decoded = session.strategies.google.decoded;
   return (
-    <Button color={state.animatedBackground ? 'primary' : 'info'}>
-      <Avatar
-        src={decoded.picture}
-        sx={{ width: 24, height: 24, mr: 1 }}
-      ></Avatar>
-      {decoded.name}
-    </Button>
+    <>
+      <Button
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+        color={state.animatedBackground ? 'primary' : 'info'}
+      >
+        <Avatar
+          src={decoded.picture}
+          sx={{ width: 24, height: 24, mr: 1 }}
+        ></Avatar>
+        {decoded.name}
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem onClick={logout}>Logout</MenuItem>
+      </Menu>
+    </>
   );
 };
 
