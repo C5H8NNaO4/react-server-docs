@@ -26,6 +26,7 @@ export const VotingApp = () => {
           color="success"
           onClick={() => component?.props.upvote()}
           startIcon={<ThumbUpIcon />}
+          disabled={component?.props?.voted >= component?.props?.maxVotes}
         >
           {component?.props?.upvotes || 0}
         </Button>
@@ -44,6 +45,7 @@ export const VotingApp = () => {
           color="error"
           onClick={() => component?.props.downvote()}
           endIcon={<ThumbDownIcon />}
+          disabled={component?.props?.voted >= component?.props?.maxVotes}
         >
           {component?.props?.downvotes || 0}
         </Button>
