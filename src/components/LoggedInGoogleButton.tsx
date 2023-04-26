@@ -14,6 +14,7 @@ const logError = () => {};
 const isGoogleLoginResponse = (val: any): val is GoogleLoginResponse => {
   return val?.tokenId !== undefined && val.accessToken !== undefined;
 };
+
 export const LoggedInGoogleButton = () => {
   const { session, logout } = useContext(authContext);
   const { state } = useContext(stateContext);
