@@ -1,19 +1,46 @@
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import { Alert, Box, Button, Typography } from '@mui/material';
+import { Alert, Box, Button, IconButton, Typography } from '@mui/material';
 import { useComponent } from '@state-less/react-client';
 
-export const VotingApp = () => {
-  const [component, { loading, error }] = useComponent('votings', {});
+const calc = (votes = 0, { lb = 0, ub = 0, random = false, wilson = true }) => {
+  const diff = ub - lb;
+  const lbv = Math.round(lb * votes);
+  const rand = Math.round(Math.random() * diff * votes);
+  return (wilson ? lbv : votes) + (random ? rand : 0);
+};
+export const VotingApp = ({
+  random,
+  wilson,
+  id = 'votings',
+  hideVotes = false,
+}: {
+  random?: boolean;
+  wilson?: boolean;
+  hideVotes?: boolean;
+  id?: string;
+}) => {
+  const [component, { loading, error }] = useComponent(id, {});
+  const { score, upvotes, downvotes, voted, policies } = component?.props || {};
 
+  const sum =
+    calc(upvotes, {
+      lb: score?.upvote[0],
+      ub: score?.upvote[1],
+      wilson,
+      random,
+    }) -
+    calc(downvotes, {
+      lb: score?.downvote[0],
+      ub: score?.downvote[1],
+      wilson,
+      random,
+    });
   if (loading) return <div>Loading...</div>;
 
   return (
     <>
       {error && <Alert severity="error">{error.message}</Alert>}
-      <Typography variant="h4" align="center" sx={{ my: 2 }} gutterBottom>
-        Voting App
-      </Typography>
       <Box
         display="flex"
         alignItems="center"
@@ -21,44 +48,48 @@ export const VotingApp = () => {
         flexDirection={'row'}
         sx={{ my: 2 }}
       >
-        <Button
-          variant="contained"
-          color="success"
-          onClick={() => component?.props.upvote()}
-          startIcon={<ThumbUpIcon />}
-          disabled={component?.props?.voted === -1}
-        >
-          {component?.props?.upvotes || 0}
-        </Button>
+        {hideVotes ? (
+          <IconButton
+            color="success"
+            onClick={() => component?.props.upvote()}
+            disabled={voted === -1 && policies.includes('single-vote')}
+          >
+            <ThumbUpIcon />
+          </IconButton>
+        ) : (
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => component?.props.upvote()}
+            disabled={voted === -1 && policies.includes('single-vote')}
+            startIcon={<ThumbUpIcon />}
+          >
+            {upvotes || 0}
+          </Button>
+        )}
         <Typography variant="h5" align="center" sx={{ mx: 2 }}>
-          {Math.round(
-            (component?.props?.upvotes || 0) *
-              (component?.props?.score?.upvote || 0)
-          ) -
-            Math.round(
-              (component?.props?.downvotes || 0) *
-                (component?.props?.score?.downvote || 0)
-            )}
+          {sum}
         </Typography>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => component?.props.downvote()}
-          endIcon={<ThumbDownIcon />}
-          disabled={component?.props?.voted === 1}
-        >
-          {component?.props?.downvotes || 0}
-        </Button>
-      </Box>
-
-      <Box display="block" alignItems="center" columnGap={4}>
-        <Typography variant="h6" align="center" sx={{ mx: 2 }}>
-          Upvote Bound: {component?.props?.score?.upvote.toFixed(2)}
-        </Typography>
-
-        <Typography variant="h6" align="center" sx={{ mx: 2 }}>
-          Downvote Bound: {component?.props?.score?.downvote.toFixed(2)}
-        </Typography>
+        {hideVotes ? (
+          <IconButton
+            variant="contained"
+            color="error"
+            onClick={() => component?.props.downvote()}
+            disabled={voted === 1 && policies.includes('single-vote')}
+          >
+            <ThumbDownIcon />
+          </IconButton>
+        ) : (
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => component?.props.downvote()}
+            disabled={voted === 1 && policies.includes('single-vote')}
+            endIcon={<ThumbDownIcon />}
+          >
+            {downvotes || 0}
+          </Button>
+        )}
       </Box>
     </>
   );
