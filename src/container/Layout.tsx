@@ -137,7 +137,7 @@ export const Layout = () => {
                               component={RouterLink}
                               to="https://twitter.com/statelesscloud"
                             >
-                              @statelesscloud
+                              Twitter
                             </Link>
                           </ListItemText>
                         </ListItem>
