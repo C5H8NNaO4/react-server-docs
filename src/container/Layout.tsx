@@ -7,7 +7,7 @@ import {
 } from '../components/Background';
 import { Actions, stateContext } from '../provider/StateProvider';
 import { routes } from '../routes';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Paper,
   Typography,
@@ -37,11 +37,31 @@ import { SidebarNavigation } from '../components/SidebarNavigation';
 import ChatIcon from '@mui/icons-material/Chat';
 import Snackbar from '@mui/material/Snackbar';
 import HeartIcon from '@mui/icons-material/Favorite';
+import { authContext, useComponent } from '@state-less/react-client';
 
 declare let gtag: Function;
 
 export const Layout = () => {
   const { state, dispatch } = useContext(stateContext);
+  const [features, { loading: featuresLoading }] = useComponent('features');
+  const [_animated, setAnim] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setAnim(state?.animatedBackground);
+    }, 1000);
+  }, [state?.animatedBackground]);
+  useEffect(() => {
+    localStorage.setItem(
+      'animatedBackground',
+      features?.props?.animated.toString()
+    );
+    if (state.animatedBackground !== features?.props?.animated)
+      dispatch({
+        type: Actions.TOGGLE_ANIMATED_BACKGROUND,
+      });
+  }, [features?.props?.animated]);
+
   const { pathname } = useLocation();
   useEffect(() => {
     gtag('event', 'load', { event_category: 'page' });
@@ -50,7 +70,7 @@ export const Layout = () => {
     <VantaBackground
       light={SunnyBlueClouds}
       dark={DarkWaves}
-      enabled={state.animatedBackground}
+      enabled={_animated}
     >
       <Box
         key={pathname}

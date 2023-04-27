@@ -7,7 +7,7 @@ type State = {
 };
 const initialState: State = {
   menuOpen: false,
-  animatedBackground: false,
+  animatedBackground: localStorage.getItem('animatedBackground') === 'true',
   messages: [],
 };
 

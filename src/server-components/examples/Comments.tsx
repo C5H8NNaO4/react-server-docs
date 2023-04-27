@@ -20,6 +20,7 @@ import { UpDownButtons, VotingApp } from './VotingApp';
 
 export const Comments = ({ id = 'comments' }) => {
   const [component, { error, loading }] = useComponent(id, {});
+  const [features, { loading: featuresLoading }] = useComponent('features');
   const [comment, setComment] = useState('');
   const comments = component?.props?.comments || [];
 
@@ -29,7 +30,8 @@ export const Comments = ({ id = 'comments' }) => {
   // return <>{JSON.stringify(component)}</>;
   return (
     <Card>
-      {loading && <Alert severity="info">Loading...</Alert>}
+      {loading ||
+        (featuresLoading && <Alert severity="info">Loading...</Alert>)}
       {error && <Alert severity="error">{error.message}</Alert>}
       {!canComment && (
         <Alert severity="info">You need to be logged in to comment.</Alert>
@@ -41,6 +43,7 @@ export const Comments = ({ id = 'comments' }) => {
             comment={child}
             del={() => component?.props?.del(index)}
             canDelete={canDelete}
+            wilson={features?.props?.wilson}
           />
         );
       })}
@@ -78,7 +81,7 @@ export const Comments = ({ id = 'comments' }) => {
 const StrategyIcons = {
   google: GoogleIcon,
 };
-const Comment = ({ comment, del, canDelete }) => {
+const Comment = ({ comment, del, canDelete, wilson }) => {
   const { session } = useContext(authContext);
   const [component, { error, loading }] = useComponent(comment.key, {
     data: comment,
@@ -93,7 +96,7 @@ const Comment = ({ comment, del, canDelete }) => {
   return (
     <Card sx={{ m: 1 }}>
       <Box sx={{ display: 'flex', ml: 1, mt: 1 }}>
-        <UpDownButtons id={component?.children[0].key} random />
+        <UpDownButtons id={component?.children[0].key} wilson={wilson} />
         <CardContent sx={{ display: 'flex' }}>
           <Typography variant="body1">{props?.message}</Typography>
         </CardContent>

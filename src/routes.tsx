@@ -15,6 +15,7 @@ import { VotingApp } from './server-components/examples/VotingApp';
 import { CommentsPage } from './pages/examples/comments';
 import { InstallationPage } from './pages/installation';
 import { VotingPage } from './pages/examples/voting';
+import { AdminPage } from './pages/admin';
 
 export const navigation = [
   ['/', 'Home'],
@@ -81,4 +82,5 @@ export const routes = [
     )}
   />,
   <Route path="/examples/votings" Component={VotingPage} />,
+  <Route path="/admin" Component={AdminPage} />,
 ];
