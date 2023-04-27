@@ -51,7 +51,13 @@ export default function ButtonAppBar() {
         {connections}
         <IconButton
           color={state.animatedBackground ? 'primary' : 'inherit'}
-          onClick={() => dispatch({ type: Actions.TOGGLE_ANIMATED_BACKGROUND })}
+          onClick={() => {
+            dispatch({ type: Actions.TOGGLE_ANIMATED_BACKGROUND });
+            localStorage.setItem(
+              'animatedBackgroundUser',
+              (!state.animatedBackground).toString()
+            );
+          }}
         >
           <AutoFixHighIcon />
         </IconButton>
