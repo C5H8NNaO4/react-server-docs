@@ -47,19 +47,21 @@ export const Layout = () => {
   const [_animated, setAnim] = useState(false);
 
   useEffect(() => {
+    localStorage.setItem(
+      'animatedBackground',
+      features?.props?.animated.toString()
+    );
     setTimeout(() => {
       setAnim(state?.animatedBackground);
     }, 1000);
   }, [state?.animatedBackground]);
+
+
   useEffect(() => {
     localStorage.setItem(
       'animatedBackground',
       features?.props?.animated.toString()
     );
-    if (state.animatedBackground !== features?.props?.animated)
-      dispatch({
-        type: Actions.TOGGLE_ANIMATED_BACKGROUND,
-      });
   }, [features?.props?.animated]);
 
   const { pathname } = useLocation();
