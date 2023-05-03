@@ -41,6 +41,7 @@ export const Comments = ({ id = 'comments' }) => {
         return (
           <Comment
             comment={child}
+            del={() => component?.props?.del(index)}
             canDelete={canDelete}
             wilson={features?.props?.wilson}
           />
@@ -54,7 +55,7 @@ export const Comments = ({ id = 'comments' }) => {
           onChange={(e) => setComment(e.target.value)}
           fullWidth
           value={comment}
-        /> 
+        />
       </CardContent>
       <CardActions>
         <Tooltip
@@ -80,7 +81,7 @@ export const Comments = ({ id = 'comments' }) => {
 const StrategyIcons = {
   google: GoogleIcon,
 };
-const Comment = ({ comment, canDelete, wilson }) => {
+const Comment = ({ comment, del, canDelete, wilson }) => {
   const { session } = useContext(authContext);
   const [component, { error, loading }] = useComponent(comment.key, {
     data: comment,
@@ -90,8 +91,8 @@ const Comment = ({ comment, canDelete, wilson }) => {
     props.identity.email === session?.strategies?.[session.strategy]?.email ||
     (props.identity.strategy === 'anonymous' &&
       props.identity.id === JSON.parse(localStorage.id));
-  const Icon = StrategyIcons[props?.identity?.strategy];
-
+  const Icon = StrategyIcons[props.strategy];
+  // return <>{component?.children[0].key}</>;
   return (
     <Card sx={{ m: 1 }}>
       <Box sx={{ display: 'flex', ml: 1, mt: 1 }}>
@@ -102,14 +103,16 @@ const Comment = ({ comment, canDelete, wilson }) => {
       </Box>
       <CardActions>
         {(canDelete || isOwnComment) && (
-          <IconButton onClick={() => component?.props?.del()}>
+          <IconButton onClick={del}>
             <DeleteIcon />
           </IconButton>
         )}
         <Chip
           avatar={
             props?.identity.picture && (
-              <Avatar src={props?.identity.picture}>{<Icon />}</Avatar>
+              <Avatar src={props?.identity.picture}>
+                <Icon />
+              </Avatar>
             )
           }
           label={props?.identity.name}
