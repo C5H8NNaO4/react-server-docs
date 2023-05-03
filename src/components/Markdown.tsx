@@ -18,6 +18,7 @@ import { IconButton } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import copy from 'copy-to-clipboard';
 import { Actions, stateContext } from '../provider/StateProvider';
+import rehypeRaw from 'rehype-raw';
 
 type MarkdownProps = {
   children: string;
@@ -52,6 +53,7 @@ export const Markdown = ({ children, src }: MarkdownProps) => {
 
   return (
     <ReactMarkdown
+      rehypePlugins={[rehypeRaw]}
       remarkPlugins={[remarkGfm]}
       components={{
         h1: headingRenderer,
