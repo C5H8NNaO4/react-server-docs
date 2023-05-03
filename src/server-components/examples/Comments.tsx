@@ -41,7 +41,6 @@ export const Comments = ({ id = 'comments' }) => {
         return (
           <Comment
             comment={child}
-            del={() => component?.props?.del(index)}
             canDelete={canDelete}
             wilson={features?.props?.wilson}
           />
