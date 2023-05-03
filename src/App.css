@@ -37,3 +37,7 @@ pre {
 
   backdrop-filter: blur(6px);
 }
+
+#bg {
+  z-index: 0;
+}

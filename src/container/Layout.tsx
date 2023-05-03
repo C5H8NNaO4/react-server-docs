@@ -68,7 +68,13 @@ export const Layout = () => {
     >
       <Box
         key={pathname}
-        sx={{ maxHeight: '100vh', overflowY: 'auto', overflowX: 'hidden' }}
+        sx={{
+          maxHeight: '100vh',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          zIndex: 1,
+          position: 'relative',
+        }}
       >
         <header>
           <ButtonAppBar />

@@ -81,7 +81,7 @@ export const Comments = ({ id = 'comments' }) => {
 const StrategyIcons = {
   google: GoogleIcon,
 };
-const Comment = ({ comment, del, canDelete, wilson }) => {
+const Comment = ({ comment, canDelete, wilson }) => {
   const { session } = useContext(authContext);
   const [component, { error, loading }] = useComponent(comment.key, {
     data: comment,
@@ -91,8 +91,8 @@ const Comment = ({ comment, del, canDelete, wilson }) => {
     props.identity.email === session?.strategies?.[session.strategy]?.email ||
     (props.identity.strategy === 'anonymous' &&
       props.identity.id === JSON.parse(localStorage.id));
-  const Icon = StrategyIcons[props.strategy];
-  // return <>{component?.children[0].key}</>;
+  const Icon = StrategyIcons[props?.identity?.strategy];
+
   return (
     <Card sx={{ m: 1 }}>
       <Box sx={{ display: 'flex', ml: 1, mt: 1 }}>
@@ -103,16 +103,14 @@ const Comment = ({ comment, del, canDelete, wilson }) => {
       </Box>
       <CardActions>
         {(canDelete || isOwnComment) && (
-          <IconButton onClick={del}>
+          <IconButton onClick={() => component?.props?.del()}>
             <DeleteIcon />
           </IconButton>
         )}
         <Chip
           avatar={
             props?.identity.picture && (
-              <Avatar src={props?.identity.picture}>
-                <Icon />
-              </Avatar>
+              <Avatar src={props?.identity.picture}>{<Icon />}</Avatar>
             )
           }
           label={props?.identity.name}
