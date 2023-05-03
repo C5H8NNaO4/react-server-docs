@@ -16,6 +16,7 @@ import { navigation } from '../global';
 import { getGHPath, getRawPath } from '../components/CollabEditButton';
 import { Poll } from '../server-components/examples/Polls';
 import { Comments } from '../server-components/examples/Comments';
+import { HelloWorldExample2 } from '../server-components/examples';
 
 export const IndexPage = () => {
   const [value, setValue, localInfo] = useServerState('Hello World', {
@@ -107,19 +108,11 @@ export const IndexPage = () => {
           <Box
             sx={{ display: 'flex', justifyContent: 'center', paddingTop: 1 }}
           >
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => setCount(count + 1)}
-            >
-              Count is {count}
-            </Button>
+            <HelloWorldExample2 />
           </Box>
           ´
-          <Markdown>
-            This is just the beginning. You can now start to build your own
-            [components](/components) and share them with the community. Please
-            read the docs for more information.
+          <Markdown src={getRawPath('src/pages/index/footer.md')}>
+            Loading...
           </Markdown>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <NavigationButton2D next />

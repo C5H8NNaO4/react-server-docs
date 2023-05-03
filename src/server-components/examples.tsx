@@ -19,7 +19,7 @@ export const HelloWorldExample2 = () => {
   return (
     <>
       {error && <Alert severity="error">{error.message}</Alert>}
-      <Button onClick={() => component?.props?.increase()}>
+      <Button onClick={() => component?.props?.increase()} variant="contained">
         Count is {component?.props?.count}
       </Button>
     </>
