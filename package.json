@@ -24,8 +24,8 @@
     "react-dom": "^18.2.0",
     "react-google-login": "^5.2.2",
     "react-markdown": "^8.0.5",
-    "react-router": "^6.9.0",
-    "react-router-dom": "^6.9.0",
+    "react-router": "6.10.0",
+    "react-router-dom": "6.10.0",
     "react-syntax-highlighter": "^15.5.0",
     "remark-gfm": "^3.0.1"
   },
