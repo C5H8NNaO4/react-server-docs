@@ -22,6 +22,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Button,
 } from '@mui/material';
 import styles from './Layout.module.css';
 import { Link as RouterLink } from 'react-router-dom';
@@ -90,7 +91,15 @@ export const Layout = () => {
         </header>
         <main>
           <SidebarNavigation />
-          <Alert severity="info" sx={{ mt: 8 }}>
+          <Alert
+            severity="info"
+            sx={{ mt: 8 }}
+            action={
+              <Link component={Button} href="/changes">
+                Changes
+              </Link>
+            }
+          >
             Notice: This is a pre-alpha version and a work in progress. Features
             and documentation may not be fully complete. Please use with
             caution.
