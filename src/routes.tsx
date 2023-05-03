@@ -18,6 +18,7 @@ import { VotingPage } from './pages/examples/voting';
 import { AdminPage } from './pages/admin';
 import { ReactServerPage } from './pages/react-server';
 import { ReactServerHooksPage } from './pages/react-server/hooks';
+import { ChangeLog } from './pages/changelog';
 
 export const navigation = [
   ['/', 'Home'],
@@ -42,6 +43,7 @@ export const navigation = [
   ],
   ['/additional-topics', 'Additional Topics', 'src/pages/Additional.md'],
   ['/faq', 'FAQ'],
+  ['/changes', 'Changes', 'src/pages/changelog.md'],
   ['/collaborating', 'Collaborate', 'src/pages/Collaborating.md'],
 ];
 
@@ -49,6 +51,7 @@ export const routes = [
   <Route path="/" Component={IndexPage} />,
   <Route path="/installation" Component={InstallationPage} />,
   <Route path="/faq" Component={FAQPage} />,
+  <Route path="/changes" Component={ChangeLog} />,
   <Route
     path="/collaborating"
     Component={() => {
