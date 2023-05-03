@@ -54,7 +54,7 @@ export const Comments = ({ id = 'comments' }) => {
           onChange={(e) => setComment(e.target.value)}
           fullWidth
           value={comment}
-        />
+        /> 
       </CardContent>
       <CardActions>
         <Tooltip
