@@ -16,12 +16,16 @@ import { CommentsPage } from './pages/examples/comments';
 import { InstallationPage } from './pages/installation';
 import { VotingPage } from './pages/examples/voting';
 import { AdminPage } from './pages/admin';
+import { ReactServerPage } from './pages/react-server';
+import { ReactServerHooksPage } from './pages/react-server/hooks';
 
 export const navigation = [
   ['/', 'Home'],
   ['/installation', 'Installation'],
   ['/states', 'States', 'src/pages/States.md'],
   ['/components', 'Components', 'src/pages/Components.md'],
+  ['/react-server', 'React Server', 'src/pages/react-server/index.md'],
+  ['/react-server/hooks', 'Hooks', 'src/pages/react-server/hooks.md'],
   ['/stores', 'Stores', 'src/pages/Stores.md'],
   ['/server', 'Server', 'src/playground/Server.md'],
   ['/authentication', 'Authentication', 'src/pages/Authentication.md'],
@@ -65,6 +69,8 @@ export const routes = [
   />,
   <Route path="/states" Component={StatesPage} />,
   <Route path="/components" Component={ComponentsPage} />,
+  <Route path="/react-server" Component={ReactServerPage} />,
+  <Route path="/react-server/hooks" Component={ReactServerHooksPage} />,
   <Route path="/stores" Component={StoresPage} />,
   <Route path="/server" Component={ServerPage} />,
   <Route path="/authentication" Component={AuthPage} />,
