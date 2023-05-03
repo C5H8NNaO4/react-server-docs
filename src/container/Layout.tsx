@@ -54,6 +54,15 @@ export const Layout = () => {
 
   useEffect(() => {
     localStorage.setItem('animatedBackground', features?.props?.animated);
+    if (
+      features?.props?.animated &&
+      !localStorage.getItem('animatedBackgroundUser') &&
+      !state.animatedBackground
+    ) {
+      dispatch({
+        type: Actions.TOGGLE_ANIMATED_BACKGROUND,
+      });
+    }
   }, [features?.props?.animated]);
 
   const { pathname } = useLocation();
