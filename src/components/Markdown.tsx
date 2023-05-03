@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import { Link as RouterLink } from 'react-router-dom';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState, createElement } from 'react';
 
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -38,10 +38,28 @@ export const Markdown = ({ children, src }: MarkdownProps) => {
     }
   }, []);
 
+  const headingRenderer = (props) => {
+    console.log('Heading', props);
+    const { level, children } = props;
+    const text = children[0];
+    const anchor = text
+      .toLowerCase()
+      .replace(/[^\w\s]/g, '') // Remove special characters
+      .replace(/\s+/g, '-'); // Replace spaces with hyphens
+
+    return createElement(`h${level}`, { id: anchor }, children);
+  };
+
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
+        h1: headingRenderer,
+        h2: headingRenderer,
+        h3: headingRenderer,
+        h4: headingRenderer,
+        h5: headingRenderer,
+        h6: headingRenderer,
         pre: (props: any) => {
           return (
             <>
@@ -70,9 +88,10 @@ export const Markdown = ({ children, src }: MarkdownProps) => {
             </>
           );
         },
-        a: (props) => {
+        a: (props: any) => {
+          console.log('Anchor', props);
           return (
-            <Link to={props.href || '/'} component={RouterLink}>
+            <Link to={props.href} component={RouterLink}>
               {props.children}
             </Link>
           );
