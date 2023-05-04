@@ -43,12 +43,12 @@ export const Markdown = ({ children, src }: MarkdownProps) => {
     console.log('Heading', props);
     const { level, children } = props;
     const text = children[0];
-    const anchor = text
+    const anchor = (text || '')
       .toLowerCase()
       .replace(/[^\w\s]/g, '') // Remove special characters
       .replace(/\s+/g, '-'); // Replace spaces with hyphens
 
-    return createElement(`h${level}`, { id: anchor }, children);
+    return createElement(`h${level}`, { id: anchor || undefined }, children);
   };
 
   return (
