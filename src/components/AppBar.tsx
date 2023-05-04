@@ -17,14 +17,13 @@ import {
   LoggedInGoogleButton,
 } from './LoggedInGoogleButton';
 import SensorsIcon from '@mui/icons-material/Sensors';
+import { ViewCounter } from '../server-components/examples/ViewCounter';
+import { ConnectionCounter } from '../server-components/examples/ConnectionCounter';
 
 export default function ButtonAppBar() {
   const { state, dispatch } = React.useContext(stateContext);
   const { authenticate, session } = React.useContext(authContext);
-  const [connections] = useServerState(0, {
-    key: 'connections',
-    scope: 'global',
-  });
+
   return (
     <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
@@ -47,8 +46,7 @@ export default function ButtonAppBar() {
           </Link>
         </Box>
         <Box sx={{ flexGrow: 1 }}></Box>
-        <SensorsIcon></SensorsIcon>
-        {connections}
+        <ConnectionCounter />
         <IconButton
           color={state.animatedBackground ? 'primary' : 'inherit'}
           onClick={() => {
