@@ -62,7 +62,10 @@ const Commits = ({ repo }) => {
   const rep = repo.split('/')[1];
   useEffect(() => {
     (async () => {
-      const gh = new Github();
+      const gh = new Github({
+        username: import.meta.env.REACT_APP_GITHUB_USER,
+        password: import.meta.env.REACT_APP_GITHUB_TOKEN,
+      });
       gh.getRepo(org, rep).listCommits((err, commits) => {
         setData(commits);
         setLoading(false);
