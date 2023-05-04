@@ -17,7 +17,8 @@ import { Navigation } from '../components/NavigationButton';
 import { useEffect, useState } from 'react';
 import Github from 'github-api';
 import { Link as RouterLink } from 'react-router-dom';
-import GithubIcon from '@mui/icons-material/Github';
+import GitHubIcon from '@mui/icons-material/GitHub';
+
 const PAGE_SRC = 'src/pages/changelog.md';
 
 export const ChangeLog = () => {
@@ -76,7 +77,7 @@ const Commits = ({ repo }) => {
           <Avatar
             sx={{ width: 24, height: 24, background: '#FFF', color: '#000' }}
           >
-            <GithubIcon />
+            <GitHubIcon />
           </Avatar>
         }
         title={
