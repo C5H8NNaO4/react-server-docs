@@ -6,6 +6,9 @@ import {
   ListItem,
   ListItemText,
   Grid,
+  Link,
+  Box,
+  Avatar,
 } from '@mui/material';
 
 import { Markdown } from '../components/Markdown';
@@ -13,7 +16,8 @@ import { getRawPath } from '../components/CollabEditButton';
 import { Navigation } from '../components/NavigationButton';
 import { useEffect, useState } from 'react';
 import Github from 'github-api';
-
+import { Link as RouterLink } from 'react-router-dom';
+import GithubIcon from '@mui/icons-material/Github';
 const PAGE_SRC = 'src/pages/changelog.md';
 
 export const ChangeLog = () => {
@@ -51,7 +55,7 @@ export const ChangeLog = () => {
 };
 
 const Commits = ({ repo }) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const org = repo.split('/')[0].replace('@', '');
   const rep = repo.split('/')[1];
@@ -67,7 +71,20 @@ const Commits = ({ repo }) => {
 
   return (
     <Card sx={{ height: '100%' }}>
-      <CardHeader title={repo}></CardHeader>
+      <CardHeader
+        avatar={
+          <Avatar
+            sx={{ width: 24, height: 24, background: '#FFF', color: '#000' }}
+          >
+            <GithubIcon />
+          </Avatar>
+        }
+        title={
+          <Link component={RouterLink} to={`https://github.com/${org}/${rep}`}>
+            {repo}
+          </Link>
+        }
+      ></CardHeader>
       {data.map((commit) => {
         return (
           <ListItem dense>
