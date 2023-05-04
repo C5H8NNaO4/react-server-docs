@@ -17,6 +17,7 @@ import { useContext, useState } from 'react';
 import GoogleIcon from '@mui/icons-material/Google';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { UpDownButtons, VotingApp } from './VotingApp';
+import { Markdown } from '../../components/Markdown';
 
 export const Comments = ({ id = 'comments' }) => {
   const [component, { error, loading }] = useComponent(id, {});
@@ -97,7 +98,7 @@ const Comment = ({ comment, canDelete, wilson }) => {
       <Box sx={{ display: 'flex', ml: 1, mt: 1 }}>
         <UpDownButtons id={component?.children[0].key} wilson={wilson} />
         <CardContent sx={{ display: 'flex' }}>
-          <Typography variant="body1">{props?.message}</Typography>
+          <Markdown>{props?.message}</Markdown>
         </CardContent>
       </Box>
       <CardActions>
