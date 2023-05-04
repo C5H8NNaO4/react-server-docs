@@ -1,4 +1,6 @@
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import GroupIcon from '@mui/icons-material/Group';
+
 import { useComponent } from '@state-less/react-client';
 import {
   Box,
@@ -13,12 +15,20 @@ export const ViewCounter = () => {
 
   return (
     <Tooltip title="Views" placement="left">
+        <Box sx={{display: 'flex'}}>
       <ListItem dense>
         <ListItemIcon>
           <VisibilityIcon />
         </ListItemIcon>
         <ListItemText>{loading ? '-' : component?.props?.views}</ListItemText>
       </ListItem>
+      <ListItem dense>
+        <ListItemIcon>
+          <GroupIcon />
+        </ListItemIcon>
+        <ListItemText>{loading ? '-' : component?.props?.clients}</ListItemText>
+      </ListItem>
+        </Box>
     </Tooltip>
   );
 };
