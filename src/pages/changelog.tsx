@@ -32,10 +32,7 @@ const data = [{ name: 'Page A', uv: 400, pv: 2400, amt: 2400 }];
 
 const PAGE_SRC = 'src/pages/changelog.md';
 const commitsToData = (commits) => {
-  const data = [
-    ...commits,
-    { dummy: true, commit: { author: { date: '2023-03-01' } } },
-  ].reduce((acc, commit) => {
+  const data = [...commits].reduce((acc, commit) => {
     const date = new Date(commit?.commit?.author?.date).toDateString();
     const lastDate = acc.at(-1)?.date;
     if (lastDate === date) {
