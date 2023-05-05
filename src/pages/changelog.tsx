@@ -9,6 +9,7 @@ import {
   Link,
   Box,
   Avatar,
+  Tooltip as MUITooltip,
 } from '@mui/material';
 
 import { Markdown } from '../components/Markdown';
@@ -19,9 +20,36 @@ import Github from 'github-api';
 import { Link as RouterLink } from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
+import {
+  LineChart,
+  Line,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from 'recharts';
+const data = [{ name: 'Page A', uv: 400, pv: 2400, amt: 2400 }];
+
 const PAGE_SRC = 'src/pages/changelog.md';
+const commitsToData = (commits) => {
+  const data = commits.reduce((acc, commit) => {
+    const date = new Date(commit?.commit?.author?.date).toDateString();
+    const lastDate = acc.at(-1)?.date;
+    if (lastDate === date) {
+      acc.at(-1).commits++;
+      return acc;
+    } else {
+      return [...acc, { date, commits: 1 }];
+    }
+  }, []);
+  return data;
+};
 
 export const ChangeLog = () => {
+  const [data, setData] = useState([]);
+  const onLoad = (key) => (commits) => {
+    setData(commitsToData(commits));
+  };
   return (
     <Container maxWidth="lg" disableGutters>
       <Paper
@@ -36,6 +64,7 @@ export const ChangeLog = () => {
         }}
       >
         <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown>
+
         <Markdown># Commits</Markdown>
         <Grid container spacing={1}>
           <Grid item xs={12} sm={4}>
@@ -66,13 +95,13 @@ const Commits = ({ repo }) => {
         username: import.meta.env.REACT_APP_GITHUB_USER,
         password: import.meta.env.REACT_APP_GITHUB_TOKEN,
       });
-      gh.getRepo(org, rep).listCommits((err, commits) => {
+      gh.getRepo(org, rep).listCommits({ per_page: 50 }, (err, commits) => {
         setData(commits);
         setLoading(false);
       });
     })();
-  });
-
+  }, []);
+  console.log(commitsToData(data));
   return (
     <Card sx={{ height: '100%' }}>
       <CardHeader
@@ -89,6 +118,15 @@ const Commits = ({ repo }) => {
           </Link>
         }
       ></CardHeader>
+      {data.length > 0 && (
+        <ResponsiveContainer width="95%" height={120}>
+          <LineChart data={commitsToData(data).slice().reverse()}>
+            <Line type="monotone" dataKey="commits" stroke="#8884d8" />
+
+            <Tooltip content={<CustomTooltip />} />
+          </LineChart>
+        </ResponsiveContainer>
+      )}
       {data.map((commit) => {
         const author = commit?.author?.login || commit?.commit?.author?.name;
         const date = commit?.commit?.author?.date;
@@ -102,5 +140,32 @@ const Commits = ({ repo }) => {
         );
       })}
     </Card>
+  );
+};
+
+const CustomTooltip = (props) => {
+  return (
+    <Paper
+      className="noFocus"
+      elevation={1}
+      sx={{
+        background: '#FFFFFF00',
+        backdropFilter: 'blur(2px);',
+        '&:hover': {
+          background: '#000',
+        },
+      }}
+    >
+      {Object.keys(props.payload[0]?.payload || {}).map((key) => {
+        return (
+          <ListItem dense>
+            <ListItemText
+              primary={props?.payload?.[0]?.payload?.[key]}
+              secondary={key}
+            ></ListItemText>
+          </ListItem>
+        );
+      })}
+    </Paper>
   );
 };
