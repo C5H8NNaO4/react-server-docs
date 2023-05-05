@@ -90,11 +90,13 @@ const Commits = ({ repo }) => {
         }
       ></CardHeader>
       {data.map((commit) => {
+        const author = commit?.author?.login || commit?.commit?.author?.name;
+        const date = commit?.commit?.author?.date;
         return (
           <ListItem dense>
             <ListItemText
               primary={commit?.commit?.message}
-              secondary={commit?.author?.login}
+              secondary={`${new Date(date).toLocaleDateString()} (${author})`}
             ></ListItemText>
           </ListItem>
         );
