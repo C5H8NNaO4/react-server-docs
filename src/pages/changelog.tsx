@@ -32,14 +32,30 @@ const data = [{ name: 'Page A', uv: 400, pv: 2400, amt: 2400 }];
 
 const PAGE_SRC = 'src/pages/changelog.md';
 const commitsToData = (commits) => {
-  const data = commits.reduce((acc, commit) => {
+  const data = [
+    ...commits,
+    { dummy: true, commit: { author: { date: '2023-03-01' } } },
+  ].reduce((acc, commit) => {
     const date = new Date(commit?.commit?.author?.date).toDateString();
     const lastDate = acc.at(-1)?.date;
     if (lastDate === date) {
       acc.at(-1).commits++;
       return acc;
     } else {
-      return [...acc, { date, commits: 1 }];
+      const datesBetween = +new Date(lastDate || +new Date()) - +new Date(date);
+      const between: any = [];
+
+      const missingDates = Math.floor(datesBetween / (1000 * 60 * 60 * 24));
+      for (let i = 0; i < missingDates; i++) {
+        between.push({
+          date: new Date(+new Date(lastDate) - i * 1000 * 60 * 60 * 24)
+            .toDateString()
+            .slice(4),
+          commits: 0,
+        });
+      }
+
+      return [...acc, ...between, { date, commits: commit.dummy ? 0 : 1 }];
     }
   }, []);
   return data;
@@ -95,7 +111,7 @@ const Commits = ({ repo }) => {
         username: import.meta.env.REACT_APP_GITHUB_USER,
         password: import.meta.env.REACT_APP_GITHUB_TOKEN,
       });
-      gh.getRepo(org, rep).listCommits({ per_page: 50 }, (err, commits) => {
+      gh.getRepo(org, rep).listCommits({ per_page: 150 }, (err, commits) => {
         setData(commits);
         setLoading(false);
       });
@@ -119,15 +135,20 @@ const Commits = ({ repo }) => {
         }
       ></CardHeader>
       {data.length > 0 && (
-        <ResponsiveContainer width="95%" height={120}>
+        <ResponsiveContainer width="100%" height={120}>
           <LineChart data={commitsToData(data).slice().reverse()}>
-            <Line type="monotone" dataKey="commits" stroke="#8884d8" />
+            <Line
+              type="monotone"
+              dataKey="commits"
+              stroke="#8884d8"
+              dot={false}
+            />
 
             <Tooltip content={<CustomTooltip />} />
           </LineChart>
         </ResponsiveContainer>
       )}
-      {data.map((commit) => {
+      {data.slice(0, 10).map((commit) => {
         const author = commit?.author?.login || commit?.commit?.author?.name;
         const date = commit?.commit?.author?.date;
         return (
