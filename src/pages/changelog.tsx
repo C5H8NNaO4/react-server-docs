@@ -43,11 +43,10 @@ const commitsToData = (commits) => {
       const between: any = [];
 
       const missingDates = Math.floor(datesBetween / (1000 * 60 * 60 * 24));
-      for (let i = 0; i < missingDates; i++) {
+      for (let i = 1; i < missingDates; i++) {
         between.push({
-          date: new Date(+new Date(lastDate) - i * 1000 * 60 * 60 * 24)
-            .toDateString()
-            .slice(4),
+          date: new Date(+new Date(lastDate || +new Date()) - i * 1000 * 60 * 60 * 24)
+            .toDateString(),
           commits: 0,
         });
       }
@@ -80,14 +79,17 @@ export const ChangeLog = () => {
 
         <Markdown># Commits</Markdown>
         <Grid container spacing={1}>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <Commits repo={'state-less/react-server'} />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <Commits repo={'state-less/react-client'} />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
+            <Commits repo={'state-less/clean-starter'} />
+          </Grid>
+          <Grid item xs={12} sm={3}>
             <Commits repo={'C5H8NNaO4/react-server-docs'} />
           </Grid>
         </Grid>
@@ -108,10 +110,16 @@ const Commits = ({ repo }) => {
         username: import.meta.env.REACT_APP_GITHUB_USER,
         password: import.meta.env.REACT_APP_GITHUB_TOKEN,
       });
-      gh.getRepo(org, rep).listCommits({ per_page: 150 }, (err, commits) => {
-        setData(commits);
-        setLoading(false);
-      });
+      gh.getRepo(org, rep).listCommits(
+        {
+          since: new Date(+new Date() - 90 * 60 * 60 * 24 * 1000).toISOString(),
+          per_page: 150,
+        },
+        (err, commits) => {
+          setData(commits);
+          setLoading(false);
+        }
+      );
     })();
   }, []);
   console.log(commitsToData(data));
