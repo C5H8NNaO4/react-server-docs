@@ -19,13 +19,29 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import copy from 'copy-to-clipboard';
 import { Actions, stateContext } from '../provider/StateProvider';
 import rehypeRaw from 'rehype-raw';
+import mermaid from 'mermaid';
 
 type MarkdownProps = {
   children: string;
   src?: string;
+  disablePadding: boolean;
 };
 
-export const Markdown = ({ children, src }: MarkdownProps) => {
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'default',
+  securityLevel: 'loose',
+  fontFamily: 'Fira Code',
+});
+
+const Mermaid = (props) => {
+  useEffect(() => {
+    mermaid.contentLoaded();
+  }, []);
+
+  return <div className="mermaid">{props.children}</div>;
+};
+export const Markdown = ({ children, src, disablePadding }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(children || '');
   const { state, dispatch } = useContext(stateContext);
 
@@ -67,6 +83,14 @@ export const Markdown = ({ children, src }: MarkdownProps) => {
         h5: headingRenderer,
         h6: headingRenderer,
         pre: (props: any) => {
+          const language = (
+            props.children[0]?.props?.className || '-bash'
+          ).split('-')[1];
+
+          if (language === 'mermaid') {
+            return <Mermaid>{props.children[0].props.children}</Mermaid>;
+          }
+
           return (
             <>
               <Box sx={{ width: '100%', display: 'flex' }}>
@@ -83,12 +107,7 @@ export const Markdown = ({ children, src }: MarkdownProps) => {
                   <ContentCopyIcon />
                 </IconButton>
               </Box>
-              <SyntaxHighlighter
-                language={
-                  (props.children[0]?.props?.className || '-bash').split('-')[1]
-                }
-                style={a11yDark}
-              >
+              <SyntaxHighlighter language={language} style={a11yDark}>
                 {props.children[0].props.children}
               </SyntaxHighlighter>
             </>

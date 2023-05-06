@@ -19,6 +19,7 @@ import { AdminPage } from './pages/admin';
 import { ReactServerPage } from './pages/react-server';
 import { ReactServerHooksPage } from './pages/react-server/hooks';
 import { ChangeLog } from './pages/changelog';
+import { ChatPage } from './pages/examples/chat';
 
 export const navigation = [
   ['/', 'Home'],
@@ -34,6 +35,7 @@ export const navigation = [
   ['/examples', 'Examples', 'src/examples'],
   ['/examples/comments', 'Comments', 'src/examples/comments.md'],
   ['/examples/votings', 'Voting', 'src/examples/voting.md'],
+  ['/examples/chat', 'Chat', 'src/examples/chat.md'],
   ['/examples/cms', 'CMS (Navigation)', 'src/examples/cms'],
   ['/examples/cms/pages', 'CMS (Pages)', 'src/examples/cms/pages.md'],
   [
@@ -79,6 +81,7 @@ export const routes = [
   <Route path="/authentication" Component={AuthPage} />,
   <Route path="/examples" Component={FunctionsPage} />,
   <Route path="/examples/comments" Component={CommentsPage} />,
+  <Route path="/examples/chat" Component={ChatPage} />,
   <Route path="/examples/cms" Component={CMSPage} />,
   <Route path="/examples/cms/pages" Component={PagesPage} />,
   <Route path="/examples/cms/rendering" Component={NavigationPage} />,

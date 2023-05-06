@@ -71,6 +71,10 @@ export const Layout = () => {
   useEffect(() => {
     gtag('event', 'load', { event_category: 'page' });
   }, [pathname]);
+
+  useEffect(() => {
+    console.log('Layout useEffect');
+  }, []);
   return (
     <VantaBackground
       light={SunnyBlueClouds}

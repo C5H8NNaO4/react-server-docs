@@ -15,20 +15,22 @@ export const ViewCounter = () => {
 
   return (
     <Tooltip title="Views" placement="left">
-        <Box sx={{display: 'flex'}}>
-      <ListItem dense>
-        <ListItemIcon>
-          <VisibilityIcon />
-        </ListItemIcon>
-        <ListItemText>{loading ? '-' : component?.props?.views}</ListItemText>
-      </ListItem>
-      <ListItem dense>
-        <ListItemIcon>
-          <GroupIcon />
-        </ListItemIcon>
-        <ListItemText>{loading ? '-' : component?.props?.clients}</ListItemText>
-      </ListItem>
-        </Box>
+      <Box sx={{ display: 'flex' }}>
+        <ListItem dense>
+          <ListItemIcon>
+            <VisibilityIcon />
+          </ListItemIcon>
+          <ListItemText>{loading ? '-' : component?.props?.views}</ListItemText>
+        </ListItem>
+        <ListItem dense>
+          <ListItemIcon>
+            <GroupIcon />
+          </ListItemIcon>
+          <ListItemText>
+            {loading ? '-' : component?.props?.clients}
+          </ListItemText>
+        </ListItem>
+      </Box>
     </Tooltip>
   );
 };

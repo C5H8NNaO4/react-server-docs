@@ -17,24 +17,9 @@ import { getGHPath, getRawPath } from '../components/CollabEditButton';
 import { Poll } from '../server-components/examples/Polls';
 import { Comments } from '../server-components/examples/Comments';
 import { HelloWorldExample2 } from '../server-components/examples';
+import { ChatApp } from '../server-components/examples/ChatApp';
 
 export const IndexPage = () => {
-  const [value, setValue, localInfo] = useServerState('Hello World', {
-    key: 'hello-world',
-    scope: 'global',
-    client: localClient,
-  });
-  console.log('Localinfo', localInfo);
-  const { loading, error } = localInfo || {
-    error: new Error('Wrong react-client version.'),
-  };
-
-  const [count, setCount] = useServerState(0, {
-    key: 'count',
-    scope: 'global',
-  });
-
-  const { state } = useContext(stateContext);
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} md={4} xl={3} sx={{ mt: 1, p: 1 }}>
