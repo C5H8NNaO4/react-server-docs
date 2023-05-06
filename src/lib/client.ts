@@ -44,9 +44,6 @@ const localWs = new WebSocketLink({
   uri: `ws://localhost:4000/graphql`,
   options: {
     reconnect: true,
-    headers: {
-      'x-unique-id': localStorage.id,
-    },
   },
 });
 

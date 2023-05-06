@@ -24,7 +24,7 @@ import mermaid from 'mermaid';
 type MarkdownProps = {
   children: string;
   src?: string;
-  disablePadding: boolean;
+  disablePadding?: boolean;
 };
 
 mermaid.initialize({
