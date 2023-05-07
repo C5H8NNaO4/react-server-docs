@@ -7,9 +7,7 @@ import {
   ListItemText,
   Grid,
   Link,
-  Box,
   Avatar,
-  Tooltip as MUITooltip,
 } from '@mui/material';
 
 import { Markdown } from '../components/Markdown';
@@ -20,17 +18,11 @@ import Github from 'github-api';
 import { Link as RouterLink } from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
-import {
-  LineChart,
-  Line,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from 'recharts';
-const DAYS_HISTORY = 30;
+import { LineChart, Line, ResponsiveContainer, Tooltip } from 'recharts';
 
+const DAYS_HISTORY = 30;
 const PAGE_SRC = 'src/pages/changelog.md';
+
 const commitsToData = (commits) => {
   const data = [
     ...commits,
@@ -73,10 +65,6 @@ const commitsToData = (commits) => {
 };
 
 export const ChangeLog = () => {
-  const [data, setData] = useState([]);
-  const onLoad = (key) => (commits) => {
-    setData(commitsToData(commits));
-  };
   return (
     <Container maxWidth="lg" disableGutters>
       <Paper
