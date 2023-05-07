@@ -28,11 +28,23 @@ import {
   YAxis,
   Tooltip,
 } from 'recharts';
-const data = [{ name: 'Page A', uv: 400, pv: 2400, amt: 2400 }];
+const DAYS_HISTORY = 30;
 
 const PAGE_SRC = 'src/pages/changelog.md';
 const commitsToData = (commits) => {
-  const data = [...commits].reduce((acc, commit) => {
+  const data = [
+    ...commits,
+    {
+      dummy: true,
+      commit: {
+        author: {
+          date: new Date(
+            +new Date() - DAYS_HISTORY * 60 * 60 * 24 * 1000
+          ).toISOString(),
+        },
+      },
+    },
+  ].reduce((acc, commit) => {
     const date = new Date(commit?.commit?.author?.date).toDateString();
     const lastDate = acc.at(-1)?.date;
     if (lastDate === date) {
@@ -40,13 +52,15 @@ const commitsToData = (commits) => {
       return acc;
     } else {
       const datesBetween = +new Date(lastDate || +new Date()) - +new Date(date);
+
       const between: any = [];
 
       const missingDates = Math.floor(datesBetween / (1000 * 60 * 60 * 24));
-      for (let i = 1; i < missingDates; i++) {
+      for (let i = !lastDate ? 0 : 1; i < missingDates; i++) {
         between.push({
-          date: new Date(+new Date(lastDate || +new Date()) - i * 1000 * 60 * 60 * 24)
-            .toDateString(),
+          date: new Date(
+            +new Date(lastDate || +new Date()) - i * 1000 * 60 * 60 * 24
+          ).toDateString(),
           commits: 0,
         });
       }
@@ -54,6 +68,7 @@ const commitsToData = (commits) => {
       return [...acc, ...between, { date, commits: commit.dummy ? 0 : 1 }];
     }
   }, []);
+  console.log('DATA', data);
   return data;
 };
 
@@ -112,7 +127,9 @@ const Commits = ({ repo }) => {
       });
       gh.getRepo(org, rep).listCommits(
         {
-          since: new Date(+new Date() - 90 * 60 * 60 * 24 * 1000).toISOString(),
+          since: new Date(
+            +new Date() - DAYS_HISTORY * 60 * 60 * 24 * 1000
+          ).toISOString(),
           per_page: 150,
         },
         (err, commits) => {
