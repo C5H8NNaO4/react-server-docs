@@ -53,7 +53,12 @@ export const MyLists = (props) => {
         {component?.children?.map((list, i) => {
           return (
             <Grid item sm={12} md={6} lg={4} xl={3}>
-              <List key={list.key} list={`${list.key}`} />
+              <List
+                key={list.key}
+                list={`${list.key}`}
+                remove={component?.props?.remove}
+                id={list.id}
+              />
             </Grid>
           );
         })}
@@ -79,7 +84,7 @@ export const NewListSkeleton = ({ onAdd }) => {
   );
 };
 
-export const List = ({ list }) => {
+export const List = ({ list, remove, id }) => {
   const { dispatch, state } = useContext(stateContext);
   const [component, { loading, error }] = useComponent(list, {});
   const [title, setTitle] = useState('');
@@ -168,6 +173,7 @@ export const List = ({ list }) => {
           />
         ))}
       </MUIList>
+
       <CardActions>
         <Button
           onClick={() => {
@@ -176,6 +182,13 @@ export const List = ({ list }) => {
           }}
         >
           <EditIcon />
+        </Button>
+        <Button
+          onClick={() => {
+            remove(component?.props?.id);
+          }}
+        >
+          <RemoveCircleIcon />
         </Button>
       </CardActions>
     </Card>
