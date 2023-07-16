@@ -20,6 +20,7 @@ import { ReactServerPage } from './pages/react-server';
 import { ReactServerHooksPage } from './pages/react-server/hooks';
 import { ChangeLog } from './pages/changelog';
 import { ChatPage } from './pages/examples/chat';
+import { ListsPage } from './pages/lists';
 
 export const navigation = [
   ['/', 'Home'],
@@ -32,6 +33,7 @@ export const navigation = [
   ['/server', 'Server', 'src/playground/Server.md'],
   ['/authentication', 'Authentication', 'src/pages/Authentication.md'],
   ['/SSR', 'SSR', 'src/examples/SSR.md'],
+  ['/lists', 'Lists', 'src/pages/lists.md'],
   ['/examples', 'Examples', 'src/examples'],
   ['/examples/comments', 'Comments', 'src/examples/comments.md'],
   ['/examples/votings', 'Voting', 'src/examples/voting.md'],
@@ -79,6 +81,7 @@ export const routes = [
   <Route path="/stores" Component={StoresPage} />,
   <Route path="/server" Component={ServerPage} />,
   <Route path="/authentication" Component={AuthPage} />,
+  <Route path="/lists" Component={ListsPage} />,
   <Route path="/examples" Component={FunctionsPage} />,
   <Route path="/examples/comments" Component={CommentsPage} />,
   <Route path="/examples/chat" Component={ChatPage} />,

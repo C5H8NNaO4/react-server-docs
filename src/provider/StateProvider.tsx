@@ -4,13 +4,22 @@ type State = {
   menuOpen: boolean;
   animatedBackground: boolean;
   messages: string[];
+  history: HistoryAction[];
 };
+
+type HistoryAction = {
+  action: string;
+  value: any;
+  reverse: () => void;
+};
+
 const initialState: State = {
   menuOpen: false,
   animatedBackground: localStorage.getItem('animatedBackgroundUser')
     ? localStorage.getItem('animatedBackgroundUser') === 'true'
     : localStorage.getItem('animatedBackground') === 'true',
   messages: [],
+  history: [],
 };
 
 export enum Actions {
@@ -18,6 +27,8 @@ export enum Actions {
   TOGGLE_ANIMATED_BACKGROUND,
   SHOW_MESSAGE,
   HIDE_MESSAGE,
+  RECORD_CHANGE,
+  REVERT_CHANGE,
 }
 
 export const stateContext = createContext({
@@ -49,6 +60,17 @@ const reducer = (state: State, action: Action) => {
         ...state,
         messages: state.messages.slice(1),
       };
+    case Actions.RECORD_CHANGE:
+      return {
+        ...state,
+        history: [...state.history, action.value],
+      };
+    case Actions.REVERT_CHANGE: {
+      return {
+        ...state,
+        history: state.history.slice(0, -1),
+      };
+    }
   }
   return state;
 };

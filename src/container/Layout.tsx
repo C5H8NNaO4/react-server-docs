@@ -23,6 +23,7 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
+  LinearProgress,
 } from '@mui/material';
 import styles from './Layout.module.css';
 import { Link as RouterLink } from 'react-router-dom';
@@ -43,10 +44,27 @@ import { ViewCounter } from '../server-components/examples/ViewCounter';
 
 declare let gtag: Function;
 
+const messages = [
+  'Building Layout',
+  'Loading Animation...',
+  'Loading Content...',
+  `Notice: This is a pre-alpha version and a work in progress. Features and documentation may not be fully complete. Please use with caution.`,
+];
+
 export const Layout = () => {
   const { state, dispatch } = useContext(stateContext);
   const [features, { loading: featuresLoading }] = useComponent('features');
   const [_animated, setAnim] = useState(false);
+
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    if (_animated) {
+      setTime(1000);
+    } else if (time < 1000) {
+      setTimeout(setTime, 100, time + 100);
+    }
+  }, [time, _animated]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -93,21 +111,24 @@ export const Layout = () => {
       >
         <header>
           <ButtonAppBar />
+          <LinearProgress
+            variant="determinate"
+            value={time / 10}
+            sx={{ mt: 8 }}
+          />
         </header>
         <main>
           <SidebarNavigation />
           <Alert
             severity="info"
-            sx={{ mt: 8 }}
+            // sx={{ mt: 8 }}
             action={
               <Link component={Button} href="/changes">
                 Changes
               </Link>
             }
           >
-            Notice: This is a pre-alpha version and a work in progress. Features
-            and documentation may not be fully complete. Please use with
-            caution.
+            {time < 1000 ? messages[1] : messages[3]}
           </Alert>
           {state.messages.map((message) => {
             return (

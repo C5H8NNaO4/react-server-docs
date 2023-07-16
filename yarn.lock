@@ -1377,9 +1377,10 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@state-less/react-client@state-less/react-client":
-  version "2.0.1"
-  resolved "https://codeload.github.com/state-less/react-client/tar.gz/79dd0c56244b8650c4d895c69a8dc6020f905d7b"
+"@state-less/react-client@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@state-less/react-client/-/react-client-2.0.3.tgz#10d95ed61d8f9cc38c9f304ec47691a2139c6ddc"
+  integrity sha512-WVj7SPGa3BAkd7cESVF25d91TeBWe8AGIqMlkBamp0sHUmbZN37pZ9WgX8J19Tv36Jiuatp/oC7zLi2FViG+vQ==
   dependencies:
     "@apollo/client" "^3.7.10"
     "@babel/plugin-transform-react-jsx" "^7.21.0"
