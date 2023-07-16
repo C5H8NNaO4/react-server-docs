@@ -169,7 +169,12 @@ export const List = ({ list }) => {
         ))}
       </MUIList>
       <CardActions>
-        <Button onClick={() => setTitle('') || setEdit(!edit)}>
+        <Button
+          onClick={() => {
+            setTitle('');
+            setEdit(!edit);
+          }}
+        >
           <EditIcon />
         </Button>
       </CardActions>
