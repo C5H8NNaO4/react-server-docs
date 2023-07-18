@@ -14,7 +14,6 @@ export const ListsPage = () => {
 
   return (
     <>
-      <Alert severity="success">Click the + button to add a new list.</Alert>
       <Container maxWidth={'xl'}>
         <MyLists key={ctx?.session?.id} />
       </Container>
