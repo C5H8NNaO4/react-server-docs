@@ -263,7 +263,7 @@ export const List = ({ list, remove, id, refetch }) => {
                 }
                 onKeyDown={(e) => {
                   if (!edit && e.key === 'Enter') {
-                    addEntry(e, labelMode);
+                    addEntry(e, canAddLabel);
                   }
                 }}
                 InputProps={{
@@ -286,7 +286,7 @@ export const List = ({ list, remove, id, refetch }) => {
               />
               <IconButton
                 disabled={!todoTitle}
-                onClick={(e) => addEntry(e, labelMode)}
+                onClick={(e) => addEntry(e, canAddLabel)}
               >
                 <IconMore />
               </IconButton>
@@ -376,7 +376,8 @@ const TodoItem = (props) => {
       <ListItemSecondaryAction>
         <Checkbox
           checked={component?.props.completed}
-          onClick={() => {
+          onClick={async () => {
+            component?.props.toggle();
             dispatch({
               type: Actions.SHOW_MESSAGE,
               value: `Marked ${component.props.title}. Undo? (Ctrl+Z)`,
@@ -389,7 +390,6 @@ const TodoItem = (props) => {
                 },
               },
             });
-            component?.props.toggle();
           }}
         />
       </ListItemSecondaryAction>
