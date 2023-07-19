@@ -14,6 +14,10 @@ export const ListsPage = () => {
 
   return (
     <>
+      <Alert severity="warning">
+        Please don't store any valuable data in Lists for now, as they will be
+        deleted on every deploy.
+      </Alert>
       <Container maxWidth={'xl'}>
         <MyLists key={ctx?.session?.id} />
       </Container>
