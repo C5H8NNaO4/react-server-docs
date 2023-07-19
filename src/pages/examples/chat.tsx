@@ -23,9 +23,7 @@ const EXAMPLE_SRC_3 = 'src/examples/todo.md';
 const EXAMPLE_SRC_4 = 'src/examples/poll.md';
 
 export const ChatPage = () => {
-  useEffect(() => {
-    console.log('ChatPage useEffect');
-  }, []);
+  
   return (
     <Container maxWidth="lg" disableGutters>
       <Paper

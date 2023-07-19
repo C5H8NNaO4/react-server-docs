@@ -24,6 +24,7 @@ function App() {
             <ThemeProvider>
               <Router>
                 <ScrollToTop />
+
                 <Layout />
               </Router>
             </ThemeProvider>

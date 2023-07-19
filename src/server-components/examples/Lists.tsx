@@ -27,10 +27,37 @@ import EditIcon from '@mui/icons-material/Edit';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import LabelIcon from '@mui/icons-material/Label';
 import { useComponent } from '@state-less/react-client';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useMemo, useState } from 'react';
 import IconMore from '@mui/icons-material/Add';
 import IconClear from '@mui/icons-material/Clear';
 import { Actions, stateContext } from '../../provider/StateProvider';
+
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
+
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  horizontalListSortingStrategy,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import { SortableItem } from '../../components/SortableItem';
+
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Dialog from '@mui/material/Dialog';
 
 const unique = (arr) => [...new Set(arr)];
 export const MyLists = (props) => {
@@ -38,13 +65,15 @@ export const MyLists = (props) => {
   const { state, dispatch } = useContext(stateContext);
   const [title, setTitle] = useState('');
   const [active, setActive] = useState<string[]>([]);
+  const { setNodeRef } = useDroppable({
+    id: 'unique-id',
+  });
   const labels = unique(
     component?.children
       ?.reduce((acc, list) => acc.concat(list?.props?.labels), [])
       .map((label) => label.title)
   );
 
-  console.log('Lists', labels);
   useEffect(() => {
     const onKeyUp = (e) => {
       if (e.key === 'z' && e.ctrlKey) {
@@ -59,10 +88,55 @@ export const MyLists = (props) => {
     };
   }, [state]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const filtered = component?.children?.filter((list) => {
+    if (active.length === 0) return true;
+
+    return list.props.labels.some((label) => active.includes(label.title));
+  });
+  const items = useMemo(
+    () => component?.props?.order,
+    [JSON.stringify(component?.props?.order)]
+  );
+  const [optimisticOrder, setOptimisticOrder] = useState(items);
+  useEffect(() => {
+    if (component?.props?.order && !loading) {
+      setOptimisticOrder(items);
+    }
+  }, [loading, items]);
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  const lkp = filtered?.reduce(
+    (acc, list) => ({ ...acc, [list.props.id]: list }),
+    {}
+  );
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setOptimisticOrder((items) => {
+        const oldIndex = items.indexOf(active.id);
+        const newIndex = items.indexOf(over.id);
+        console.log('Move', active, oldIndex, newIndex, items);
+
+        const newOrder = arrayMove(items, oldIndex, newIndex);
+        component?.props?.setOrder(newOrder);
+        return newOrder;
+      });
+    }
+  }
   return (
     <Container maxWidth="xl">
       {error && <Alert severity="error">{error.message}</Alert>}
-      <Box sx={{ display: 'flex', width: '100%', mt: 2 }}>
+      <Box sx={{ display: 'flex', width: '100%', mt: 2 }} ref={setNodeRef}>
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
           <TextField
             inputRef={inputRef}
@@ -70,6 +144,12 @@ export const MyLists = (props) => {
             label="New List"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                component?.props?.add({ title });
+                setTitle('');
+              }
+            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -107,29 +187,37 @@ export const MyLists = (props) => {
           setActive(newActive);
         }}
       />
-      <Grid container spacing={1}>
-        {component?.children
-          ?.filter((list) => {
-            if (active.length === 0) return true;
-
-            return list.props.labels.some((label) =>
-              active.includes(label.title)
-            );
-          })
-          .map((list, i) => {
-            return (
-              <Grid item sm={12} md={6} lg={4} xl={3}>
-                <List
-                  key={list.key}
-                  list={`${list.key}`}
-                  remove={component?.props?.remove}
-                  id={list.id}
-                  refetch={refetch}
-                />
-              </Grid>
-            );
-          })}
-      </Grid>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={optimisticOrder || []}
+          strategy={rectSortingStrategy}
+        >
+          <Grid container spacing={1}>
+            {optimisticOrder?.map((id, i) => {
+              console.log('ITEM', id);
+              const list = lkp[id];
+              if (!list) return null;
+              return (
+                <Grid item sm={12} md={6} lg={4} xl={3}>
+                  <SortableItem key={id} id={id}>
+                    <List
+                      key={list.key}
+                      list={`${list.key}`}
+                      remove={component?.props?.remove}
+                      id={list.id}
+                      refetch={refetch}
+                    />
+                  </SortableItem>
+                </Grid>
+              );
+            })}
+          </Grid>
+        </SortableContext>
+      </DndContext>
     </Container>
   );
 };
@@ -164,12 +252,9 @@ export const NewListSkeleton = ({ onAdd }) => {
 
 const useSyncedState = (defValue, updateFn) => {
   const timeout = useRef<any>(null);
-  console.log('UseState', defValue);
   const [localValue, setLocalValue] = useState(defValue);
-  console.log('UseState2', localValue);
 
   const setValue = async (value) => {
-    console.log('SET LOCAL', value);
     setLocalValue(value);
 
     clearTimeout(timeout.current);
@@ -181,8 +266,6 @@ const useSyncedState = (defValue, updateFn) => {
   useEffect(() => {
     setLocalValue(defValue);
   }, [defValue]);
-
-  console.log('GET LOCAL', localValue, defValue);
 
   return [localValue, setValue];
 };
@@ -199,12 +282,10 @@ export const List = ({ list, remove, id, refetch }) => {
   const [labelMode, setLabelMode] = useState(false);
   const canAddLabel = edit && labelMode;
   const inputRef = useRef<HTMLInputElement | null>(null);
-  if (loading) {
-    return null;
-  }
 
   const addEntry = async (e, label) => {
     setTodoTitle('');
+    if (todoTitle === '') return;
     const fn = label ? component.props.addLabel : component.props.add;
     const res = await fn(
       label
@@ -233,12 +314,15 @@ export const List = ({ list, remove, id, refetch }) => {
     });
   };
 
-  console.log('CHILDREN', component);
-
   const childs = !canAddLabel
     ? component?.children || []
     : component?.props?.labels || [];
 
+  const [showDialog, setShowDialog] = useState(false);
+
+  if (loading) {
+    return null;
+  }
   return (
     <Card sx={{ height: '100%' }}>
       {error && <Alert severity="error">{error.message}</Alert>}
@@ -254,7 +338,7 @@ export const List = ({ list, remove, id, refetch }) => {
                 inputRef={inputRef}
                 value={edit && !labelMode ? listTitle : todoTitle}
                 label={
-                  canAddLabel ? 'Add Label' : edit ? 'Edit Title' : 'Add Todo'
+                  canAddLabel ? 'Add Label' : edit ? 'Edit Title' : 'Add Item'
                 }
                 onChange={(e) =>
                   edit && !labelMode
@@ -336,7 +420,7 @@ export const List = ({ list, remove, id, refetch }) => {
             color="error"
             disabled={!edit}
             onClick={() => {
-              remove(component?.props?.id);
+              setShowDialog(true);
             }}
           >
             <RemoveCircleIcon />
@@ -352,9 +436,59 @@ export const List = ({ list, remove, id, refetch }) => {
           </IconButton>
         </CardActions>
       </CardActionArea>
+      <ConfirmationDialogRaw
+        title="Delete List"
+        open={showDialog}
+        id={list}
+        onClose={(confirmed) => {
+          if (confirmed) remove(component?.props?.id);
+          setShowDialog(false);
+        }}
+      >
+        <Alert severity="error">Are you sure you want to delete this?</Alert>
+      </ConfirmationDialogRaw>
     </Card>
   );
 };
+export interface ConfirmationDialogRawProps {
+  id: string;
+  keepMounted?: boolean;
+  open: boolean;
+  onClose: (confirmed?: boolean) => void;
+  title: string;
+}
+function ConfirmationDialogRaw(
+  props: React.PropsWithChildren<ConfirmationDialogRawProps>
+) {
+  const { onClose, open, title, ...other } = props;
+
+  const handleCancel = () => {
+    onClose();
+  };
+
+  const handleOk = () => {
+    onClose(true);
+  };
+
+  return (
+    <Dialog
+      sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
+      maxWidth="xs"
+      // TransitionProps={{ onEntering: handleEntering }}
+      open={open}
+      {...other}
+    >
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent dividers>{props.children}</DialogContent>
+      <DialogActions>
+        <Button autoFocus onClick={handleCancel}>
+          Cancel
+        </Button>
+        <Button onClick={handleOk}>Ok</Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
 const TodoItem = (props) => {
   const { dispatch, state } = useContext(stateContext);

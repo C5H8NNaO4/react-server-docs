@@ -12,7 +12,6 @@ export default function ScrollToTop() {
     // else scroll to id
     else {
       setTimeout(() => {
-        console.log('Scroll', hash);
         const id = hash.replace('#', '');
         const element = document.getElementById(id);
         if (element) {

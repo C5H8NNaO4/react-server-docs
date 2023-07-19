@@ -56,10 +56,8 @@ export const Markdown = ({ children, src, disablePadding }: MarkdownProps) => {
   }, []);
 
   const headingRenderer = (props) => {
-    console.log('Heading', props);
     const { level, children } = props;
     const text = children[0];
-    console.log('Text', text);
     if (typeof text === 'string') {
       const anchor = (text || '')
         .toLowerCase()
@@ -114,7 +112,6 @@ export const Markdown = ({ children, src, disablePadding }: MarkdownProps) => {
           );
         },
         a: (props: any) => {
-          console.log('Anchor', props);
           return (
             <Link to={props.href} component={RouterLink}>
               {props.children}

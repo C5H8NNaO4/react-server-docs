@@ -90,9 +90,6 @@ export const Layout = () => {
     gtag('event', 'load', { event_category: 'page' });
   }, [pathname]);
 
-  useEffect(() => {
-    console.log('Layout useEffect');
-  }, []);
   return (
     <VantaBackground
       light={SunnyBlueClouds}
@@ -123,9 +120,11 @@ export const Layout = () => {
             severity="info"
             // sx={{ mt: 8 }}
             action={
-              <Link component={Button} href="/changes">
-                Changes
-              </Link>
+              <Button>
+                <Link component={RouterLink} to="/changes">
+                  Changes
+                </Link>
+              </Button>
             }
           >
             {time < 1000 ? messages[1] : messages[3]}

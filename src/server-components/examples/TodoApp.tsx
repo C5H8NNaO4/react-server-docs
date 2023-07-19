@@ -91,7 +91,6 @@ const TodoItem = (props) => {
         <Checkbox
           checked={component?.props.completed}
           onClick={() => {
-            console.log('TODO', todo);
             component?.props.toggle();
           }}
         />

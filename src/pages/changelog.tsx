@@ -60,7 +60,6 @@ const commitsToData = (commits) => {
       return [...acc, ...between, { date, commits: commit.dummy ? 0 : 1 }];
     }
   }, []);
-  console.log('DATA', data);
   return data;
 };
 
@@ -127,7 +126,6 @@ const Commits = ({ repo }) => {
       );
     })();
   }, []);
-  console.log(commitsToData(data));
   return (
     <Card sx={{ height: '100%' }}>
       <CardHeader
