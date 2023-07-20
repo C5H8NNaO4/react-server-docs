@@ -127,7 +127,6 @@ export const MyLists = (props) => {
       setOptimisticOrder((items) => {
         const oldIndex = items.indexOf(active.id);
         const newIndex = items.indexOf(over.id);
-        console.log('Move', active, oldIndex, newIndex, items);
 
         const newOrder = arrayMove(items, oldIndex, newIndex);
         component?.props?.setOrder(newOrder);
@@ -153,7 +152,6 @@ export const MyLists = (props) => {
         <Box sx={{ mx: fullWidth ? 4 : 0 }}>
           <Grid container spacing={1}>
             {optimisticOrder?.map((id, i) => {
-              console.log('ITEM', id);
               const list = lkp[id];
               if (!list) return null;
               return (
@@ -351,21 +349,24 @@ export const List = ({ list, remove, id, refetch }) => {
     });
   };
 
-  const childs = !canAddLabel
-    ? component?.children || []
-    : component?.props?.labels || [];
-
   const [showDialog, setShowDialog] = useState(false);
-
-  const lkp = childs.reduce((acc, child) => {
-    return { ...acc, [child.props.id]: child };
-  }, {});
 
   const items = useMemo(
     () => component?.props?.order || [],
     [JSON.stringify(component?.props?.order)]
   );
-  const [order, setOrder] = useState(items);
+  const [itemOrder, setOrder] = useState(items);
+  const labelOrder = (component?.props?.labels || []).map((l) => l.id);
+
+  const order = !canAddLabel ? itemOrder : labelOrder;
+
+  const itemLkp = (component?.children || []).reduce((acc, child) => {
+    return { ...acc, [child.props.id]: child };
+  }, {});
+  const labelLkp = (component?.props.labels || []).reduce((acc, child) => {
+    return { ...acc, [child.id]: child };
+  }, {});
+  const lkp = !canAddLabel ? itemLkp : labelLkp;
 
   useEffect(() => {
     if (component?.props?.order && !loading) {
@@ -380,7 +381,6 @@ export const List = ({ list, remove, id, refetch }) => {
       setOrder((items) => {
         const oldIndex = items.indexOf(active.id);
         const newIndex = items.indexOf(over.id);
-        console.log('Move', active, oldIndex, newIndex, items);
 
         const newOrder = arrayMove(items, oldIndex, newIndex);
         component?.props?.setOrder(newOrder);
@@ -411,13 +411,12 @@ export const List = ({ list, remove, id, refetch }) => {
                   canAddLabel ? 'Add Label' : edit ? 'Edit Title' : 'Add Item'
                 }
                 onChange={(e) => {
-                  console.log('On change', e.target.value);
                   edit && !labelMode
                     ? setListTitle(e.target.value)
                     : setTodoTitle(e.target.value);
                 }}
                 onKeyUp={(e) => {
-                  if (!edit && e.key === 'Enter') {
+                  if (!edit || (canAddLabel && e.key === 'Enter')) {
                     addEntry(e, canAddLabel);
                   }
                 }}
@@ -468,7 +467,7 @@ export const List = ({ list, remove, id, refetch }) => {
             {order.map((id, i) => {
               const todo = lkp[id];
               return (
-                <SortableItem key={id} id={id} fullHeight>
+                <>
                   {canAddLabel && (
                     <LabelItem
                       edit={edit}
@@ -480,14 +479,16 @@ export const List = ({ list, remove, id, refetch }) => {
                     />
                   )}
                   {!canAddLabel && (
-                    <TodoItem
-                      key={i}
-                      todo={todo.key}
-                      edit={edit && !labelMode}
-                      remove={component?.props?.remove}
-                    />
+                    <SortableItem key={id} id={id} fullHeight>
+                      <TodoItem
+                        key={i}
+                        todo={todo.key}
+                        edit={edit && !labelMode}
+                        remove={component?.props?.remove}
+                      />
+                    </SortableItem>
                   )}
-                </SortableItem>
+                </>
               );
             })}
           </MUIList>
