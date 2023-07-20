@@ -26,7 +26,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import LabelIcon from '@mui/icons-material/Label';
-import { useComponent } from '@state-less/react-client';
+import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { useContext, useEffect, useRef, useMemo, useState } from 'react';
 import IconMore from '@mui/icons-material/Add';
 import IconClear from '@mui/icons-material/Clear';
@@ -58,12 +58,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Dialog from '@mui/material/Dialog';
+import ExpandIcon from '@mui/icons-material/Expand';
 
 const unique = (arr) => [...new Set(arr)];
 export const MyLists = (props) => {
   const [component, { loading, error, refetch }] = useComponent('my-lists', {});
   const { state, dispatch } = useContext(stateContext);
   const [title, setTitle] = useState('');
+  const [fullWidth, setFullWidth] = useLocalStorage('fullWidth', true);
   const [active, setActive] = useState<string[]>([]);
   const { setNodeRef } = useDroppable({
     id: 'unique-id',
@@ -133,76 +135,29 @@ export const MyLists = (props) => {
       });
     }
   }
-  return (
-    <Container maxWidth="xl">
-      {error && <Alert severity="error">{error.message}</Alert>}
-      <Box sx={{ display: 'flex', width: '100%', mt: 2 }} ref={setNodeRef}>
-        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-          <TextField
-            inputRef={inputRef}
-            fullWidth
-            label="New List"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            onKeyUp={(e) => {
-              if (e.key === 'Enter') {
-                component?.props?.add({ title });
-                setTitle('');
-              }
-            }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => {
-                      setTitle('');
-                      setTimeout(() => inputRef.current?.focus(), 0);
-                    }}
-                    disabled={!title}
-                  >
-                    <IconClear />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-        <Box sx={{ ml: 2, display: 'flex', justifyContent: 'center' }}>
-          <NewListSkeleton
-            onAdd={() => {
-              component?.props?.add({ title });
-              setTitle('');
-            }}
-          />
-        </Box>
-      </Box>
-      <Labels
-        sx={{ my: 2 }}
-        labels={labels}
-        active={active}
-        onClick={(label) => {
-          const newActive = active.includes(label)
-            ? active.filter((l) => l !== label)
-            : active.concat(label);
-          setActive(newActive);
-        }}
-      />
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
+
+  const bps = [12, 6, 4, 3];
+  const bpsFw = [12, 4, 3, 2];
+  const bp = fullWidth ? bpsFw : bps;
+
+  const content = (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext
+        items={optimisticOrder || []}
+        strategy={rectSortingStrategy}
       >
-        <SortableContext
-          items={optimisticOrder || []}
-          strategy={rectSortingStrategy}
-        >
+        <Box sx={{ mx: fullWidth ? 4 : 0 }}>
           <Grid container spacing={1}>
             {optimisticOrder?.map((id, i) => {
               console.log('ITEM', id);
               const list = lkp[id];
               if (!list) return null;
               return (
-                <Grid item sm={12} md={6} lg={4} xl={3}>
+                <Grid item sm={bp[0]} md={bp[1]} lg={bp[2]} xl={bp[3]}>
                   <SortableItem key={id} id={id}>
                     <List
                       key={list.key}
@@ -216,9 +171,80 @@ export const MyLists = (props) => {
               );
             })}
           </Grid>
-        </SortableContext>
-      </DndContext>
-    </Container>
+        </Box>
+      </SortableContext>
+    </DndContext>
+  );
+  return (
+    <>
+      <Container maxWidth="xl">
+        {error && <Alert severity="error">{error.message}</Alert>}
+        <Box sx={{ display: 'flex', width: '100%', mt: 2 }} ref={setNodeRef}>
+          <Box
+            sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+          >
+            <TextField
+              inputRef={inputRef}
+              fullWidth
+              label="New List"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  component?.props?.add({ title });
+                  setTitle('');
+                }
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => {
+                        setTitle('');
+                        setTimeout(() => inputRef.current?.focus(), 0);
+                      }}
+                      disabled={!title}
+                    >
+                      <IconClear />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+          <Box sx={{ ml: 2, display: 'flex', justifyContent: 'center' }}>
+            <NewListSkeleton
+              onAdd={() => {
+                component?.props?.add({ title });
+                setTitle('');
+              }}
+            />
+          </Box>
+        </Box>
+        <Box sx={{ display: 'flex', mt: 2 }}>
+          <Labels
+            sx={{ my: 2 }}
+            labels={labels}
+            active={active}
+            onClick={(label) => {
+              const newActive = active.includes(label)
+                ? active.filter((l) => l !== label)
+                : active.concat(label);
+              setActive(newActive);
+            }}
+          />
+          <IconButton
+            color={fullWidth ? 'success' : 'default'}
+            sx={{ ml: 'auto' }}
+            onClick={() => setFullWidth(!fullWidth)}
+          >
+            <ExpandIcon sx={{ transform: 'rotate(90deg)' }} />
+          </IconButton>
+        </Box>
+        {!fullWidth && content}
+      </Container>
+      {fullWidth && content}
+    </>
   );
 };
 
@@ -340,15 +366,19 @@ export const List = ({ list, remove, id, refetch }) => {
                 label={
                   canAddLabel ? 'Add Label' : edit ? 'Edit Title' : 'Add Item'
                 }
-                onChange={(e) =>
+                onChange={(e) => {
+                  console.log('On change', e.target.value);
                   edit && !labelMode
                     ? setListTitle(e.target.value)
-                    : setTodoTitle(e.target.value)
-                }
-                onKeyDown={(e) => {
+                    : setTodoTitle(e.target.value);
+                }}
+                onKeyUp={(e) => {
                   if (!edit && e.key === 'Enter') {
                     addEntry(e, canAddLabel);
                   }
+                }}
+                onKeyDown={(e) => {
+                  e.stopPropagation();
                 }}
                 InputProps={{
                   endAdornment: (

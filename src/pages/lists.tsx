@@ -18,9 +18,9 @@ export const ListsPage = () => {
         Please don't store any valuable data in Lists for now, as they will be
         deleted on every deploy.
       </Alert>
-      <Container maxWidth={'xl'}>
-        <MyLists key={ctx?.session?.id} />
-      </Container>
+
+      <MyLists key={ctx?.session?.id} />
+
       {/* <Paper
         sx={{
           mt: 1,

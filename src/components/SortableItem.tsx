@@ -12,6 +12,8 @@ export function SortableItem(props) {
     height: '100%',
   };
 
+//   delete listeners?.onKeyDown;
+
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {props.children}
