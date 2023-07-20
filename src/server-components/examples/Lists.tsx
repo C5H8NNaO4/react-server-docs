@@ -309,6 +309,17 @@ export const List = ({ list, remove, id, refetch }) => {
   const canAddLabel = edit && labelMode;
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   const addEntry = async (e, label) => {
     setTodoTitle('');
     if (todoTitle === '') return;
@@ -346,9 +357,42 @@ export const List = ({ list, remove, id, refetch }) => {
 
   const [showDialog, setShowDialog] = useState(false);
 
+  const lkp = childs.reduce((acc, child) => {
+    return { ...acc, [child.props.id]: child };
+  }, {});
+
+  const items = useMemo(
+    () => component?.props?.order || [],
+    [JSON.stringify(component?.props?.order)]
+  );
+  const [order, setOrder] = useState(items);
+
+  useEffect(() => {
+    if (component?.props?.order && !loading) {
+      setOrder(component?.props?.order);
+    }
+  }, [loading]);
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setOrder((items) => {
+        const oldIndex = items.indexOf(active.id);
+        const newIndex = items.indexOf(over.id);
+        console.log('Move', active, oldIndex, newIndex, items);
+
+        const newOrder = arrayMove(items, oldIndex, newIndex);
+        component?.props?.setOrder(newOrder);
+        return newOrder;
+      });
+    }
+  }
+
   if (loading) {
     return null;
   }
+
   return (
     <Card sx={{ height: '100%' }}>
       {error && <Alert severity="error">{error.message}</Alert>}
@@ -409,31 +453,46 @@ export const List = ({ list, remove, id, refetch }) => {
         }
       ></CardHeader>
 
-      <MUIList sx={{ maxHeight: '50vh', overflowY: 'auto' }}>
-        {childs.map((todo, i) => (
-          <>
-            {canAddLabel && (
-              <LabelItem
-                edit={edit}
-                {...todo}
-                remove={async (id) => {
-                  await component?.props?.removeLabel(id);
-                  await refetch();
-                }}
-              />
-            )}
-            {!canAddLabel && (
-              <TodoItem
-                key={i}
-                todo={todo.key}
-                edit={edit && !labelMode}
-                remove={component?.props?.remove}
-              />
-            )}
-          </>
-        ))}
-      </MUIList>
-
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={order || []}
+          strategy={verticalListSortingStrategy}
+        >
+          <MUIList
+            sx={{ maxHeight: '50vh', overflowY: 'auto', overflowX: 'hidden' }}
+          >
+            {order.map((id, i) => {
+              const todo = lkp[id];
+              return (
+                <SortableItem key={id} id={id}>
+                  {canAddLabel && (
+                    <LabelItem
+                      edit={edit}
+                      {...todo}
+                      remove={async (id) => {
+                        await component?.props?.removeLabel(id);
+                        await refetch();
+                      }}
+                    />
+                  )}
+                  {!canAddLabel && (
+                    <TodoItem
+                      key={i}
+                      todo={todo.key}
+                      edit={edit && !labelMode}
+                      remove={component?.props?.remove}
+                    />
+                  )}
+                </SortableItem>
+              );
+            })}
+          </MUIList>
+        </SortableContext>
+      </DndContext>
       <CardActionArea sx={{ mt: 'auto' }}>
         <CardActions>
           <IconButton
@@ -523,7 +582,7 @@ function ConfirmationDialogRaw(
 const TodoItem = (props) => {
   const { dispatch, state } = useContext(stateContext);
   const { todo, edit, remove } = props;
-  const [component, { loading }] = useComponent(todo, {});
+  const [component, { loading, error }] = useComponent(todo, {});
 
   if (loading) return null;
 
@@ -536,26 +595,36 @@ const TodoItem = (props) => {
           </IconButton>
         </ListItemIcon>
       )}
-      <ListItemText primary={component.props.title} />
+      <ListItemText
+        primary={
+          component?.props?.completed ? (
+            <s>{component.props.title}</s>
+          ) : (
+            component.props.title
+          )
+        }
+      />
       <ListItemSecondaryAction>
-        <Checkbox
-          checked={component?.props.completed}
-          onClick={async () => {
-            component?.props.toggle();
-            dispatch({
-              type: Actions.SHOW_MESSAGE,
-              value: `Marked ${component.props.title}. Undo? (Ctrl+Z)`,
-            });
-            dispatch({
-              type: Actions.RECORD_CHANGE,
-              value: {
-                reverse: () => {
-                  component?.props.toggle();
+        {!edit && (
+          <Checkbox
+            checked={component?.props.completed}
+            onClick={async () => {
+              component?.props.toggle();
+              dispatch({
+                type: Actions.SHOW_MESSAGE,
+                value: `Marked ${component.props.title}. Undo? (Ctrl+Z)`,
+              });
+              dispatch({
+                type: Actions.RECORD_CHANGE,
+                value: {
+                  reverse: () => {
+                    component?.props.toggle();
+                  },
                 },
-              },
-            });
-          }}
-        />
+              });
+            }}
+          />
+        )}
       </ListItemSecondaryAction>
     </ListItem>
   );

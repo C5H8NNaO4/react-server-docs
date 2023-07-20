@@ -9,10 +9,11 @@ export function SortableItem(props) {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    height: '100%',
+    height: props.fullHeight ? '100%' : undefined,
+    overflow: 'hidden',
   };
 
-//   delete listeners?.onKeyDown;
+  //   delete listeners?.onKeyDown;
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
