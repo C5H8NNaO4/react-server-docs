@@ -371,7 +371,7 @@ export const List = ({ list, remove, id, refetch }) => {
     if (component?.props?.order && !loading) {
       setOrder(component?.props?.order);
     }
-  }, [loading]);
+  }, [JSON.stringify(component?.props?.order)]);
 
   function handleDragEnd(event) {
     const { active, over } = event;
@@ -468,7 +468,7 @@ export const List = ({ list, remove, id, refetch }) => {
             {order.map((id, i) => {
               const todo = lkp[id];
               return (
-                <SortableItem key={id} id={id}>
+                <SortableItem key={id} id={id} fullHeight>
                   {canAddLabel && (
                     <LabelItem
                       edit={edit}
