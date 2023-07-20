@@ -156,7 +156,7 @@ export const MyLists = (props) => {
               if (!list) return null;
               return (
                 <Grid item sm={bp[0]} md={bp[1]} lg={bp[2]} xl={bp[3]}>
-                  <SortableItem key={id} id={id}>
+                  <SortableItem key={id} id={id} fullHeight>
                     <List
                       key={list.key}
                       list={`${list.key}`}
@@ -479,7 +479,7 @@ export const List = ({ list, remove, id, refetch }) => {
                     />
                   )}
                   {!canAddLabel && (
-                    <SortableItem key={id} id={id} fullHeight>
+                    <SortableItem key={id} id={id} >
                       <TodoItem
                         key={i}
                         todo={todo.key}
