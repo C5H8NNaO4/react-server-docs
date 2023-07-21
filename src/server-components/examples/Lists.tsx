@@ -716,6 +716,7 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
       sx={{ height: '100%' }}
       onMouseOver={() => setHover(true)}
       onMouseLeave={() => setTimeout(setHover, 200, false)}
+      elevation={hover ? 1 : 0}
     >
       {error && <Alert severity="error">{error.message}</Alert>}
       <CardHeader
