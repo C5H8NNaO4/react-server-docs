@@ -615,6 +615,7 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
   );
   const [edit, setEdit] = useState(false);
   const [labelMode, setLabelMode] = useState(false);
+  const [hover, setHover] = useState(false);
   const canAddLabel = edit && labelMode;
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -711,7 +712,11 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
   }
 
   return (
-    <Card sx={{ height: '100%' }}>
+    <Card
+      sx={{ height: '100%' }}
+      onMouseOver={() => setHover(true)}
+      onMouseLeave={() => setTimeout(setHover, 200, false)}
+    >
       {error && <Alert severity="error">{error.message}</Alert>}
       <CardHeader
         title={
@@ -823,7 +828,16 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
           </MUIList>
         </SortableContext>
       </DndContext>
-      <CardActionArea sx={{ mt: 'auto' }}>
+      <CardActionArea
+        sx={{
+          mt: 'auto',
+          opacity: hover ? 1 : 0,
+          transition: 'opacity 200ms ease-in',
+          '&:hover': {
+            transition: 'opacity 200ms ease-out',
+          },
+        }}
+      >
         <CardActions>
           <IconButton
             color={edit ? 'primary' : 'default'}
