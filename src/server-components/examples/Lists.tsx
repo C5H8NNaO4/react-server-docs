@@ -29,6 +29,8 @@ import {
   Paper,
   ClickAwayListener,
   MenuList,
+  Select,
+  Tooltip,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
@@ -70,6 +72,8 @@ import ExpandIcon from '@mui/icons-material/Expand';
 import save from 'save-file';
 import * as XLSX from 'xlsx';
 
+const LIST_ITEM_HEIGHT = 48;
+
 function downloadExcel(data: Record<string, Record<string, any>>) {
   /* create a new blank workbook */
   var wb = XLSX.utils.book_new();
@@ -108,6 +112,7 @@ export const MyLists = (props) => {
   const [title, setTitle] = useState('');
   const [fullWidth, setFullWidth] = useLocalStorage('fullWidth', true);
   const [active, setActive] = useState<string[]>([]);
+  const [nItems, setNItems] = useState(5);
   const [showExport, setShowExport] = useState<HTMLElement | null>(null);
   const [showImport, setShowImport] = useState<HTMLElement | null>(null);
 
@@ -184,8 +189,8 @@ export const MyLists = (props) => {
     }
   }
 
-  const bps = [12, 6, 4, 3];
-  const bpsFw = [12, 4, 3, 2];
+  const bps = [12, 12, 6, 4, 3];
+  const bpsFw = [12, 12, 4, 3, 2];
   const bp = fullWidth ? bpsFw : bps;
 
   const content = (
@@ -204,7 +209,14 @@ export const MyLists = (props) => {
               const list = lkp[id];
               if (!list) return null;
               return (
-                <Grid item sm={bp[0]} md={bp[1]} lg={bp[2]} xl={bp[3]}>
+                <Grid
+                  item
+                  xs={bp[0]}
+                  sm={bp[1]}
+                  md={bp[2]}
+                  lg={bp[3]}
+                  xl={bp[4]}
+                >
                   <SortableItem key={id} id={id} fullHeight>
                     <List
                       key={list.key}
@@ -212,6 +224,7 @@ export const MyLists = (props) => {
                       remove={component?.props?.remove}
                       id={list.id}
                       refetch={refetch}
+                      nItems={nItems}
                     />
                   </SortableItem>
                 </Grid>
@@ -280,28 +293,44 @@ export const MyLists = (props) => {
               setActive(newActive);
             }}
           />
-          <IconButton
-            sx={{ ml: 'auto' }}
-            onClick={async (e) => {
-              setShowImport(e.target as HTMLElement);
-            }}
-          >
-            <DownloadIcon sx={{ transform: 'rotate(180deg)' }} />
-          </IconButton>
-          <IconButton
-            onClick={async (e) => {
-              setShowExport(e.target as HTMLElement);
-            }}
-          >
-            <DownloadIcon />
-          </IconButton>
-          <IconButton
-            color={fullWidth ? 'success' : 'default'}
-            // sx={{ ml: 'auto' }}
-            onClick={() => setFullWidth(!fullWidth)}
-          >
-            <ExpandIcon sx={{ transform: 'rotate(90deg)' }} />
-          </IconButton>
+          <Tooltip title="Import" placement="left">
+            <IconButton
+              sx={{ ml: 'auto' }}
+              onClick={async (e) => {
+                setShowImport(e.target as HTMLElement);
+              }}
+            >
+              <DownloadIcon sx={{ transform: 'rotate(180deg)' }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Export" placement="bottom">
+            <IconButton
+              onClick={async (e) => {
+                setShowExport(e.target as HTMLElement);
+              }}
+            >
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Full Width" placement="bottom">
+            <IconButton
+              color={fullWidth ? 'success' : 'default'}
+              // sx={{ ml: 'auto' }}
+              onClick={() => setFullWidth(!fullWidth)}
+            >
+              <ExpandIcon sx={{ transform: 'rotate(90deg)' }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="# Items" placement="right">
+            <Select
+              onChange={(e) => setNItems(Number(e.target.value))}
+              value={nItems}
+            >
+              {[5, 10, 15, 20].map((n) => {
+                return <MenuItem value={n}>{n}</MenuItem>;
+              })}
+            </Select>
+          </Tooltip>
         </Box>
         {!fullWidth && content}
       </Container>
@@ -355,10 +384,15 @@ export const ImportMenu = ({ open, onClose, importData }) => {
   const handleFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files as FileList);
     const file = files[0];
-    const text = await file.text();
-    const json = JSON.parse(text);
-    console.log('files:', json);
-    setFiles([json]);
+    try {
+      const text = await file.text();
+      const json = JSON.parse(text);
+      console.log('FILES', file, json, { name: file.name, json });
+
+      setFiles([{ name: file.name, json }]);
+    } catch (e) {
+      setFiles(files);
+    }
   };
 
   return (
@@ -388,14 +422,13 @@ export const ImportMenu = ({ open, onClose, importData }) => {
                 // onKeyDown={handleListKeyDown}
               >
                 <MenuItem>
-                  <input type="file" onChange={handleFileSelected} />
+                  <TextField type="file" onChange={handleFileSelected} />
                 </MenuItem>
-
-                {files?.length > 0 && (
+                {files?.length > 0 && files[0]?.name?.endsWith?.('.json') && (
                   <MenuItem
                     onClick={async () => {
                       try {
-                        await importData(files[0]);
+                        await importData(files[0].json);
                         setError(null);
                         onClose();
                       } catch (e) {
@@ -406,6 +439,14 @@ export const ImportMenu = ({ open, onClose, importData }) => {
                     Import JSON
                   </MenuItem>
                 )}
+                <MenuItem>
+                  {files?.length > 0 &&
+                    !files[0]?.name?.endsWith?.('.json') && (
+                      <Alert severity="warning">
+                        Only JSON files are supported at the moment
+                      </Alert>
+                    )}
+                </MenuItem>
               </MenuList>
             </ClickAwayListener>
           </Paper>
@@ -485,7 +526,7 @@ const useSyncedState = (defValue, updateFn) => {
   return [localValue, setValue];
 };
 
-export const List = ({ list, remove, id, refetch }) => {
+export const List = ({ list, remove, id, refetch, nItems }) => {
   const { dispatch, state } = useContext(stateContext);
   const [component, { loading, error }] = useComponent(list, {});
   const [todoTitle, setTodoTitle] = useState('');
@@ -656,7 +697,7 @@ export const List = ({ list, remove, id, refetch }) => {
         >
           <MUIList
             sx={{
-              height: 480 * 7 + 'px',
+              height: LIST_ITEM_HEIGHT * nItems + 'px',
               overflowY: 'auto',
               overflowX: 'hidden',
             }}
