@@ -46,6 +46,7 @@ import {
   DndContext,
   KeyboardSensor,
   PointerSensor,
+  TouchSensor,
   closestCenter,
   useDraggable,
   useDroppable,
@@ -540,11 +541,17 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const sensors = useSensors(
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 10,
       },
     }),
+
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })

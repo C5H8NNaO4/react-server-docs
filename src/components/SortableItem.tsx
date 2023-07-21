@@ -12,16 +12,17 @@ export function SortableItem(props) {
     transition,
     height: props.fullHeight ? '100%' : undefined,
     overflow: 'hidden',
+    touchAction: 'none',
   };
 
   //   delete listeners?.onKeyDown;
-  const theme = useTheme();
-  const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
+//   const theme = useTheme();
+//   const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
-  if (lessThanSmall) {
-    return <div>{props.children}</div>;
-  }
-  
+//   if (lessThanSmall) {
+//     return <div>{props.children}</div>;
+//   }
+
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {props.children}
