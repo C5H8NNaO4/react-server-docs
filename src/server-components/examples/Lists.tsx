@@ -115,6 +115,11 @@ function downloadJSON(data) {
     `${new Date().toISOString().split('T')[0]}.lists.json`
   );
 }
+
+const exportToLocalStorage = (data) => {
+  localStorage.setItem('lists', JSON.stringify(data));
+};
+
 const unique = (arr) => [...new Set(arr)];
 export const MyLists = (props) => {
   const [component, { loading, error, refetch }] = useComponent('my-lists', {});
@@ -439,29 +444,67 @@ export const ImportMenu = ({ open, onClose, importData }) => {
                 <MenuItem>
                   <TextField type="file" onChange={handleFileSelected} />
                 </MenuItem>
-                {files?.length > 0 && files[0]?.name?.endsWith?.('.json') && (
-                  <MenuItem
-                    onClick={async () => {
-                      try {
-                        await importData(files[0].json);
-                        setError(null);
-                        onClose();
-                      } catch (e) {
-                        setError((e as Error).message);
+
+                <Tooltip
+                  title={
+                    !(files?.length > 0)
+                      ? 'No file selected'
+                      : files[0]?.name?.endsWith?.('.json')
+                      ? 'Import JSON'
+                      : 'Only JSON is supported'
+                  }
+                  placement="left"
+                >
+                  <span>
+                    <MenuItem
+                      disabled={
+                        !(
+                          files?.length > 0 &&
+                          files[0]?.name?.endsWith?.('.json')
+                        )
                       }
-                    }}
-                  >
-                    Import JSON
-                  </MenuItem>
-                )}
-                <MenuItem>
-                  {files?.length > 0 &&
-                    !files[0]?.name?.endsWith?.('.json') && (
-                      <Alert severity="warning">
-                        Only JSON files are supported at the moment
-                      </Alert>
-                    )}
-                </MenuItem>
+                      onClick={async () => {
+                        try {
+                          await importData(files[0].json);
+                          setError(null);
+                          onClose();
+                        } catch (e) {
+                          setError((e as Error).message);
+                        }
+                      }}
+                    >
+                      JSON
+                    </MenuItem>
+                  </span>
+                </Tooltip>
+
+                <Tooltip
+                  title={
+                    !localStorage.getItem('lists')
+                      ? 'No data found in localStorage. Export your data first.'
+                      : 'Import your localStorage. This will overwrite your current data.'
+                  }
+                  placement="left"
+                >
+                  <span>
+                    <MenuItem
+                      disabled={!localStorage.getItem('lists')}
+                      onClick={async () => {
+                        try {
+                          await importData(
+                            JSON.parse(localStorage.getItem('lists') || '{}')
+                          );
+                          setError(null);
+                          onClose();
+                        } catch (e) {
+                          setError((e as Error).message);
+                        }
+                      }}
+                    >
+                      localStorage
+                    </MenuItem>
+                  </span>
+                </Tooltip>
               </MenuList>
             </ClickAwayListener>
           </Paper>
@@ -496,22 +539,42 @@ export const ExportMenu = ({ open, onClose, exportData }) => {
                 aria-labelledby="composition-button"
                 // onKeyDown={handleListKeyDown}
               >
-                <MenuItem
-                  onClick={async () => {
-                    downloadExcel(await exportData());
-                    onClose();
-                  }}
+                <Tooltip
+                  title="Export your data as an Excel file"
+                  placement="left"
                 >
-                  Excel
-                </MenuItem>
-                <MenuItem
-                  onClick={async () => {
-                    downloadJSON(await exportData());
-                    onClose();
-                  }}
+                  <MenuItem
+                    onClick={async () => {
+                      downloadExcel(await exportData());
+                      onClose();
+                    }}
+                  >
+                    Excel
+                  </MenuItem>
+                </Tooltip>
+                <Tooltip
+                  title="Export your data as a JSON file"
+                  placement="left"
                 >
-                  JSON
-                </MenuItem>
+                  <MenuItem
+                    onClick={async () => {
+                      downloadJSON(await exportData());
+                      onClose();
+                    }}
+                  >
+                    JSON
+                  </MenuItem>
+                </Tooltip>
+                <Tooltip title="Save your data into your browsers localStorage">
+                  <MenuItem
+                    onClick={async () => {
+                      exportToLocalStorage(await exportData());
+                      onClose();
+                    }}
+                  >
+                    localStorage
+                  </MenuItem>
+                </Tooltip>
               </MenuList>
             </ClickAwayListener>
           </Paper>
