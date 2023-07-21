@@ -21,7 +21,7 @@ const initialState: State = {
     : localStorage.getItem('animatedBackground') === 'true',
   messages: [],
   history: [],
-  fullscreen: false,
+  fullscreen: localStorage.getItem('fullscreen') === 'true',
 };
 
 export enum Actions {

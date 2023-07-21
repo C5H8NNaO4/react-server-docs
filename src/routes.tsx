@@ -33,7 +33,7 @@ export const navigation = [
   ['/server', 'Server', 'src/playground/Server.md'],
   ['/authentication', 'Authentication', 'src/pages/Authentication.md'],
   ['/SSR', 'SSR', 'src/examples/SSR.md'],
-  ['/lists', 'Lists', 'src/pages/lists.md'],
+  ['/lists', 'Lists', 'src/pages/lists.md', 'Lists'],
   ['/examples', 'Examples', 'src/examples'],
   ['/examples/comments', 'Comments', 'src/examples/comments.md'],
   ['/examples/votings', 'Voting', 'src/examples/voting.md'],

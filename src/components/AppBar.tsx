@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Actions, stateContext } from '../provider/StateProvider';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import GoogleLogin from 'react-google-login';
 import { authContext, useServerState } from '@state-less/react-client';
 import {
@@ -19,11 +19,12 @@ import {
 import SensorsIcon from '@mui/icons-material/Sensors';
 import { ViewCounter } from '../server-components/examples/ViewCounter';
 import { ConnectionCounter } from '../server-components/examples/ConnectionCounter';
+import { navigation } from '../routes';
 
 export default function ButtonAppBar() {
   const { state, dispatch } = React.useContext(stateContext);
   const { authenticate, session } = React.useContext(authContext);
-
+  const { pathname } = useLocation();
   return (
     <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
@@ -41,7 +42,8 @@ export default function ButtonAppBar() {
           <img src="/react-server.png" style={{ width: 24, height: 24 }} />
           <Link component={RouterLink} to="/" sx={{ color: 'white' }}>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              React Server
+              {navigation.find((nav) => nav[0] === pathname)?.[3] ||
+                'React Server'}
             </Typography>
           </Link>
         </Box>

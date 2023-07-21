@@ -357,7 +357,13 @@ export const MyLists = (props) => {
             <IconButton
               color={state.fullscreen ? 'success' : 'default'}
               // sx={{ ml: 'auto' }}
-              onClick={() => dispatch({ type: Actions.TOGGLE_FULLSCREEN })}
+              onClick={() => {
+                dispatch({ type: Actions.TOGGLE_FULLSCREEN });
+                localStorage.setItem(
+                  'fullscreen',
+                  JSON.stringify(!state.fullscreen)
+                );
+              }}
             >
               <FullscreenIcon />
             </IconButton>
