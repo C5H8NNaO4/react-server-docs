@@ -305,6 +305,8 @@ export const MyLists = (props) => {
         </Box>
         {!fullWidth && content}
       </Container>
+      {fullWidth && content}
+
       <ImportMenu
         onClose={handleClose}
         open={showImport}
@@ -315,7 +317,6 @@ export const MyLists = (props) => {
         open={showExport}
         exportData={component?.props?.exportUserData}
       />
-      {fullWidth && content}
     </>
   );
 };
@@ -368,38 +369,48 @@ export const ImportMenu = ({ open, onClose, importData }) => {
       placement="bottom"
       transition
       disablePortal
+      sx={{ zIndex: 10 }}
     >
-      <Paper>
-        {error && <Alert severity="error">{error}</Alert>}
-        <ClickAwayListener onClickAway={onClose}>
-          <MenuList
-            autoFocusItem={!!open}
-            id="composition-menu"
-            aria-labelledby="composition-button"
-            // onKeyDown={handleListKeyDown}
-          >
-            <MenuItem>
-              <input type="file" onChange={handleFileSelected} />
-            </MenuItem>
-
-            {files?.length > 0 && (
-              <MenuItem
-                onClick={async () => {
-                  try {
-                    await importData(files[0]);
-                    setError(null);
-                    onClose();
-                  } catch (e) {
-                    setError((e as Error).message);
-                  }
-                }}
+      {({ TransitionProps, placement }) => (
+        <Grow
+          {...TransitionProps}
+          style={{
+            transformOrigin: 'left bottom',
+          }}
+        >
+          <Paper>
+            {error && <Alert severity="error">{error}</Alert>}
+            <ClickAwayListener onClickAway={onClose}>
+              <MenuList
+                autoFocusItem={!!open}
+                id="composition-menu"
+                aria-labelledby="composition-button"
+                // onKeyDown={handleListKeyDown}
               >
-                Import JSON
-              </MenuItem>
-            )}
-          </MenuList>
-        </ClickAwayListener>
-      </Paper>
+                <MenuItem>
+                  <input type="file" onChange={handleFileSelected} />
+                </MenuItem>
+
+                {files?.length > 0 && (
+                  <MenuItem
+                    onClick={async () => {
+                      try {
+                        await importData(files[0]);
+                        setError(null);
+                        onClose();
+                      } catch (e) {
+                        setError((e as Error).message);
+                      }
+                    }}
+                  >
+                    Import JSON
+                  </MenuItem>
+                )}
+              </MenuList>
+            </ClickAwayListener>
+          </Paper>
+        </Grow>
+      )}
     </Popper>
   );
 };
@@ -414,33 +425,42 @@ export const ExportMenu = ({ open, onClose, exportData }) => {
       transition
       disablePortal
     >
-      <Paper>
-        <ClickAwayListener onClickAway={onClose}>
-          <MenuList
-            autoFocusItem={!!open}
-            id="composition-menu"
-            aria-labelledby="composition-button"
-            // onKeyDown={handleListKeyDown}
-          >
-            <MenuItem
-              onClick={async () => {
-                downloadExcel(await exportData());
-                onClose();
-              }}
-            >
-              Excel
-            </MenuItem>
-            <MenuItem
-              onClick={async () => {
-                downloadJSON(await exportData());
-                onClose();
-              }}
-            >
-              JSON
-            </MenuItem>
-          </MenuList>
-        </ClickAwayListener>
-      </Paper>
+      {({ TransitionProps, placement }) => (
+        <Grow
+          {...TransitionProps}
+          style={{
+            transformOrigin: 'left bottom',
+          }}
+        >
+          <Paper>
+            <ClickAwayListener onClickAway={onClose}>
+              <MenuList
+                autoFocusItem={!!open}
+                id="composition-menu"
+                aria-labelledby="composition-button"
+                // onKeyDown={handleListKeyDown}
+              >
+                <MenuItem
+                  onClick={async () => {
+                    downloadExcel(await exportData());
+                    onClose();
+                  }}
+                >
+                  Excel
+                </MenuItem>
+                <MenuItem
+                  onClick={async () => {
+                    downloadJSON(await exportData());
+                    onClose();
+                  }}
+                >
+                  JSON
+                </MenuItem>
+              </MenuList>
+            </ClickAwayListener>
+          </Paper>
+        </Grow>
+      )}
     </Popper>
   );
 };
@@ -636,7 +656,7 @@ export const List = ({ list, remove, id, refetch }) => {
         >
           <MUIList
             sx={{
-              height: 48 * 7 + 'px',
+              height: 480 * 7 + 'px',
               overflowY: 'auto',
               overflowX: 'hidden',
             }}
