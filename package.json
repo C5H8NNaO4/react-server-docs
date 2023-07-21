@@ -21,6 +21,7 @@
     "change-case": "^4.1.2",
     "clsx": "^1.2.1",
     "copy-to-clipboard": "^3.3.3",
+    "fast-levenshtein": "^3.0.0",
     "github-api": "^3.4.0",
     "jotai": "^2.2.2",
     "mermaid": "^10.1.0",

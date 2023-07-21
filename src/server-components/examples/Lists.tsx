@@ -77,6 +77,8 @@ import { Action } from '@dnd-kit/core/dist/store';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { useLocation, useNavigate } from 'react-router';
 
+import levenshtein from 'fast-levenshtein';
+
 const LIST_ITEM_HEIGHT = 36;
 
 const isTouchScreenDevice = () => {
@@ -250,36 +252,66 @@ export const MyLists = (props) => {
       >
         <Box sx={{ mx: fullWidth ? 0 : 0 }}>
           <Grid container spacing={1}>
-            {optimisticOrder?.map((id, i) => {
-              const list = lkp[id];
-              if (!list) return null;
-              return (
-                <Grid
-                  item
-                  xs={bp[0]}
-                  sm={bp[1]}
-                  md={bp[2]}
-                  lg={bp[3]}
-                  xl={bp[4]}
-                >
-                  <SortableItem
-                    key={id}
-                    id={id}
-                    fullHeight
-                    enabled={!isTouchScreenDevice()}
+            {optimisticOrder
+              ?.filter((id) => {
+                if (!state.search) return true;
+                const list = lkp[id];
+                const dist = list.props.title
+                  .split(' ')
+                  .some(
+                    (word) =>
+                      levenshtein.get(
+                        word.slice(0, state.search.length),
+                        state.search
+                      ) < 3
+                  );
+                return (
+                  dist ||
+                  list.children.some((todo) => {
+                    const matched = todo.props.title
+                      .split(' ')
+                      .some(
+                        (word) =>
+                          levenshtein.get(
+                            word.slice(0, state.search.length),
+                            state.search
+                          ) < 3
+                      );
+
+                    return matched;
+                  })
+                );
+              })
+              .map((id, i) => {
+                const list = lkp[id];
+                if (!list) return null;
+                return (
+                  <Grid
+                    item
+                    xs={bp[0]}
+                    sm={bp[1]}
+                    md={bp[2]}
+                    lg={bp[3]}
+                    xl={bp[4]}
                   >
-                    <List
-                      key={list.key}
-                      list={`${list.key}`}
-                      remove={component?.props?.remove}
-                      id={list.id}
-                      refetch={refetch}
-                      nItems={nItems}
-                    />
-                  </SortableItem>
-                </Grid>
-              );
-            })}
+                    <SortableItem
+                      key={id}
+                      id={id}
+                      fullHeight
+                      enabled={!isTouchScreenDevice()}
+                    >
+                      <List
+                        key={list.key}
+                        list={`${list.key}`}
+                        remove={component?.props?.remove}
+                        id={list.id}
+                        refetch={refetch}
+                        nItems={nItems}
+                      />
+                    </SortableItem>
+                  </Grid>
+                );
+              })}
           </Grid>
         </Box>
       </SortableContext>

@@ -1,5 +1,10 @@
 import * as React from 'react';
+import { InputAdornment } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
+import IconClear from '@mui/icons-material/Clear';
+import IconSearch from '@mui/icons-material/Search';
+
+import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -47,7 +52,55 @@ export default function ButtonAppBar() {
             </Typography>
           </Link>
         </Box>
-        <Box sx={{ flexGrow: 1 }}></Box>
+        <Box
+          sx={{ display: pathname === '/lists' ? 'flex' : 'none', flexGrow: 1 }}
+        >
+          <TextField
+            label="Search"
+            value={state.search}
+            onChange={(e) => {
+              dispatch({ type: Actions.SEARCH, value: e.target.value });
+            }}
+            sx={{
+              mx: 'auto',
+              background: '#FFF',
+              borderRadius: 1,
+              width: '50%',
+              marginTop: 1,
+              '& label': {
+                background: '#FFF',
+                borderTopLeftRadius: 50,
+                borderTopRightRadius: 200,
+                pr: 4,
+                pl: 2,
+                ml: '-13px',
+                // transform: 'translate(0px, 0px)',
+              },
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="end">
+                  <IconSearch sx={{ mr: 1 }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={(e) => {
+                      dispatch({ type: Actions.SEARCH, value: '' });
+
+                      // setTimeout(() => inputRef.current?.focus(), 0);
+                    }}
+                    disabled={!state.search}
+                  >
+                    <IconClear />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+        <Box sx={{ ml: 'auto' }} />
         <ConnectionCounter />
         <IconButton
           color={state.animatedBackground ? 'primary' : 'inherit'}

@@ -6,6 +6,7 @@ type State = {
   messages: string[];
   history: HistoryAction[];
   fullscreen: boolean;
+  search: string;
 };
 
 type HistoryAction = {
@@ -22,6 +23,7 @@ const initialState: State = {
   messages: [],
   history: [],
   fullscreen: localStorage.getItem('fullscreen') === 'true',
+  search: '',
 };
 
 export enum Actions {
@@ -32,6 +34,7 @@ export enum Actions {
   RECORD_CHANGE,
   REVERT_CHANGE,
   TOGGLE_FULLSCREEN,
+  SEARCH,
 }
 
 export const stateContext = createContext({
@@ -78,6 +81,12 @@ const reducer = (state: State, action: Action) => {
       return {
         ...state,
         fullscreen: !state.fullscreen,
+      };
+
+    case Actions.SEARCH:
+      return {
+        ...state,
+        search: action.value,
       };
     default:
       return state;

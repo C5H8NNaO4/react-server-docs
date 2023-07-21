@@ -28,7 +28,7 @@ export const ComponentsPage = () => {
     client: localClient,
   });
   const { loading, error } = localInfo || {};
-  console.log('info', localInfo);
+  
   const [count, setCount] = useServerState(0, {
     key: 'count',
     scope: 'global',
