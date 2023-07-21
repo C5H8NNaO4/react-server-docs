@@ -369,46 +369,37 @@ export const ImportMenu = ({ open, onClose, importData }) => {
       transition
       disablePortal
     >
-      {({ TransitionProps, placement }) => (
-        <Grow
-          {...TransitionProps}
-          style={{
-            transformOrigin: 'left bottom',
-          }}
-        >
-          <Paper>
-            {error && <Alert severity="error">{error}</Alert>}
-            <ClickAwayListener onClickAway={onClose}>
-              <MenuList
-                autoFocusItem={!!open}
-                id="composition-menu"
-                aria-labelledby="composition-button"
-                // onKeyDown={handleListKeyDown}
-              >
-                <MenuItem>
-                  <input type="file" onChange={handleFileSelected} />
-                </MenuItem>
+      <Paper>
+        {error && <Alert severity="error">{error}</Alert>}
+        <ClickAwayListener onClickAway={onClose}>
+          <MenuList
+            autoFocusItem={!!open}
+            id="composition-menu"
+            aria-labelledby="composition-button"
+            // onKeyDown={handleListKeyDown}
+          >
+            <MenuItem>
+              <input type="file" onChange={handleFileSelected} />
+            </MenuItem>
 
-                {files?.length > 0 && (
-                  <MenuItem
-                    onClick={async () => {
-                      try {
-                        await importData(files[0]);
-                        setError(null);
-                        onClose();
-                      } catch (e) {
-                        setError((e as Error).message);
-                      }
-                    }}
-                  >
-                    Import JSON
-                  </MenuItem>
-                )}
-              </MenuList>
-            </ClickAwayListener>
-          </Paper>
-        </Grow>
-      )}
+            {files?.length > 0 && (
+              <MenuItem
+                onClick={async () => {
+                  try {
+                    await importData(files[0]);
+                    setError(null);
+                    onClose();
+                  } catch (e) {
+                    setError((e as Error).message);
+                  }
+                }}
+              >
+                Import JSON
+              </MenuItem>
+            )}
+          </MenuList>
+        </ClickAwayListener>
+      </Paper>
     </Popper>
   );
 };
@@ -423,42 +414,33 @@ export const ExportMenu = ({ open, onClose, exportData }) => {
       transition
       disablePortal
     >
-      {({ TransitionProps, placement }) => (
-        <Grow
-          {...TransitionProps}
-          style={{
-            transformOrigin: 'left bottom',
-          }}
-        >
-          <Paper>
-            <ClickAwayListener onClickAway={onClose}>
-              <MenuList
-                autoFocusItem={!!open}
-                id="composition-menu"
-                aria-labelledby="composition-button"
-                // onKeyDown={handleListKeyDown}
-              >
-                <MenuItem
-                  onClick={async () => {
-                    downloadExcel(await exportData());
-                    onClose();
-                  }}
-                >
-                  Excel
-                </MenuItem>
-                <MenuItem
-                  onClick={async () => {
-                    downloadJSON(await exportData());
-                    onClose();
-                  }}
-                >
-                  JSON
-                </MenuItem>
-              </MenuList>
-            </ClickAwayListener>
-          </Paper>
-        </Grow>
-      )}
+      <Paper>
+        <ClickAwayListener onClickAway={onClose}>
+          <MenuList
+            autoFocusItem={!!open}
+            id="composition-menu"
+            aria-labelledby="composition-button"
+            // onKeyDown={handleListKeyDown}
+          >
+            <MenuItem
+              onClick={async () => {
+                downloadExcel(await exportData());
+                onClose();
+              }}
+            >
+              Excel
+            </MenuItem>
+            <MenuItem
+              onClick={async () => {
+                downloadJSON(await exportData());
+                onClose();
+              }}
+            >
+              JSON
+            </MenuItem>
+          </MenuList>
+        </ClickAwayListener>
+      </Paper>
     </Popper>
   );
 };
