@@ -725,7 +725,13 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
             {!edit && (
               <Typography variant="h6">{component?.props?.title}</Typography>
             )}
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                display: hover ? 'flex' : 'none',
+              }}
+            >
               <TextField
                 fullWidth
                 inputRef={inputRef}
