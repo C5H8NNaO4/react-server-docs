@@ -85,7 +85,7 @@ function downloadExcel(data: Record<string, Record<string, any>>) {
         ? `${list.title}(${titles[list.title]})`
         : list.title
     );
-    
+
     titles[list.title] = (titles[list.title] || 0) + 1;
   }
   const fileType =
@@ -282,7 +282,7 @@ export const MyLists = (props) => {
             color={fullWidth ? 'success' : 'default'}
             sx={{ ml: 'auto' }}
             onClick={async (e) => {
-              setShowExport(e.target);
+              setShowExport(e.target as HTMLElement);
             }}
           >
             <DownloadIcon />
