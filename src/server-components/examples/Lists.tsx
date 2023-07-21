@@ -416,7 +416,7 @@ export const List = ({ list, remove, id, refetch }) => {
                     : setTodoTitle(e.target.value);
                 }}
                 onKeyUp={(e) => {
-                  if (!edit || (canAddLabel && e.key === 'Enter')) {
+                  if ((!edit || canAddLabel) && e.key === 'Enter') {
                     addEntry(e, canAddLabel);
                   }
                 }}
@@ -479,7 +479,7 @@ export const List = ({ list, remove, id, refetch }) => {
                     />
                   )}
                   {!canAddLabel && (
-                    <SortableItem key={id} id={id} >
+                    <SortableItem key={id} id={id}>
                       <TodoItem
                         key={i}
                         todo={todo.key}
