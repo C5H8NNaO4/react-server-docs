@@ -231,7 +231,7 @@ export const MyLists = (props) => {
                     key={id}
                     id={id}
                     fullHeight
-                    enabled={!isTouchScreenDevice}
+                    enabled={!isTouchScreenDevice()}
                   >
                     <List
                       key={list.key}
