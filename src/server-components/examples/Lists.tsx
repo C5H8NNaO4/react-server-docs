@@ -109,8 +109,10 @@ export const MyLists = (props) => {
   const [fullWidth, setFullWidth] = useLocalStorage('fullWidth', true);
   const [active, setActive] = useState<string[]>([]);
   const [showExport, setShowExport] = useState<HTMLElement | null>(null);
+  const [showImport, setShowImport] = useState<HTMLElement | null>(null);
 
   const handleClose = () => {
+    setShowImport(null);
     setShowExport(null);
   };
 
@@ -279,8 +281,14 @@ export const MyLists = (props) => {
             }}
           />
           <IconButton
-            color={fullWidth ? 'success' : 'default'}
             sx={{ ml: 'auto' }}
+            onClick={async (e) => {
+              setShowImport(e.target as HTMLElement);
+            }}
+          >
+            <DownloadIcon sx={{ transform: 'rotate(180deg)' }} />
+          </IconButton>
+          <IconButton
             onClick={async (e) => {
               setShowExport(e.target as HTMLElement);
             }}
@@ -297,51 +305,16 @@ export const MyLists = (props) => {
         </Box>
         {!fullWidth && content}
       </Container>
-      <Popper
-        open={!!showExport}
-        anchorEl={showExport}
-        role={undefined}
-        placement="bottom"
-        transition
-        disablePortal
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin: 'left bottom',
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList
-                  autoFocusItem={!!showExport}
-                  id="composition-menu"
-                  aria-labelledby="composition-button"
-                  // onKeyDown={handleListKeyDown}
-                >
-                  <MenuItem
-                    onClick={async () => {
-                      downloadExcel(await component?.props?.exportUserData());
-                      handleClose();
-                    }}
-                  >
-                    Excel
-                  </MenuItem>
-                  <MenuItem
-                    onClick={async () => {
-                      downloadJSON(await component?.props?.exportUserData());
-                      handleClose();
-                    }}
-                  >
-                    JSON
-                  </MenuItem>
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
+      <ImportMenu
+        onClose={handleClose}
+        open={showImport}
+        importData={component?.props?.importUserData}
+      />
+      <ExportMenu
+        onClose={handleClose}
+        open={showExport}
+        exportData={component?.props?.exportUserData}
+      />
       {fullWidth && content}
     </>
   );
@@ -372,6 +345,114 @@ export const NewListSkeleton = ({ onAdd }) => {
         </Box>
       </Box>
     </Card>
+  );
+};
+
+export const ImportMenu = ({ open, onClose, importData }) => {
+  const [files, setFiles] = useState<any[]>([]);
+  const handleFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files as FileList);
+    const file = files[0];
+    const text = await file.text();
+    const json = JSON.parse(text);
+    console.log('files:', json);
+    setFiles([json]);
+  };
+
+  return (
+    <Popper
+      open={!!open}
+      anchorEl={open}
+      role={undefined}
+      placement="bottom"
+      transition
+      disablePortal
+    >
+      {({ TransitionProps, placement }) => (
+        <Grow
+          {...TransitionProps}
+          style={{
+            transformOrigin: 'left bottom',
+          }}
+        >
+          <Paper>
+            <ClickAwayListener onClickAway={onClose}>
+              <MenuList
+                autoFocusItem={!!open}
+                id="composition-menu"
+                aria-labelledby="composition-button"
+                // onKeyDown={handleListKeyDown}
+              >
+                <MenuItem>
+                  <input type="file" onChange={handleFileSelected} />
+                </MenuItem>
+
+                {files?.length > 0 && (
+                  <MenuItem
+                    onClick={async () => {
+                      await importData(files[0]);
+                      onClose();
+                    }}
+                  >
+                    Import JSON
+                  </MenuItem>
+                )}
+              </MenuList>
+            </ClickAwayListener>
+          </Paper>
+        </Grow>
+      )}
+    </Popper>
+  );
+};
+
+export const ExportMenu = ({ open, onClose, exportData }) => {
+  return (
+    <Popper
+      open={!!open}
+      anchorEl={open}
+      role={undefined}
+      placement="bottom"
+      transition
+      disablePortal
+    >
+      {({ TransitionProps, placement }) => (
+        <Grow
+          {...TransitionProps}
+          style={{
+            transformOrigin: 'left bottom',
+          }}
+        >
+          <Paper>
+            <ClickAwayListener onClickAway={onClose}>
+              <MenuList
+                autoFocusItem={!!open}
+                id="composition-menu"
+                aria-labelledby="composition-button"
+                // onKeyDown={handleListKeyDown}
+              >
+                <MenuItem
+                  onClick={async () => {
+                    downloadExcel(await exportData());
+                    onClose();
+                  }}
+                >
+                  Excel
+                </MenuItem>
+                <MenuItem
+                  onClick={async () => {
+                    downloadJSON(await exportData());
+                    onClose();
+                  }}
+                >
+                  JSON
+                </MenuItem>
+              </MenuList>
+            </ClickAwayListener>
+          </Paper>
+        </Grow>
+      )}
+    </Popper>
   );
 };
 
