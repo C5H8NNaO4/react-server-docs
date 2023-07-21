@@ -70,7 +70,7 @@ import ExpandIcon from '@mui/icons-material/Expand';
 import save from 'save-file';
 import * as XLSX from 'xlsx';
 
-function downloadExcel(data) {
+function downloadExcel(data: Record<string, Record<string, any>>) {
   /* create a new blank workbook */
   var wb = XLSX.utils.book_new();
   const titles = {};
@@ -85,7 +85,7 @@ function downloadExcel(data) {
         ? `${list.title}(${titles[list.title]})`
         : list.title
     );
-    console.log(titles, titles[list.title]);
+    
     titles[list.title] = (titles[list.title] || 0) + 1;
   }
   const fileType =
