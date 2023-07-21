@@ -523,6 +523,7 @@ export const ExportMenu = ({ open, onClose, exportData }) => {
       placement="bottom"
       transition
       disablePortal
+      sx={{ zIndex: 10 }}
     >
       {({ TransitionProps, placement }) => (
         <Grow
