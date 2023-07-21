@@ -72,8 +72,11 @@ import Dialog from '@mui/material/Dialog';
 import ExpandIcon from '@mui/icons-material/Expand';
 import save from 'save-file';
 import * as XLSX from 'xlsx';
+import { Action } from '@dnd-kit/core/dist/store';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import { useLocation, useNavigate } from 'react-router';
 
-const LIST_ITEM_HEIGHT = 48;
+const LIST_ITEM_HEIGHT = 36;
 
 const isTouchScreenDevice = () => {
   try {
@@ -131,6 +134,15 @@ export const MyLists = (props) => {
   const [showExport, setShowExport] = useState<HTMLElement | null>(null);
   const [showImport, setShowImport] = useState<HTMLElement | null>(null);
 
+  const { search } = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (search.includes('?fs') && !state.fullscreen) {
+      dispatch({ type: Actions.TOGGLE_FULLSCREEN });
+      navigate('/lists');
+    }
+  });
   const handleClose = () => {
     setShowImport(null);
     setShowExport(null);
@@ -205,7 +217,7 @@ export const MyLists = (props) => {
   }
 
   const bps = [12, 12, 6, 4, 3];
-  const bpsFw = [12, 12, 4, 3, 2];
+  const bpsFw = [12, 6, 4, 3, 2];
   const bp = fullWidth ? bpsFw : bps;
 
   const content = (
@@ -218,7 +230,7 @@ export const MyLists = (props) => {
         items={optimisticOrder || []}
         strategy={rectSortingStrategy}
       >
-        <Box sx={{ mx: fullWidth ? 4 : 0 }}>
+        <Box sx={{ mx: fullWidth ? 0 : 0 }}>
           <Grid container spacing={1}>
             {optimisticOrder?.map((id, i) => {
               const list = lkp[id];
@@ -339,6 +351,15 @@ export const MyLists = (props) => {
               onClick={() => setFullWidth(!fullWidth)}
             >
               <ExpandIcon sx={{ transform: 'rotate(90deg)' }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Fullscreen" placement="bottom">
+            <IconButton
+              color={state.fullscreen ? 'success' : 'default'}
+              // sx={{ ml: 'auto' }}
+              onClick={() => dispatch({ type: Actions.TOGGLE_FULLSCREEN })}
+            >
+              <FullscreenIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="# Items" placement="right">
@@ -947,7 +968,7 @@ const TodoItem = (props) => {
   if (loading) return null;
 
   return (
-    <ListItem>
+    <ListItem dense>
       {edit && (
         <ListItemIcon>
           <IconButton color="error" onClick={() => remove(component.props.id)}>

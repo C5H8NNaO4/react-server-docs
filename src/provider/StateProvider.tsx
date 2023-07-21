@@ -5,6 +5,7 @@ type State = {
   animatedBackground: boolean;
   messages: string[];
   history: HistoryAction[];
+  fullscreen: boolean;
 };
 
 type HistoryAction = {
@@ -20,6 +21,7 @@ const initialState: State = {
     : localStorage.getItem('animatedBackground') === 'true',
   messages: [],
   history: [],
+  fullscreen: false,
 };
 
 export enum Actions {
@@ -29,6 +31,7 @@ export enum Actions {
   HIDE_MESSAGE,
   RECORD_CHANGE,
   REVERT_CHANGE,
+  TOGGLE_FULLSCREEN,
 }
 
 export const stateContext = createContext({
@@ -71,6 +74,13 @@ const reducer = (state: State, action: Action) => {
         history: state.history.slice(0, -1),
       };
     }
+    case Actions.TOGGLE_FULLSCREEN:
+      return {
+        ...state,
+        fullscreen: !state.fullscreen,
+      };
+    default:
+      return state;
   }
   return state;
 };

@@ -14,10 +14,10 @@ export const ListsPage = () => {
 
   return (
     <>
-      <Alert severity="warning">
+      {/* <Alert severity="warning">
         Please don't store any valuable data in Lists for now, as they will be
         deleted on every deploy.
-      </Alert>
+      </Alert> */}
 
       <MyLists key={ctx?.session?.id} />
 
