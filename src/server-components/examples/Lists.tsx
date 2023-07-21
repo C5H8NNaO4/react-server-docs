@@ -40,6 +40,7 @@ import { useContext, useEffect, useRef, useMemo, useState } from 'react';
 import IconMore from '@mui/icons-material/Add';
 import IconClear from '@mui/icons-material/Clear';
 import DownloadIcon from '@mui/icons-material/Download';
+import PaletteIcon from '@mui/icons-material/Palette';
 import { Actions, stateContext } from '../../provider/StateProvider';
 
 import {
@@ -143,6 +144,23 @@ export const MyLists = (props) => {
       navigate('/lists');
     }
   });
+  const data = component?.children?.reduce((acc, list) => {
+    return {
+      ...acc,
+      [list.props.id]: {
+        title: list.props.title,
+        id: list.props.id,
+        todos: list.children.map((todo) => {
+          return {
+            title: todo.props.title,
+            completed: todo.props.completed,
+            id: todo.props.id,
+          };
+        }),
+      },
+    };
+  }, {});
+
   const handleClose = () => {
     setShowImport(null);
     setShowExport(null);
@@ -337,6 +355,11 @@ export const MyLists = (props) => {
           </Tooltip>
           <Tooltip title="Export" placement="bottom">
             <IconButton
+              color={
+                JSON.stringify(data) === localStorage.getItem('lists')
+                  ? 'success'
+                  : 'warning'
+              }
               onClick={async (e) => {
                 setShowExport(e.target as HTMLElement);
               }}
@@ -422,6 +445,77 @@ export const NewListSkeleton = ({ onAdd }) => {
         </Box>
       </Box>
     </Card>
+  );
+};
+
+export const ColorMenu = ({ open, onClose, setColor }) => {
+  const colors = [
+    'white',
+    '#9e0142',
+    '#d53e4f',
+    '#f46d43',
+    '#fdae61',
+    '#fee08b',
+    '#e6f598',
+    '#abdda4',
+    '#66c2a5',
+    '#3288bd',
+    '#5e4fa2',
+  ];
+
+  return (
+    <Popper
+      open={!!open}
+      anchorEl={open}
+      role={undefined}
+      placement="top"
+      transition
+      disablePortal
+      sx={{ zIndex: 10 }}
+    >
+      {({ TransitionProps, placement }) => (
+        <Grow
+          {...TransitionProps}
+          style={{
+            transformOrigin: 'left bottom',
+          }}
+        >
+          <Paper sx={{ backgroundColor: 'beige' }}>
+            <ClickAwayListener onClickAway={onClose}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 1,
+                  maxWidth: '150px',
+                }}
+              >
+                {colors.map((color) => {
+                  return (
+                    <IconButton
+                      onClick={async () => {
+                        await setColor(color);
+                        onClose(color);
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          borderRadius: 100,
+                          backgroundColor: color,
+                          width: 24,
+                          height: 24,
+                          border: '1px solid black',
+                        }}
+                      />
+                    </IconButton>
+                  );
+                })}
+              </Box>
+            </ClickAwayListener>
+          </Paper>
+        </Grow>
+      )}
+    </Popper>
   );
 };
 
@@ -643,6 +737,8 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
   const [edit, setEdit] = useState(false);
   const [labelMode, setLabelMode] = useState(false);
   const [hover, setHover] = useState(false);
+  const [showColors, setShowColors] = useState<HTMLElement | null>(null);
+
   const canAddLabel = edit && labelMode;
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -734,13 +830,20 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
     }
   }
 
+  function handleClose() {
+    setShowColors(null);
+  }
+
   if (loading) {
     return null;
   }
 
   return (
     <Card
-      sx={{ height: '100%' }}
+      sx={{
+        height: '100%',
+        backgroundColor: component?.props?.color || 'white',
+      }}
       onMouseOver={() => setHover(true)}
       onMouseLeave={() => setTimeout(setHover, 200, false)}
       elevation={hover ? 1 : 0}
@@ -908,6 +1011,15 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
           >
             <LabelIcon />
           </IconButton>
+          <IconButton
+            color={showColors ? 'success' : 'default'}
+            // disabled={!edit}
+            onClick={(e) => {
+              setShowColors(e.target as HTMLElement);
+            }}
+          >
+            <PaletteIcon />
+          </IconButton>
         </CardActions>
       </CardActionArea>
       <ConfirmationDialogRaw
@@ -921,6 +1033,11 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
       >
         <Alert severity="error">Are you sure you want to delete this?</Alert>
       </ConfirmationDialogRaw>
+      <ColorMenu
+        onClose={handleClose}
+        open={showColors}
+        setColor={component?.props?.setColor}
+      ></ColorMenu>
     </Card>
   );
 };
