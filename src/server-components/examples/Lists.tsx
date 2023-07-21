@@ -22,6 +22,13 @@ import {
   Container,
   CardActionArea,
   Chip,
+  Menu,
+  MenuItem,
+  Popper,
+  Grow,
+  Paper,
+  ClickAwayListener,
+  MenuList,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
@@ -30,6 +37,7 @@ import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { useContext, useEffect, useRef, useMemo, useState } from 'react';
 import IconMore from '@mui/icons-material/Add';
 import IconClear from '@mui/icons-material/Clear';
+import DownloadIcon from '@mui/icons-material/Download';
 import { Actions, stateContext } from '../../provider/StateProvider';
 
 import {
@@ -59,7 +67,40 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Dialog from '@mui/material/Dialog';
 import ExpandIcon from '@mui/icons-material/Expand';
+import save from 'save-file';
+import * as XLSX from 'xlsx';
 
+function downloadExcel(data) {
+  /* create a new blank workbook */
+  var wb = XLSX.utils.book_new();
+  const titles = {};
+  for (const [id, list] of Object.entries(data)) {
+    /* create a worksheet for books */
+    var wsBooks = XLSX.utils.json_to_sheet(list.todos);
+    /* Add the worksheet to the workbook */
+    XLSX.utils.book_append_sheet(
+      wb,
+      wsBooks,
+      titles[list.title] > 0
+        ? `${list.title}(${titles[list.title]})`
+        : list.title
+    );
+    console.log(titles, titles[list.title]);
+    titles[list.title] = (titles[list.title] || 0) + 1;
+  }
+  const fileType =
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([excelBuffer], { type: fileType });
+  save(blob, `${new Date().toISOString().split('T')[0]}.lists.xlsx`);
+}
+
+function downloadJSON(data) {
+  save(
+    JSON.stringify(data),
+    `${new Date().toISOString().split('T')[0]}.lists.json`
+  );
+}
 const unique = (arr) => [...new Set(arr)];
 export const MyLists = (props) => {
   const [component, { loading, error, refetch }] = useComponent('my-lists', {});
@@ -67,6 +108,12 @@ export const MyLists = (props) => {
   const [title, setTitle] = useState('');
   const [fullWidth, setFullWidth] = useLocalStorage('fullWidth', true);
   const [active, setActive] = useState<string[]>([]);
+  const [showExport, setShowExport] = useState<HTMLElement | null>(null);
+
+  const handleClose = () => {
+    setShowExport(null);
+  };
+
   const { setNodeRef } = useDroppable({
     id: 'unique-id',
   });
@@ -234,6 +281,15 @@ export const MyLists = (props) => {
           <IconButton
             color={fullWidth ? 'success' : 'default'}
             sx={{ ml: 'auto' }}
+            onClick={async (e) => {
+              setShowExport(e.target);
+            }}
+          >
+            <DownloadIcon />
+          </IconButton>
+          <IconButton
+            color={fullWidth ? 'success' : 'default'}
+            // sx={{ ml: 'auto' }}
             onClick={() => setFullWidth(!fullWidth)}
           >
             <ExpandIcon sx={{ transform: 'rotate(90deg)' }} />
@@ -241,6 +297,51 @@ export const MyLists = (props) => {
         </Box>
         {!fullWidth && content}
       </Container>
+      <Popper
+        open={!!showExport}
+        anchorEl={showExport}
+        role={undefined}
+        placement="bottom"
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin: 'left bottom',
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList
+                  autoFocusItem={!!showExport}
+                  id="composition-menu"
+                  aria-labelledby="composition-button"
+                  // onKeyDown={handleListKeyDown}
+                >
+                  <MenuItem
+                    onClick={async () => {
+                      downloadExcel(await component?.props?.exportUserData());
+                      handleClose();
+                    }}
+                  >
+                    Excel
+                  </MenuItem>
+                  <MenuItem
+                    onClick={async () => {
+                      downloadJSON(await component?.props?.exportUserData());
+                      handleClose();
+                    }}
+                  >
+                    JSON
+                  </MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
       {fullWidth && content}
     </>
   );
@@ -468,7 +569,7 @@ export const List = ({ list, remove, id, refetch }) => {
           >
             {order.map((id, i) => {
               const todo = lkp[id];
-              if (!todo) return null;
+              // if (!todo) return null;
               return (
                 <>
                   {canAddLabel && (
