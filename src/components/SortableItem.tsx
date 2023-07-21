@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 export function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -14,7 +15,13 @@ export function SortableItem(props) {
   };
 
   //   delete listeners?.onKeyDown;
+  const theme = useTheme();
+  const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
+  if (lessThanSmall) {
+    return <div>{props.children}</div>;
+  }
+  
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {props.children}
