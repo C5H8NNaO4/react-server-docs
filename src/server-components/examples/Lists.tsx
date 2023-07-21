@@ -653,7 +653,11 @@ export const List = ({ list, remove, id, refetch }) => {
           strategy={verticalListSortingStrategy}
         >
           <MUIList
-            sx={{ maxHeight: '50vh', overflowY: 'auto', overflowX: 'hidden' }}
+            sx={{
+              height: 48 * 7 + 'px',
+              overflowY: 'auto',
+              overflowX: 'hidden',
+            }}
           >
             {order.map((id, i) => {
               const todo = lkp[id];
