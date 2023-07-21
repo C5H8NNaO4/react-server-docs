@@ -350,6 +350,7 @@ export const NewListSkeleton = ({ onAdd }) => {
 
 export const ImportMenu = ({ open, onClose, importData }) => {
   const [files, setFiles] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const handleFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files as FileList);
     const file = files[0];
@@ -376,6 +377,7 @@ export const ImportMenu = ({ open, onClose, importData }) => {
           }}
         >
           <Paper>
+            {error && <Alert severity="error">{error}</Alert>}
             <ClickAwayListener onClickAway={onClose}>
               <MenuList
                 autoFocusItem={!!open}
@@ -390,8 +392,13 @@ export const ImportMenu = ({ open, onClose, importData }) => {
                 {files?.length > 0 && (
                   <MenuItem
                     onClick={async () => {
-                      await importData(files[0]);
-                      onClose();
+                      try {
+                        await importData(files[0]);
+                        setError(null);
+                        onClose();
+                      } catch (e) {
+                        setError((e as Error).message);
+                      }
                     }}
                   >
                     Import JSON
