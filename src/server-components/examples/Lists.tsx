@@ -432,7 +432,7 @@ export const ImportMenu = ({ open, onClose, importData }) => {
             transformOrigin: 'left bottom',
           }}
         >
-          <Paper>
+          <Paper sx={{ backgroundColor: 'beige' }}>
             {error && <Alert severity="error">{error}</Alert>}
             <ClickAwayListener onClickAway={onClose}>
               <MenuList
@@ -532,7 +532,7 @@ export const ExportMenu = ({ open, onClose, exportData }) => {
             transformOrigin: 'left bottom',
           }}
         >
-          <Paper>
+          <Paper sx={{ backgroundColor: 'beige' }}>
             <ClickAwayListener onClickAway={onClose}>
               <MenuList
                 autoFocusItem={!!open}
