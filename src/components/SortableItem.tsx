@@ -15,13 +15,13 @@ export function SortableItem(props) {
     touchAction: 'none',
   };
 
-  //   delete listeners?.onKeyDown;
-//   const theme = useTheme();
-//   const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
+  delete listeners?.onKeyDown;
+  const theme = useTheme();
+  const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
-//   if (lessThanSmall) {
-//     return <div>{props.children}</div>;
-//   }
+  if (!props.enabled) {
+    return <div>{props.children}</div>;
+  }
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>

@@ -75,6 +75,15 @@ import * as XLSX from 'xlsx';
 
 const LIST_ITEM_HEIGHT = 48;
 
+const isTouchScreenDevice = () => {
+  try {
+    document.createEvent('TouchEvent');
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 function downloadExcel(data: Record<string, Record<string, any>>) {
   /* create a new blank workbook */
   var wb = XLSX.utils.book_new();
@@ -218,7 +227,12 @@ export const MyLists = (props) => {
                   lg={bp[3]}
                   xl={bp[4]}
                 >
-                  <SortableItem key={id} id={id} fullHeight>
+                  <SortableItem
+                    key={id}
+                    id={id}
+                    fullHeight
+                    enabled={!isTouchScreenDevice}
+                  >
                     <List
                       key={list.key}
                       list={`${list.key}`}
@@ -725,7 +739,11 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
                     />
                   )}
                   {!canAddLabel && (
-                    <SortableItem key={id} id={id}>
+                    <SortableItem
+                      key={id}
+                      id={id}
+                      enabled={isTouchScreenDevice() ? edit : true}
+                    >
                       <TodoItem
                         key={i}
                         todo={todo.key}
