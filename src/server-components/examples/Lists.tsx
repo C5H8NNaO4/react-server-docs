@@ -675,6 +675,7 @@ export const List = ({ list, remove, id, refetch }) => {
                       <TodoItem
                         key={i}
                         todo={todo.key}
+                        data={todo}
                         edit={edit && !labelMode}
                         remove={component?.props?.remove}
                       />
@@ -774,8 +775,10 @@ function ConfirmationDialogRaw(
 
 const TodoItem = (props) => {
   const { dispatch, state } = useContext(stateContext);
-  const { todo, edit, remove } = props;
-  const [component, { loading, error }] = useComponent(todo, {});
+  const { todo: todoId, edit, remove, data } = props;
+  const [component, { loading, error }] = useComponent(todoId, {
+    data,
+  });
 
   if (loading) return null;
 
