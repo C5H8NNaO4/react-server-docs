@@ -441,12 +441,14 @@ export const List = ({ list, remove, id, refetch }) => {
                   ),
                 }}
               />
-              <IconButton
-                disabled={!todoTitle}
-                onClick={(e) => addEntry(e, canAddLabel)}
-              >
-                <IconMore />
-              </IconButton>
+              {(!edit || canAddLabel) && (
+                <IconButton
+                  disabled={!todoTitle}
+                  onClick={(e) => addEntry(e, canAddLabel)}
+                >
+                  <IconMore />
+                </IconButton>
+              )}
             </Box>
           </>
         }
@@ -466,6 +468,7 @@ export const List = ({ list, remove, id, refetch }) => {
           >
             {order.map((id, i) => {
               const todo = lkp[id];
+              if (!todo) return null;
               return (
                 <>
                   {canAddLabel && (
