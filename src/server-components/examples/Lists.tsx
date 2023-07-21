@@ -722,14 +722,15 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
       <CardHeader
         title={
           <>
-            {!edit && (
-              <Typography variant="h6">{component?.props?.title}</Typography>
-            )}
             <Box
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                display: hover ? 'flex' : 'none',
+                opacity: hover ? 1 : 0.5,
+                transition: 'opacity 0.2s ease-in',
+                '&:hover': {
+                  transition: 'opacity 0.2s ease-out',
+                },
               }}
             >
               <TextField
@@ -782,6 +783,11 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
           </>
         }
       ></CardHeader>
+      <CardContent>
+        {!edit && (
+          <Typography variant="h6">{component?.props?.title}</Typography>
+        )}
+      </CardContent>
 
       <DndContext
         sensors={sensors}
@@ -793,6 +799,7 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
           strategy={verticalListSortingStrategy}
         >
           <MUIList
+            disablePadding
             sx={{
               height: LIST_ITEM_HEIGHT * nItems + 'px',
               overflowY: 'auto',
