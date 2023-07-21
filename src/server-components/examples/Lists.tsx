@@ -191,11 +191,38 @@ export const MyLists = (props) => {
     };
   }, [state]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const filtered = component?.children?.filter((list) => {
-    if (active.length === 0) return true;
+  const filtered = component?.children
+    ?.filter((list) => {
+      if (active.length === 0) return true;
 
-    return list.props.labels.some((label) => active.includes(label.title));
-  });
+      return list.props.labels.some((label) => active.includes(label.title));
+    })
+    ?.filter((list) => {
+      if (!state.search) return true;
+      const dist = list.props.title
+        .split(' ')
+        .some(
+          (word) =>
+            levenshtein.get(word.slice(0, state.search.length), state.search) <
+            3
+        );
+      return (
+        dist ||
+        list.children.some((todo) => {
+          const matched = todo.props.title
+            .split(' ')
+            .some(
+              (word) =>
+                levenshtein.get(
+                  word.slice(0, state.search.length),
+                  state.search
+                ) < 3
+            );
+
+          return matched;
+        })
+      );
+    });
   const items = useMemo(
     () => component?.props?.order,
     [JSON.stringify(component?.props?.order)]
@@ -252,66 +279,36 @@ export const MyLists = (props) => {
       >
         <Box sx={{ mx: fullWidth ? 0 : 0 }}>
           <Grid container spacing={1}>
-            {optimisticOrder
-              ?.filter((id) => {
-                if (!state.search) return true;
-                const list = lkp[id];
-                const dist = list.props.title
-                  .split(' ')
-                  .some(
-                    (word) =>
-                      levenshtein.get(
-                        word.slice(0, state.search.length),
-                        state.search
-                      ) < 3
-                  );
-                return (
-                  dist ||
-                  list.children.some((todo) => {
-                    const matched = todo.props.title
-                      .split(' ')
-                      .some(
-                        (word) =>
-                          levenshtein.get(
-                            word.slice(0, state.search.length),
-                            state.search
-                          ) < 3
-                      );
-
-                    return matched;
-                  })
-                );
-              })
-              .map((id, i) => {
-                const list = lkp[id];
-                if (!list) return null;
-                return (
-                  <Grid
-                    item
-                    xs={bp[0]}
-                    sm={bp[1]}
-                    md={bp[2]}
-                    lg={bp[3]}
-                    xl={bp[4]}
+            {optimisticOrder?.map((id, i) => {
+              const list = lkp[id];
+              if (!list) return null;
+              return (
+                <Grid
+                  item
+                  xs={bp[0]}
+                  sm={bp[1]}
+                  md={bp[2]}
+                  lg={bp[3]}
+                  xl={bp[4]}
+                >
+                  <SortableItem
+                    key={id}
+                    id={id}
+                    fullHeight
+                    enabled={!isTouchScreenDevice()}
                   >
-                    <SortableItem
-                      key={id}
-                      id={id}
-                      fullHeight
-                      enabled={!isTouchScreenDevice()}
-                    >
-                      <List
-                        key={list.key}
-                        list={`${list.key}`}
-                        remove={component?.props?.remove}
-                        id={list.id}
-                        refetch={refetch}
-                        nItems={nItems}
-                      />
-                    </SortableItem>
-                  </Grid>
-                );
-              })}
+                    <List
+                      key={list.key}
+                      list={`${list.key}`}
+                      remove={component?.props?.remove}
+                      id={list.id}
+                      refetch={refetch}
+                      nItems={nItems}
+                    />
+                  </SortableItem>
+                </Grid>
+              );
+            })}
           </Grid>
         </Box>
       </SortableContext>
