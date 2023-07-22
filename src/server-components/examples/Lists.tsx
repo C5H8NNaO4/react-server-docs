@@ -44,6 +44,7 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import DownloadIcon from '@mui/icons-material/Download';
 import PaletteIcon from '@mui/icons-material/Palette';
 import { Actions, stateContext } from '../../provider/StateProvider';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 import {
   DndContext,
@@ -207,7 +208,7 @@ export const MyLists = (props) => {
         .some(
           (word) =>
             levenshtein.get(word.slice(0, state.search.length), state.search) <
-            3
+            state.searchDistance
         );
       return (
         dist ||
@@ -219,7 +220,7 @@ export const MyLists = (props) => {
                 levenshtein.get(
                   word.slice(0, state.search.length),
                   state.search
-                ) < 3
+                ) < state.searchDistance
             );
 
           return matched;
@@ -444,6 +445,22 @@ export const MyLists = (props) => {
             >
               <VisibilityIcon />
             </IconButton>
+          </Tooltip>
+          <Tooltip title="Search Distance" placement="right">
+            <Select
+              sx={{ mr: 1 }}
+              onChange={(e) =>
+                dispatch({
+                  type: Actions.SET_SEARCH_DISTANCE,
+                  value: Number(e.target.value),
+                })
+              }
+              value={state.searchDistance}
+            >
+              {[0, 1, 2, 3].map((n) => {
+                return <MenuItem value={n}>{n}</MenuItem>;
+              })}
+            </Select>
           </Tooltip>
           <Tooltip title="# Items" placement="right">
             <Select
@@ -1230,7 +1247,24 @@ const TodoItem = (props) => {
           )
         }
       />
-
+      <ListItemText>
+        {edit && (
+          <Tooltip title="Reset after # days" placement="right">
+            <Select
+              onChange={(e) => component?.props?.setReset(e.target.value)}
+              value={
+                component.props?.reset === null
+                  ? '-'
+                  : component?.props?.reset / (1000 * 60 * 60 * 24)
+              }
+            >
+              {['-', 1, 7, 14].map((n) => {
+                return <MenuItem value={n}>{n}</MenuItem>;
+              })}
+            </Select>
+          </Tooltip>
+        )}
+      </ListItemText>
       <ListItemSecondaryAction>
         {!edit && (
           <Checkbox
@@ -1253,15 +1287,6 @@ const TodoItem = (props) => {
             }}
           />
         )}
-        {/* {edit && ( */}
-        ASD
-        <IconButton
-          color="default"
-          onClick={() => component?.props?.setReset(10)}
-        >
-          <VisibilityIcon />
-        </IconButton>
-        {/* )} */}
       </ListItemSecondaryAction>
     </ListItem>
   );

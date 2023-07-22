@@ -7,6 +7,7 @@ type State = {
   history: HistoryAction[];
   fullscreen: boolean;
   search: string;
+  searchDistance: number;
 };
 
 type HistoryAction = {
@@ -24,6 +25,7 @@ const initialState: State = {
   history: [],
   fullscreen: localStorage.getItem('fullscreen') === 'true',
   search: '',
+  searchDistance: Number(localStorage.getItem('searchDistance') || 2),
 };
 
 export enum Actions {
@@ -35,6 +37,7 @@ export enum Actions {
   REVERT_CHANGE,
   TOGGLE_FULLSCREEN,
   SEARCH,
+  SET_SEARCH_DISTANCE,
 }
 
 export const stateContext = createContext({
@@ -87,6 +90,11 @@ const reducer = (state: State, action: Action) => {
       return {
         ...state,
         search: action.value,
+      };
+    case Actions.SET_SEARCH_DISTANCE:
+      return {
+        ...state,
+        searchDistance: action.value,
       };
     default:
       return state;
