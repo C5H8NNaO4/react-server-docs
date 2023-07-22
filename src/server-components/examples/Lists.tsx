@@ -235,7 +235,7 @@ export const MyLists = (props) => {
     {}
   );
   const [_optimisticOrder, setOptimisticOrder] = useState(items);
-  const optimisticOrder = _optimisticOrder.filter(
+  const optimisticOrder = _optimisticOrder?.filter(
     (id) => lkp[id] && (showArchived || !lkp[id].props.archived)
   );
   useEffect(() => {
