@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InputAdornment } from '@mui/material';
+import { InputAdornment, useTheme, useMediaQuery } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import IconClear from '@mui/icons-material/Clear';
 import IconSearch from '@mui/icons-material/Search';
@@ -30,6 +30,10 @@ export default function ButtonAppBar() {
   const { state, dispatch } = React.useContext(stateContext);
   const { authenticate, session } = React.useContext(authContext);
   const { pathname } = useLocation();
+
+  const theme = useTheme();
+
+  const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
@@ -43,15 +47,17 @@ export default function ButtonAppBar() {
         >
           <MenuIcon />
         </IconButton>
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-          <img src="/react-server.png" style={{ width: 24, height: 24 }} />
-          <Link component={RouterLink} to="/" sx={{ color: 'white' }}>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              {navigation.find((nav) => nav[0] === pathname)?.[3] ||
-                'React Server'}
-            </Typography>
-          </Link>
-        </Box>
+        {!lessThanSmall && (
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <img src="/react-server.png" style={{ width: 24, height: 24 }} />
+            <Link component={RouterLink} to="/" sx={{ color: 'white' }}>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                {navigation.find((nav) => nav[0] === pathname)?.[3] ||
+                  'React Server'}
+              </Typography>
+            </Link>
+          </Box>
+        )}
         <Box
           sx={{ display: pathname === '/lists' ? 'flex' : 'none', flexGrow: 1 }}
         >
@@ -65,7 +71,7 @@ export default function ButtonAppBar() {
               mx: 'auto',
               background: '#FFF',
               borderRadius: 1,
-              width: '50%',
+              width: lessThanSmall ? '100%' : '50%',
               marginTop: 1,
               '& label': {
                 background: '#FFF',
@@ -101,20 +107,29 @@ export default function ButtonAppBar() {
           />
         </Box>
         <Box sx={{ ml: 'auto' }} />
-        <ConnectionCounter />
-        <IconButton
-          color={state.animatedBackground ? 'primary' : 'inherit'}
-          onClick={() => {
-            dispatch({ type: Actions.TOGGLE_ANIMATED_BACKGROUND });
-            localStorage.setItem(
-              'animatedBackgroundUser',
-              (!state.animatedBackground).toString()
-            );
-          }}
-        >
-          <AutoFixHighIcon />
-        </IconButton>
-        <GoogleLoginButton />
+        {!lessThanSmall && (
+          <Box sx={{ display: 'flex' }}>
+            <ConnectionCounter />
+            <IconButton
+              color={state.animatedBackground ? 'primary' : 'inherit'}
+              onClick={() => {
+                dispatch({ type: Actions.TOGGLE_ANIMATED_BACKGROUND });
+                localStorage.setItem(
+                  'animatedBackgroundUser',
+                  (!state.animatedBackground).toString()
+                );
+              }}
+            >
+              <AutoFixHighIcon />
+            </IconButton>
+            <GoogleLoginButton />
+          </Box>
+        )}
+        {lessThanSmall && (
+          <Box sx={{ ml: 1 }}>
+            <GoogleLoginButton />
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   );

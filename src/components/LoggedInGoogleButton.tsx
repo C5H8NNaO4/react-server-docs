@@ -1,4 +1,10 @@
-import { Avatar, Button } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  useMediaQuery,
+  useTheme,
+  IconButton,
+} from '@mui/material';
 import { authContext } from '@state-less/react-client';
 import { useContext, useState } from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
@@ -33,9 +39,14 @@ export const LoggedInGoogleButton = () => {
   }
 
   const decoded = session.strategies.google.decoded;
+
+  const theme = useTheme();
+
+  const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
+  const MDButton = lessThanSmall ? IconButton : Button;
   return (
     <>
-      <Button
+      <MDButton
         id="basic-button"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
@@ -47,8 +58,8 @@ export const LoggedInGoogleButton = () => {
           src={decoded.picture}
           sx={{ width: 24, height: 24, mr: 1 }}
         ></Avatar>
-        {decoded.name}
-      </Button>
+        {!lessThanSmall && decoded.name}
+      </MDButton>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
