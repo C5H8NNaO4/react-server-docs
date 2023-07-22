@@ -267,6 +267,9 @@ export const MyLists = (props) => {
   const bpsFw = [12, 6, 4, 3, 2];
   const bp = fullWidth ? bpsFw : bps;
 
+  const exists = component?.children?.some(
+    (todo) => todo.props.title === title
+  );
   const content = (
     <DndContext
       sensors={sensors}
@@ -318,11 +321,16 @@ export const MyLists = (props) => {
     <>
       <Container maxWidth="xl">
         {error && <Alert severity="error">{error.message}</Alert>}
-        <Box sx={{ display: 'flex', width: '100%', mt: 2 }} ref={setNodeRef}>
+        <Box
+          sx={{ display: 'flex', width: '100%', mt: 2, alignItems: 'start' }}
+          ref={setNodeRef}
+        >
           <Box
             sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}
           >
             <TextField
+              error={exists}
+              helperText={exists ? 'Item already exists' : ''}
               inputRef={inputRef}
               fullWidth
               label="New List"
@@ -351,7 +359,7 @@ export const MyLists = (props) => {
               }}
             />
           </Box>
-          <Box sx={{ ml: 2, display: 'flex', justifyContent: 'center' }}>
+          <Box sx={{ ml: 2, display: 'flex' }}>
             <NewListSkeleton
               onAdd={() => {
                 component?.props?.add({ title });
@@ -465,12 +473,19 @@ const Labels = ({ labels, onClick, active, ...rest }) => {
 };
 export const NewListSkeleton = ({ onAdd }) => {
   return (
-    <Card sx={{ height: '100%' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
-        <Box sx={{ my: 'auto' }}>
-          <Button onClick={onAdd}>
+    <Card sx={{ height: '100%', backgroundColor: 'beige' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          height: '100%',
+          my: 1,
+        }}
+      >
+        <Box sx={{ my: 'auto', mx: 2 }}>
+          <IconButton onClick={onAdd}>
             <IconMore />
-          </Button>
+          </IconButton>
         </Box>
       </Box>
     </Card>
@@ -771,6 +786,12 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
   const canAddLabel = edit && labelMode;
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const exists =
+    todoTitle !== '' &&
+    component.children.some(
+      (t) => t.props.title.toLowerCase() === todoTitle.toLowerCase()
+    );
+
   const sensors = useSensors(
     useSensor(TouchSensor, {
       activationConstraint: {
@@ -884,7 +905,7 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
             <Box
               sx={{
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'start',
                 opacity: hover ? 1 : 0.5,
                 transition: 'opacity 0.2s ease-in',
                 '&:hover': {
@@ -899,6 +920,8 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
                 label={
                   canAddLabel ? 'Add Label' : edit ? 'Edit Title' : 'Add Item'
                 }
+                error={exists}
+                helperText={exists ? 'Item already exists' : ''}
                 onChange={(e) => {
                   edit && !labelMode
                     ? setListTitle(e.target.value)
@@ -932,6 +955,7 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
               />
               {(!edit || canAddLabel) && (
                 <IconButton
+                  sx={{ mt: 1, }}
                   disabled={!todoTitle}
                   onClick={(e) => addEntry(e, canAddLabel)}
                 >
