@@ -35,10 +35,12 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import LabelIcon from '@mui/icons-material/Label';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { useContext, useEffect, useRef, useMemo, useState } from 'react';
 import IconMore from '@mui/icons-material/Add';
 import IconClear from '@mui/icons-material/Clear';
+import ArchiveIcon from '@mui/icons-material/Archive';
 import DownloadIcon from '@mui/icons-material/Download';
 import PaletteIcon from '@mui/icons-material/Palette';
 import { Actions, stateContext } from '../../provider/StateProvider';
@@ -133,6 +135,7 @@ export const MyLists = (props) => {
   const [title, setTitle] = useState('');
   const [fullWidth, setFullWidth] = useLocalStorage('fullWidth', true);
   const [active, setActive] = useState<string[]>([]);
+  const [showArchived, setShowArchived] = useState(false);
   const [nItems, setNItems] = useState(5);
   const [showExport, setShowExport] = useState<HTMLElement | null>(null);
   const [showImport, setShowImport] = useState<HTMLElement | null>(null);
@@ -227,7 +230,14 @@ export const MyLists = (props) => {
     () => component?.props?.order,
     [JSON.stringify(component?.props?.order)]
   );
-  const [optimisticOrder, setOptimisticOrder] = useState(items);
+  const lkp = filtered?.reduce(
+    (acc, list) => ({ ...acc, [list.props.id]: list }),
+    {}
+  );
+  const [_optimisticOrder, setOptimisticOrder] = useState(items);
+  const optimisticOrder = _optimisticOrder.filter(
+    (id) => lkp[id] && (showArchived || !lkp[id].props.archived)
+  );
   useEffect(() => {
     if (component?.props?.order && !loading) {
       setOptimisticOrder(items);
@@ -242,10 +252,6 @@ export const MyLists = (props) => {
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  );
-  const lkp = filtered?.reduce(
-    (acc, list) => ({ ...acc, [list.props.id]: list }),
-    {}
   );
 
   function handleDragEnd(event) {
@@ -426,6 +432,17 @@ export const MyLists = (props) => {
               }}
             >
               <FullscreenIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Show archived lists." placement="bottom">
+            <IconButton
+              color={showArchived ? 'success' : 'default'}
+              // sx={{ ml: 'auto' }}
+              onClick={() => {
+                setShowArchived(!showArchived);
+              }}
+            >
+              <VisibilityIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="# Items" placement="right">
@@ -782,6 +799,7 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
   const [labelMode, setLabelMode] = useState(false);
   const [hover, setHover] = useState(false);
   const [showColors, setShowColors] = useState<HTMLElement | null>(null);
+  const [showArchived, setShowArchived] = useState<boolean>(false);
 
   const canAddLabel = edit && labelMode;
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -842,15 +860,6 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
 
   const [showDialog, setShowDialog] = useState(false);
 
-  const items = useMemo(
-    () => component?.props?.order || [],
-    [JSON.stringify(component?.props?.order)]
-  );
-  const [itemOrder, setOrder] = useState(items);
-  const labelOrder = (component?.props?.labels || []).map((l) => l.id);
-
-  const order = !canAddLabel ? itemOrder : labelOrder;
-
   const itemLkp = (component?.children || []).reduce((acc, child) => {
     return { ...acc, [child.props.id]: child };
   }, {});
@@ -859,11 +868,24 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
   }, {});
   const lkp = !canAddLabel ? itemLkp : labelLkp;
 
+  const items = useMemo(
+    () => component?.props?.order || [],
+    [JSON.stringify(component?.props?.order)]
+  );
+  const [itemOrder, setOrder] = useState(items);
+
   useEffect(() => {
     if (component?.props?.order && !loading) {
       setOrder(component?.props?.order);
     }
   }, [JSON.stringify(component?.props?.order)]);
+
+  const labelOrder = (component?.props?.labels || []).map((l) => l.id);
+  const filteredItemOrder = itemOrder?.filter((id) => {
+    const todo = itemLkp[id];
+    return todo && (showArchived || !todo?.props?.archived);
+  });
+  const order = !canAddLabel ? filteredItemOrder : labelOrder;
 
   function handleDragEnd(event) {
     const { active, over } = event;
@@ -955,7 +977,7 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
               />
               {(!edit || canAddLabel) && (
                 <IconButton
-                  sx={{ mt: 1, }}
+                  sx={{ mt: 1 }}
                   disabled={!todoTitle}
                   onClick={(e) => addEntry(e, canAddLabel)}
                 >
@@ -1073,6 +1095,31 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
           >
             <PaletteIcon />
           </IconButton>
+          <IconButton
+            color={edit ? 'error' : 'primary'}
+            // disabled={!edit}
+            onClick={async (e) => {
+              if (edit) {
+                await component?.props?.archive();
+                return;
+              }
+              for (const c of component?.children || []) {
+                if (c?.props?.completed) await c?.props?.archive();
+              }
+              await refetch();
+            }}
+          >
+            <ArchiveIcon />
+          </IconButton>
+          <IconButton
+            color={showArchived ? 'success' : 'default'}
+            // disabled={!edit}
+            onClick={async (e) => {
+              setShowArchived(!showArchived);
+            }}
+          >
+            <VisibilityIcon />
+          </IconButton>
         </CardActions>
       </CardActionArea>
       <ConfirmationDialogRaw
@@ -1144,7 +1191,7 @@ const TodoItem = (props) => {
   if (loading) return null;
 
   return (
-    <ListItem dense>
+    <ListItem dense sx={{ opacity: component?.props?.archived ? 0.5 : 1 }}>
       {edit && (
         <ListItemIcon>
           <IconButton color="error" onClick={() => remove(component.props.id)}>
@@ -1164,6 +1211,7 @@ const TodoItem = (props) => {
       <ListItemSecondaryAction>
         {!edit && (
           <Checkbox
+            disabled={component?.props?.archived}
             checked={component?.props.completed}
             onClick={async () => {
               component?.props.toggle();
