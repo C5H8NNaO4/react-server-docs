@@ -1058,68 +1058,90 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
         }}
       >
         <CardActions>
-          <IconButton
-            color={edit ? 'primary' : 'default'}
-            onClick={() => {
-              setTodoTitle('');
-              setEdit(!edit);
-            }}
+          <Tooltip title="Edit this list">
+            <IconButton
+              color={edit ? 'primary' : 'default'}
+              onClick={() => {
+                setTodoTitle('');
+                setEdit(!edit);
+              }}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete this list">
+            <IconButton
+              color="error"
+              disabled={!edit}
+              onClick={() => {
+                setShowDialog(true);
+              }}
+            >
+              <RemoveCircleIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Add / Remove Labels">
+            <IconButton
+              color={labelMode ? 'success' : 'default'}
+              disabled={!edit}
+              onClick={() => {
+                setLabelMode(!labelMode);
+              }}
+            >
+              <LabelIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Set list color.">
+            <IconButton
+              color={showColors ? 'success' : 'default'}
+              // disabled={!edit}
+              onClick={(e) => {
+                setShowColors(e.target as HTMLElement);
+              }}
+            >
+              <PaletteIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip
+            title={edit ? 'Archive this list.' : 'Archive all completed todos.'}
           >
-            <EditIcon />
-          </IconButton>
+            <span>
+              <IconButton
+                color={edit ? 'error' : 'primary'}
+                // disabled={!edit}
 
-          <IconButton
-            color="error"
-            disabled={!edit}
-            onClick={() => {
-              setShowDialog(true);
-            }}
+                onClick={async (e) => {
+                  if (edit) {
+                    await component?.props?.archive();
+                    return;
+                  }
+                  for (const c of component?.children || []) {
+                    if (c?.props?.completed) await c?.props?.archive();
+                  }
+                  await refetch();
+                }}
+              >
+                <ArchiveIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip
+            title={
+              showArchived ? 'Hide archived items.' : 'Show archived items'
+            }
           >
-            <RemoveCircleIcon />
-          </IconButton>
-          <IconButton
-            color={labelMode ? 'success' : 'default'}
-            disabled={!edit}
-            onClick={() => {
-              setLabelMode(!labelMode);
-            }}
-          >
-            <LabelIcon />
-          </IconButton>
-          <IconButton
-            color={showColors ? 'success' : 'default'}
-            // disabled={!edit}
-            onClick={(e) => {
-              setShowColors(e.target as HTMLElement);
-            }}
-          >
-            <PaletteIcon />
-          </IconButton>
-          <IconButton
-            color={edit ? 'error' : 'primary'}
-            // disabled={!edit}
-            onClick={async (e) => {
-              if (edit) {
-                await component?.props?.archive();
-                return;
-              }
-              for (const c of component?.children || []) {
-                if (c?.props?.completed) await c?.props?.archive();
-              }
-              await refetch();
-            }}
-          >
-            <ArchiveIcon />
-          </IconButton>
-          <IconButton
-            color={showArchived ? 'success' : 'default'}
-            // disabled={!edit}
-            onClick={async (e) => {
-              setShowArchived(!showArchived);
-            }}
-          >
-            <VisibilityIcon />
-          </IconButton>
+            <span>
+              <IconButton
+                color={showArchived ? 'success' : 'default'}
+                disabled={!component?.children?.some((c) => c?.props?.archived)}
+                onClick={async (e) => {
+                  setShowArchived(!showArchived);
+                }}
+              >
+                <VisibilityIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
         </CardActions>
       </CardActionArea>
       <ConfirmationDialogRaw
@@ -1208,6 +1230,7 @@ const TodoItem = (props) => {
           )
         }
       />
+
       <ListItemSecondaryAction>
         {!edit && (
           <Checkbox
@@ -1230,6 +1253,15 @@ const TodoItem = (props) => {
             }}
           />
         )}
+        {/* {edit && ( */}
+        ASD
+        <IconButton
+          color="default"
+          onClick={() => component?.props?.setReset(10)}
+        >
+          <VisibilityIcon />
+        </IconButton>
+        {/* )} */}
       </ListItemSecondaryAction>
     </ListItem>
   );

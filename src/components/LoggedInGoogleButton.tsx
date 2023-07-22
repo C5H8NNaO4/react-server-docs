@@ -43,7 +43,7 @@ export const LoggedInGoogleButton = () => {
   const theme = useTheme();
 
   const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
-  const MDButton = lessThanSmall ? IconButton : Button;
+  const MDButton: any = lessThanSmall ? IconButton : Button;
   return (
     <>
       <MDButton
