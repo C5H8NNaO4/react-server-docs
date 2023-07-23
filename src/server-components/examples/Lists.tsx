@@ -31,8 +31,10 @@ import {
   MenuList,
   Select,
   Tooltip,
+  FormLabel,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import TrophyIcon from '@mui/icons-material/EmojiEvents';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import LabelIcon from '@mui/icons-material/Label';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -42,10 +44,11 @@ import IconMore from '@mui/icons-material/Add';
 import IconClear from '@mui/icons-material/Clear';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import DownloadIcon from '@mui/icons-material/Download';
+import SettingsIcon from '@mui/icons-material/Settings';
 import PaletteIcon from '@mui/icons-material/Palette';
 import { Actions, stateContext } from '../../provider/StateProvider';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   DndContext,
   KeyboardSensor,
@@ -376,6 +379,11 @@ export const MyLists = (props) => {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', mt: 2 }}>
+          <Chip
+            color="success"
+            avatar={<TrophyIcon />}
+            label={component?.props?.points}
+          ></Chip>
           <Labels
             sx={{ my: 2 }}
             labels={labels}
@@ -876,6 +884,7 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
   };
 
   const [showDialog, setShowDialog] = useState(false);
+  const [showListMenu, setShowListMenu] = useState(false);
 
   const itemLkp = (component?.children || []).reduce((acc, child) => {
     return { ...acc, [child.props.id]: child };
@@ -1159,6 +1168,27 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
               </IconButton>
             </span>
           </Tooltip>
+          <Tooltip
+            title={
+              showArchived ? 'Hide archived items.' : 'Show archived items'
+            }
+          >
+            <span>
+              <IconButton
+                color={showListMenu ? 'success' : 'default'}
+                onClick={async (e) => {
+                  setShowListMenu(!showListMenu);
+                }}
+              >
+                <SettingsIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <ListMenu
+            open={showListMenu}
+            component={component}
+            onClose={() => setShowListMenu(false)}
+          />
         </CardActions>
       </CardActionArea>
       <ConfirmationDialogRaw
@@ -1226,6 +1256,7 @@ const TodoItem = (props) => {
   const [component, { loading, error }] = useComponent(todoId, {
     data,
   });
+  const [showMenu, setShowMenu] = useState(false);
 
   if (loading) return null;
 
@@ -1247,24 +1278,6 @@ const TodoItem = (props) => {
           )
         }
       />
-      <ListItemText>
-        {edit && (
-          <Tooltip title="Reset after # days" placement="right">
-            <Select
-              onChange={(e) => component?.props?.setReset(e.target.value)}
-              value={
-                component.props?.reset === null
-                  ? '-'
-                  : component?.props?.reset / (1000 * 60 * 60 * 24)
-              }
-            >
-              {['-', 1, 7, 14].map((n) => {
-                return <MenuItem value={n}>{n}</MenuItem>;
-              })}
-            </Select>
-          </Tooltip>
-        )}
-      </ListItemText>
       <ListItemSecondaryAction>
         {!edit && (
           <Checkbox
@@ -1287,11 +1300,142 @@ const TodoItem = (props) => {
             }}
           />
         )}
+        {edit && (
+          <IconButton onClick={() => setShowMenu(true)}>
+            <MoreVertIcon />
+          </IconButton>
+        )}
+        <ListItemMenu
+          component={component}
+          open={showMenu}
+          onClose={() => setShowMenu(false)}
+        ></ListItemMenu>
       </ListItemSecondaryAction>
     </ListItem>
   );
 };
 
+const ListItemMenu = (props) => {
+  const { dispatch, state } = useContext(stateContext);
+  const { component, open, onClose } = props;
+  return (
+    <Dialog open={open}>
+      <Paper sx={{ backgroundColor: 'beige' }}>
+        <ClickAwayListener
+          onClickAway={(e) => {
+            console.log(e, component?.props?.id);
+            if (
+              ![component?.props?.id].includes((e?.target as HTMLElement)?.id)
+            ) {
+              onClose();
+            } else {
+              e.stopImmediatePropagation();
+            }
+          }}
+        >
+          <DialogContent>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Tooltip title="Reset after # days" placement="right">
+                <>
+                  <FormLabel>
+                    Reset after{' '}
+                    {component?.props?.reset / (1000 * 60 * 60 * 24) || '#'}{' '}
+                    days
+                  </FormLabel>
+                  <Select
+                    sx={{ minWidth: '100px', ml: 1 }}
+                    id={component?.props?.id}
+                    onChange={(e) => component?.props?.setReset(e.target.value)}
+                    value={
+                      component.props?.reset === null
+                        ? '-'
+                        : component?.props?.reset / (1000 * 60 * 60 * 24)
+                    }
+                    MenuProps={{ disablePortal: true }}
+                  >
+                    {['-', 1, 7, 14].map((n) => {
+                      return <MenuItem value={n}>{n}</MenuItem>;
+                    })}
+                  </Select>
+                </>
+              </Tooltip>
+              <Tooltip title="Value Points" placement="right">
+                <>
+                  <FormLabel>Points for completing this item</FormLabel>
+                  <Select
+                    sx={{ minWidth: '100px', ml: 1 }}
+                    id={component?.props?.id}
+                    onChange={(e) =>
+                      component?.props?.setValuePoints(e.target.value)
+                    }
+                    value={component.props?.valuePoints ?? '-'}
+                    MenuProps={{ disablePortal: true }}
+                  >
+                    {[0, 1, 2, 3, 5, 8, 13, 21, 44, 65, 100].map((n) => {
+                      return <MenuItem value={n}>{n}</MenuItem>;
+                    })}
+                  </Select>
+                </>
+              </Tooltip>
+            </Box>
+          </DialogContent>
+        </ClickAwayListener>
+      </Paper>
+    </Dialog>
+  );
+};
+
+const ListMenu = (props) => {
+  const { dispatch, state } = useContext(stateContext);
+  const { component, open, onClose } = props;
+  return (
+    <Dialog open={open}>
+      <Paper sx={{ backgroundColor: 'beige' }}>
+        <ClickAwayListener
+          onClickAway={(e) => {
+            console.log(e, component?.props?.id);
+            if (
+              ![component?.props?.id].includes((e?.target as HTMLElement)?.id)
+            ) {
+              onClose();
+            } else {
+              e.stopImmediatePropagation();
+            }
+          }}
+        >
+          <DialogContent>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Tooltip title="Default Value Points" placement="right">
+                <>
+                  <FormLabel>
+                    Default value points for completing items in this list
+                  </FormLabel>
+                  <Select
+                    sx={{ minWidth: '100px', ml: 1 }}
+                    id={component?.props?.id}
+                    onChange={(e) =>
+                      component?.props?.updateSettings({
+                        defaultValuePoints: e.target.value,
+                      })
+                    }
+                    value={
+                      component?.props?.settings?.defaultValuePoints ?? '-'
+                    }
+                    MenuProps={{ disablePortal: true }}
+                  >
+                    {[0, 1, 2, 3, 5, 8, 13, 21, 44, 65, 100].map((n) => {
+                      return <MenuItem value={n}>{n}</MenuItem>;
+                    })}
+                  </Select>
+                </>
+              </Tooltip>
+            </Box>
+          </DialogContent>
+        </ClickAwayListener>
+      </Paper>
+    </Dialog>
+  );
+};
 const LabelItem = (props) => {
   const { dispatch, state } = useContext(stateContext);
   const { title, edit, remove, id } = props;
