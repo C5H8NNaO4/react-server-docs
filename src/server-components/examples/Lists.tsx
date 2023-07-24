@@ -135,6 +135,10 @@ const exportToLocalStorage = (data) => {
 const unique = (arr) => [...new Set(arr)];
 export const MyLists = (props) => {
   const [component, { loading, error, refetch }] = useComponent('my-lists', {});
+  const [pointsComponent, { refetch: refetchPoints }] = useComponent(
+    'my-lists-points',
+    {}
+  );
   const { state, dispatch } = useContext(stateContext);
   const [title, setTitle] = useState('');
   const [fullWidth, setFullWidth] = useLocalStorage('fullWidth', true);
@@ -316,6 +320,7 @@ export const MyLists = (props) => {
                       remove={component?.props?.remove}
                       id={list.id}
                       refetch={refetch}
+                      refetchPoints={refetchPoints}
                       nItems={nItems}
                     />
                   </SortableItem>
@@ -378,11 +383,13 @@ export const MyLists = (props) => {
             />
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', mt: 2 }}>
+        <Box sx={{ display: 'flex', my: 2, alignItems: 'center' }}>
+          ASD
+          {JSON.stringify(pointsComponent)}
           <Chip
             color="success"
             avatar={<TrophyIcon />}
-            label={component?.props?.points}
+            label={pointsComponent?.props?.points ?? '-'}
           ></Chip>
           <Labels
             sx={{ my: 2 }}
@@ -812,7 +819,7 @@ const useSyncedState = (defValue, updateFn) => {
   return [localValue, setValue];
 };
 
-export const List = ({ list, remove, id, refetch, nItems }) => {
+export const List = ({ list, remove, id, refetch, nItems, refetchPoints }) => {
   const { dispatch, state } = useContext(stateContext);
   const [component, { loading, error }] = useComponent(list, {});
   const [todoTitle, setTodoTitle] = useState('');
@@ -1064,6 +1071,7 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
                         data={todo}
                         edit={edit && !labelMode}
                         remove={component?.props?.remove}
+                        refetch={refetchPoints}
                       />
                     </SortableItem>
                   )}
@@ -1252,7 +1260,7 @@ function ConfirmationDialogRaw(
 
 const TodoItem = (props) => {
   const { dispatch, state } = useContext(stateContext);
-  const { todo: todoId, edit, remove, data } = props;
+  const { todo: todoId, edit, remove, data, refetch } = props;
   const [component, { loading, error }] = useComponent(todoId, {
     data,
   });
@@ -1284,7 +1292,7 @@ const TodoItem = (props) => {
             disabled={component?.props?.archived}
             checked={component?.props.completed}
             onClick={async () => {
-              component?.props.toggle();
+              await component?.props.toggle();
               dispatch({
                 type: Actions.SHOW_MESSAGE,
                 value: `Marked ${component.props.title}. Undo? (Ctrl+Z)`,
@@ -1297,6 +1305,7 @@ const TodoItem = (props) => {
                   },
                 },
               });
+              await refetch();
             }}
           />
         )}
