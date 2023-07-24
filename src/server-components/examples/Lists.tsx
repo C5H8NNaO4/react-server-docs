@@ -384,8 +384,6 @@ export const MyLists = (props) => {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', my: 2, alignItems: 'center' }}>
-          ASD
-          {JSON.stringify(pointsComponent)}
           <Chip
             color="success"
             avatar={<TrophyIcon />}
