@@ -102,7 +102,7 @@ function downloadExcel(data: Record<string, Record<string, any>>) {
   const titles = {};
   for (const [id, list] of Object.entries(data)) {
     /* create a worksheet for books */
-    var wsBooks = XLSX.utils.json_to_sheet(list.todos);
+    var wsBooks = XLSX.utils.json_to_sheet(list.todos || []);
     /* Add the worksheet to the workbook */
     XLSX.utils.book_append_sheet(
       wb,
