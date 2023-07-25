@@ -6,6 +6,7 @@ import {
   CardHeader,
   Checkbox,
   IconButton,
+  ListItemButton,
   List as MUIList,
   ListItem,
   ListItemIcon,
@@ -84,6 +85,45 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { useLocation, useNavigate } from 'react-router';
 
 import levenshtein from 'fast-levenshtein';
+
+const DAY = 1000 * 60 * 60 * 24;
+const limits = {
+  '100': [DAY * 90, 1],
+  '65': [DAY * 30, 1],
+  '44': [DAY * 14, 2],
+  '21': [DAY * 7, 2],
+  '13': [DAY * 7, 3],
+  '8': [DAY * 7, 4],
+  '5': [DAY * 7, 7],
+  '3': [DAY, 1],
+  '2': [DAY, 10],
+  '1': [DAY, 20],
+};
+
+const colorMap = {
+  '100': 'darkgreen',
+  '65': 'green',
+  '44': 'darkblue',
+  '21': 'purple',
+  '13': 'darkred',
+  '8': 'red',
+  '5': 'orange',
+  '3': 'gold',
+  '2': 'silver',
+  '1': '#CD7F32',
+  '0': 'lightgrey',
+};
+
+const checkLimits = (items, todo) => {
+  const [interval, times] = limits[todo.props.valuePoints] || [0, 1];
+  const within = (items || []).filter(
+    (i) => i.lastModified + interval > Date.now()
+  );
+
+  const reachedLimit = within.length >= times;
+
+  return !reachedLimit;
+};
 
 const LIST_ITEM_HEIGHT = 36;
 
@@ -317,6 +357,7 @@ export const MyLists = (props) => {
                       id={list.id}
                       refetch={refetch}
                       nItems={nItems}
+                      lastCompleted={component?.props?.lastCompleted}
                     />
                   </SortableItem>
                 </Grid>
@@ -378,12 +419,22 @@ export const MyLists = (props) => {
             />
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', mt: 2 }}>
-          <Chip
-            color="success"
-            avatar={<TrophyIcon />}
-            label={component?.props?.points}
-          ></Chip>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            my: 2,
+            flexWrap: 'wrap',
+          }}
+        >
+          <Tooltip title="Gain points by completing items." placement="left">
+            <Chip
+              color="success"
+              avatar={<TrophyIcon sx={{ fill: 'gold' }} />}
+              label={component?.props?.points}
+              sx={{ mr: 1 }}
+            ></Chip>
+          </Tooltip>
           <Labels
             sx={{ my: 2 }}
             labels={labels}
@@ -812,9 +863,12 @@ const useSyncedState = (defValue, updateFn) => {
   return [localValue, setValue];
 };
 
-export const List = ({ list, remove, id, refetch, nItems }) => {
+export const List = ({ list, remove, id, refetch, nItems, lastCompleted }) => {
   const { dispatch, state } = useContext(stateContext);
-  const [component, { loading, error }] = useComponent(list, {});
+  const [component, { loading, error, refetch: refetchList }] = useComponent(
+    list,
+    {}
+  );
   const [todoTitle, setTodoTitle] = useState('');
   const [listTitle, setListTitle] = useSyncedState(
     component?.props?.title,
@@ -1039,6 +1093,10 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
           >
             {order.map((id, i) => {
               const todo = lkp[id];
+              const canBeCompleted = checkLimits(
+                lastCompleted[todo?.props?.valuePoints],
+                todo
+              );
               // if (!todo) return null;
               return (
                 <>
@@ -1058,13 +1116,27 @@ export const List = ({ list, remove, id, refetch, nItems }) => {
                       id={id}
                       enabled={isTouchScreenDevice() ? edit : true}
                     >
-                      <TodoItem
-                        key={i}
-                        todo={todo.key}
-                        data={todo}
-                        edit={edit && !labelMode}
-                        remove={component?.props?.remove}
-                      />
+                      <Tooltip
+                        title={
+                          !canBeCompleted && !todo?.props?.completed
+                            ? `You already completed too many items with ${todo?.props?.valuePoints} points`
+                            : ''
+                        }
+                      >
+                        <span>
+                          <TodoItem
+                            key={i}
+                            todo={todo.key}
+                            data={todo}
+                            edit={edit && !labelMode}
+                            remove={component?.props?.remove}
+                            disabled={
+                              !edit && !todo.props.completed && !canBeCompleted
+                            }
+                            refetchList={refetchList}
+                          />
+                        </span>
+                      </Tooltip>
                     </SortableItem>
                   )}
                 </>
@@ -1252,16 +1324,20 @@ function ConfirmationDialogRaw(
 
 const TodoItem = (props) => {
   const { dispatch, state } = useContext(stateContext);
-  const { todo: todoId, edit, remove, data } = props;
+  const { todo: todoId, edit, remove, data, disabled, refetchList } = props;
   const [component, { loading, error }] = useComponent(todoId, {
     data,
   });
   const [showMenu, setShowMenu] = useState(false);
-
+  const [interval, times] = limits[component?.props?.valuePoints] || [0, 1];
   if (loading) return null;
 
   return (
-    <ListItem dense sx={{ opacity: component?.props?.archived ? 0.5 : 1 }}>
+    <ListItemButton
+      dense
+      sx={{ opacity: component?.props?.archived ? 0.5 : 1 }}
+      disabled={disabled}
+    >
       {edit && (
         <ListItemIcon>
           <IconButton color="error" onClick={() => remove(component.props.id)}>
@@ -1277,18 +1353,32 @@ const TodoItem = (props) => {
             component.props.title
           )
         }
+        sx={{ '&>p': { color: error ? 'red' : 'theme.text' } }}
+        secondary={error ? error.message : ''}
       />
       <ListItemSecondaryAction>
+        {component?.props?.valuePoints > 0 && (
+          <Tooltip
+            title={`Can be completed ${times} times within ${
+              interval / DAY
+            } days.`}
+          >
+            <Chip
+              sx={{
+                color: 'white',
+                backgroundColor:
+                  colorMap[component?.props?.valuePoints] || 'grey',
+              }}
+              label={component?.props?.valuePoints}
+            ></Chip>
+          </Tooltip>
+        )}
         {!edit && (
           <Checkbox
             disabled={component?.props?.archived}
             checked={component?.props.completed}
             onClick={async () => {
-              component?.props.toggle();
-              dispatch({
-                type: Actions.SHOW_MESSAGE,
-                value: `Marked ${component.props.title}. Undo? (Ctrl+Z)`,
-              });
+              await component?.props.toggle();
               dispatch({
                 type: Actions.RECORD_CHANGE,
                 value: {
@@ -1309,15 +1399,16 @@ const TodoItem = (props) => {
           component={component}
           open={showMenu}
           onClose={() => setShowMenu(false)}
+          refetchList={refetchList}
         ></ListItemMenu>
       </ListItemSecondaryAction>
-    </ListItem>
+    </ListItemButton>
   );
 };
 
 const ListItemMenu = (props) => {
   const { dispatch, state } = useContext(stateContext);
-  const { component, open, onClose } = props;
+  const { component, open, onClose, refetchList } = props;
   return (
     <Dialog open={open}>
       <Paper sx={{ backgroundColor: 'beige' }}>
@@ -1365,9 +1456,10 @@ const ListItemMenu = (props) => {
                   <Select
                     sx={{ minWidth: '100px', ml: 1 }}
                     id={component?.props?.id}
-                    onChange={(e) =>
-                      component?.props?.setValuePoints(e.target.value)
-                    }
+                    onChange={async (e) => {
+                      await component?.props?.setValuePoints(e.target.value);
+                      await refetchList();
+                    }}
                     value={component.props?.valuePoints ?? '-'}
                     MenuProps={{ disablePortal: true }}
                   >
