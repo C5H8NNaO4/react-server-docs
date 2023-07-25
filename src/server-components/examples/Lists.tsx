@@ -1044,9 +1044,10 @@ export const List = ({
                     ? setListTitle(e.target.value)
                     : setTodoTitle(e.target.value);
                 }}
-                onKeyUp={(e) => {
+                onKeyUp={async (e) => {
                   if ((!edit || canAddLabel) && e.key === 'Enter') {
-                    addEntry(e, canAddLabel);
+                    await addEntry(e, canAddLabel);
+                    await refetchPoints();
                   }
                 }}
                 onKeyDown={(e) => {
@@ -1074,7 +1075,10 @@ export const List = ({
                 <IconButton
                   sx={{ mt: 1 }}
                   disabled={!todoTitle}
-                  onClick={(e) => addEntry(e, canAddLabel)}
+                  onClick={async (e) => {
+                    await addEntry(e, canAddLabel);
+                    await refetchPoints();
+                  }}
                 >
                   <IconMore />
                 </IconButton>
