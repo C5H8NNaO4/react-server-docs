@@ -142,7 +142,7 @@ function downloadExcel(data: Record<string, Record<string, any>>) {
   const titles = {};
   for (const [id, list] of Object.entries(data)) {
     /* create a worksheet for books */
-    var wsBooks = XLSX.utils.json_to_sheet(list.todos);
+    var wsBooks = XLSX.utils.json_to_sheet(list.todos || []);
     /* Add the worksheet to the workbook */
     XLSX.utils.book_append_sheet(
       wb,
@@ -175,6 +175,10 @@ const exportToLocalStorage = (data) => {
 const unique = (arr) => [...new Set(arr)];
 export const MyLists = (props) => {
   const [component, { loading, error, refetch }] = useComponent('my-lists', {});
+  const [pointsComponent, { refetch: refetchPoints }] = useComponent(
+    'my-lists-points',
+    {}
+  );
   const { state, dispatch } = useContext(stateContext);
   const [title, setTitle] = useState('');
   const [fullWidth, setFullWidth] = useLocalStorage('fullWidth', true);
@@ -356,6 +360,7 @@ export const MyLists = (props) => {
                       remove={component?.props?.remove}
                       id={list.id}
                       refetch={refetch}
+                      refetchPoints={refetchPoints}
                       nItems={nItems}
                       lastCompleted={component?.props?.lastCompleted}
                     />
@@ -431,7 +436,7 @@ export const MyLists = (props) => {
             <Chip
               color="success"
               avatar={<TrophyIcon sx={{ fill: 'gold' }} />}
-              label={component?.props?.points}
+              label={pointsComponent?.props?.points ?? '-'}
               sx={{ mr: 1 }}
             ></Chip>
           </Tooltip>
@@ -863,7 +868,15 @@ const useSyncedState = (defValue, updateFn) => {
   return [localValue, setValue];
 };
 
-export const List = ({ list, remove, id, refetch, nItems, lastCompleted }) => {
+export const List = ({
+  list,
+  remove,
+  id,
+  refetch,
+  nItems,
+  lastCompleted,
+  refetchPoints,
+}) => {
   const { dispatch, state } = useContext(stateContext);
   const [component, { loading, error, refetch: refetchList }] = useComponent(
     list,
@@ -1134,6 +1147,7 @@ export const List = ({ list, remove, id, refetch, nItems, lastCompleted }) => {
                               !edit && !todo.props.completed && !canBeCompleted
                             }
                             refetchList={refetchList}
+                            refetchPoints={refetchPoints}
                           />
                         </span>
                       </Tooltip>
@@ -1324,7 +1338,15 @@ function ConfirmationDialogRaw(
 
 const TodoItem = (props) => {
   const { dispatch, state } = useContext(stateContext);
-  const { todo: todoId, edit, remove, data, disabled, refetchList } = props;
+  const {
+    todo: todoId,
+    edit,
+    remove,
+    data,
+    disabled,
+    refetchList,
+    refetchPoints,
+  } = props;
   const [component, { loading, error }] = useComponent(todoId, {
     data,
   });
@@ -1387,6 +1409,7 @@ const TodoItem = (props) => {
                   },
                 },
               });
+              await refetchPoints();
             }}
           />
         )}
