@@ -98,6 +98,7 @@ const limits = {
   '3': [DAY, 1],
   '2': [DAY, 10],
   '1': [DAY, 20],
+  '0': [DAY, 1000],
 };
 
 const colorMap = {
