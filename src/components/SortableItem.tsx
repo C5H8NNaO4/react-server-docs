@@ -1,9 +1,10 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { useMediaQuery, useTheme, Box } from '@mui/material';
 
 export function SortableItem(props) {
+  const { id, DragHandle, ...rest } = props;
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.id });
 
@@ -12,8 +13,7 @@ export function SortableItem(props) {
     transition,
     height: props.fullHeight ? '100%' : undefined,
     overflow: 'hidden',
-    touchAction: 'none',
-    padding: '4px'
+
   };
 
   delete listeners?.onKeyDown;
@@ -24,8 +24,28 @@ export function SortableItem(props) {
     return <div>{props.children}</div>;
   }
 
+  if (props.DragHandle) {
+    return (
+      <Box
+        ref={setNodeRef}
+        style={style}
+        sx={{ display: 'flex', alignItems: 'center' }}
+      >
+        <Box sx={{ touchAction: 'none' }}>
+          <props.DragHandle {...attributes} {...listeners} />
+        </Box>
+        <Box sx={{ display: 'block', width: '100%' }}>{props.children}</Box>
+      </Box>
+    );
+  }
+
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div
+      ref={setNodeRef}
+      style={{ ...style, touchAction: 'none' }}
+      {...attributes}
+      {...listeners}
+    >
       {props.children}
     </div>
   );

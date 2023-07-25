@@ -39,6 +39,7 @@ import TrophyIcon from '@mui/icons-material/EmojiEvents';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import LabelIcon from '@mui/icons-material/Label';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { useContext, useEffect, useRef, useMemo, useState } from 'react';
 import IconMore from '@mui/icons-material/Add';
@@ -1125,6 +1126,12 @@ export const List = ({
                       key={id}
                       id={id}
                       enabled={isTouchScreenDevice() ? edit : true}
+                      DragHandle={
+                        isTouchScreenDevice()
+                          ? (props) => <DragIndicatorIcon {...props} />
+                          : null
+                      }
+                      sx={{ display: 'flex' }}
                     >
                       <TodoItem
                         key={id}
@@ -1354,7 +1361,10 @@ const TodoItem = (props) => {
       <span>
         <ListItemButton
           dense
-          sx={{ opacity: component?.props?.archived ? 0.5 : 1 }}
+          sx={{
+            opacity: component?.props?.archived ? 0.5 : 1,
+            pl: edit ? 0 : 2,
+          }}
           disabled={!component?.props.completed && !edit && !canBeCompleted}
         >
           {edit && (
