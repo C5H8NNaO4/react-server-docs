@@ -363,7 +363,7 @@ export const MyLists = (props) => {
                       refetch={refetch}
                       refetchPoints={refetchPoints}
                       nItems={nItems}
-                      lastCompleted={component?.props?.lastCompleted}
+                      lastCompleted={pointsComponent?.props?.lastCompleted}
                     />
                   </SortableItem>
                 </Grid>
@@ -1107,10 +1107,6 @@ export const List = ({
           >
             {order.map((id, i) => {
               const todo = lkp[id];
-              const canBeCompleted = checkLimits(
-                lastCompleted[todo?.props?.valuePoints],
-                todo
-              );
               // if (!todo) return null;
               return (
                 <>
@@ -1130,28 +1126,16 @@ export const List = ({
                       id={id}
                       enabled={isTouchScreenDevice() ? edit : true}
                     >
-                      <Tooltip
-                        title={
-                          !canBeCompleted && !todo?.props?.completed
-                            ? `You already completed too many items with ${todo?.props?.valuePoints} points`
-                            : ''
-                        }
-                      >
-                        <span>
-                          <TodoItem
-                            key={i}
-                            todo={todo.key}
-                            data={todo}
-                            edit={edit && !labelMode}
-                            remove={component?.props?.remove}
-                            disabled={
-                              !edit && !todo.props.completed && !canBeCompleted
-                            }
-                            refetchList={refetchList}
-                            refetchPoints={refetchPoints}
-                          />
-                        </span>
-                      </Tooltip>
+                      <TodoItem
+                        key={id}
+                        todo={todo.key}
+                        data={todo}
+                        edit={edit && !labelMode}
+                        remove={component?.props?.remove}
+                        lastCompleted={lastCompleted}
+                        refetchList={refetchList}
+                        refetchPoints={refetchPoints}
+                      />
                     </SortableItem>
                   )}
                 </>
@@ -1344,7 +1328,7 @@ const TodoItem = (props) => {
     edit,
     remove,
     data,
-    disabled,
+    lastCompleted,
     refetchList,
     refetchPoints,
   } = props;
@@ -1353,80 +1337,97 @@ const TodoItem = (props) => {
   });
   const [showMenu, setShowMenu] = useState(false);
   const [interval, times] = limits[component?.props?.valuePoints] || [0, 1];
+  const canBeCompleted = checkLimits(
+    lastCompleted[component?.props?.valuePoints],
+    component
+  );
   if (loading) return null;
 
   return (
-    <ListItemButton
-      dense
-      sx={{ opacity: component?.props?.archived ? 0.5 : 1 }}
-      disabled={disabled}
+    <Tooltip
+      title={
+        !canBeCompleted && !component?.props?.completed
+          ? `You already completed too many items with ${component?.props?.valuePoints} points`
+          : ''
+      }
     >
-      {edit && (
-        <ListItemIcon>
-          <IconButton color="error" onClick={() => remove(component.props.id)}>
-            <RemoveCircleIcon />
-          </IconButton>
-        </ListItemIcon>
-      )}
-      <ListItemText
-        primary={
-          component?.props?.completed ? (
-            <s>{component.props.title}</s>
-          ) : (
-            component.props.title
-          )
-        }
-        sx={{ '&>p': { color: error ? 'red' : 'theme.text' } }}
-        secondary={error ? error.message : ''}
-      />
-      <ListItemSecondaryAction>
-        {component?.props?.valuePoints > 0 && (
-          <Tooltip
-            title={`Can be completed ${times} times within ${
-              interval / DAY
-            } days.`}
-          >
-            <Chip
-              sx={{
-                color: 'white',
-                backgroundColor:
-                  colorMap[component?.props?.valuePoints] || 'grey',
-              }}
-              label={component?.props?.valuePoints}
-            ></Chip>
-          </Tooltip>
-        )}
-        {!edit && (
-          <Checkbox
-            disabled={component?.props?.archived}
-            checked={component?.props.completed}
-            onClick={async () => {
-              await component?.props.toggle();
-              dispatch({
-                type: Actions.RECORD_CHANGE,
-                value: {
-                  reverse: () => {
-                    component?.props.toggle();
-                  },
-                },
-              });
-              await refetchPoints();
-            }}
+      <span>
+        <ListItemButton
+          dense
+          sx={{ opacity: component?.props?.archived ? 0.5 : 1 }}
+          disabled={!component?.props.completed && !edit && !canBeCompleted}
+        >
+          {edit && (
+            <ListItemIcon>
+              <IconButton
+                color="error"
+                onClick={() => remove(component.props.id)}
+              >
+                <RemoveCircleIcon />
+              </IconButton>
+            </ListItemIcon>
+          )}
+          <ListItemText
+            primary={
+              component?.props?.completed ? (
+                <s>{component.props.title}</s>
+              ) : (
+                component.props.title
+              )
+            }
+            sx={{ '&>p': { color: error ? 'red' : 'theme.text' } }}
+            secondary={error ? error.message : ''}
           />
-        )}
-        {edit && (
-          <IconButton onClick={() => setShowMenu(true)}>
-            <MoreVertIcon />
-          </IconButton>
-        )}
-        <ListItemMenu
-          component={component}
-          open={showMenu}
-          onClose={() => setShowMenu(false)}
-          refetchList={refetchList}
-        ></ListItemMenu>
-      </ListItemSecondaryAction>
-    </ListItemButton>
+          <ListItemSecondaryAction>
+            {component?.props?.valuePoints > 0 && (
+              <Tooltip
+                title={`Can be completed ${times} times within ${
+                  interval / DAY
+                } days.`}
+              >
+                <Chip
+                  sx={{
+                    color: 'white',
+                    backgroundColor:
+                      colorMap[component?.props?.valuePoints] || 'grey',
+                  }}
+                  label={component?.props?.valuePoints}
+                ></Chip>
+              </Tooltip>
+            )}
+            {!edit && (
+              <Checkbox
+                disabled={component?.props?.archived}
+                checked={component?.props.completed}
+                onClick={async () => {
+                  await component?.props.toggle();
+                  dispatch({
+                    type: Actions.RECORD_CHANGE,
+                    value: {
+                      reverse: () => {
+                        component?.props.toggle();
+                      },
+                    },
+                  });
+                  await refetchPoints();
+                }}
+              />
+            )}
+            {edit && (
+              <IconButton onClick={() => setShowMenu(true)}>
+                <MoreVertIcon />
+              </IconButton>
+            )}
+            <ListItemMenu
+              component={component}
+              open={showMenu}
+              onClose={() => setShowMenu(false)}
+              refetchList={refetchList}
+            ></ListItemMenu>
+          </ListItemSecondaryAction>
+        </ListItemButton>
+      </span>
+    </Tooltip>
   );
 };
 
