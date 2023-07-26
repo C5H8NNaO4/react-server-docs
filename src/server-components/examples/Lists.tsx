@@ -109,10 +109,10 @@ const colorMap = {
   '21': 'purple',
   '13': 'darkred',
   '8': 'red',
-  '5': 'orange',
-  '3': 'gold',
-  '2': 'silver',
-  '1': '#CD7F32',
+  '5': 'gold',
+  '3': 'silver',
+  '2': '#CD7F32',
+  '1': 'lightgrey',
   '0': 'lightgrey',
 };
 
