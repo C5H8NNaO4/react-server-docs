@@ -37,6 +37,8 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import TrophyIcon from '@mui/icons-material/EmojiEvents';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 import LabelIcon from '@mui/icons-material/Label';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
@@ -954,6 +956,7 @@ export const List = ({
 
   const [showDialog, setShowDialog] = useState(false);
   const [showListMenu, setShowListMenu] = useState(false);
+  const [doArchive, setDoArchive] = useState(false);
 
   const itemLkp = (component?.children || []).reduce((acc, child) => {
     return { ...acc, [child.props.id]: child };
@@ -1000,7 +1003,16 @@ export const List = ({
   function handleClose() {
     setShowColors(null);
   }
-
+  useEffect(() => {
+    if (!doArchive) return;
+    (async () => {
+      for (const c of component?.children || []) {
+        if (c?.props?.completed) await c?.props?.archive();
+      }
+      setDoArchive(false);
+      await refetch();
+    })();
+  }, [doArchive]);
   if (loading) {
     return null;
   }
@@ -1137,16 +1149,29 @@ export const List = ({
                       }
                       sx={{ display: 'flex' }}
                     >
-                      <TodoItem
-                        key={id}
-                        todo={todo.key}
-                        data={todo}
-                        edit={edit && !labelMode}
-                        remove={component?.props?.remove}
-                        lastCompleted={lastCompleted}
-                        refetchList={refetchList}
-                        refetchPoints={refetchPoints}
-                      />
+                      {todo?.props?.type !== 'Counter' ? (
+                        <TodoItem
+                          key={id}
+                          todo={todo.key}
+                          data={todo}
+                          edit={edit && !labelMode}
+                          remove={component?.props?.remove}
+                          lastCompleted={lastCompleted}
+                          refetchList={refetchList}
+                          refetchPoints={refetchPoints}
+                        />
+                      ) : (
+                        <CounterItem
+                          key={id}
+                          todo={todo.key}
+                          data={todo}
+                          edit={edit && !labelMode}
+                          remove={component?.props?.remove}
+                          lastCompleted={lastCompleted}
+                          refetchList={refetchList}
+                          refetchPoints={refetchPoints}
+                        />
+                      )}
                     </SortableItem>
                   )}
                 </>
@@ -1223,10 +1248,8 @@ export const List = ({
                     await component?.props?.archive();
                     return;
                   }
-                  for (const c of component?.children || []) {
-                    if (c?.props?.completed) await c?.props?.archive();
-                  }
                   await refetch();
+                  setDoArchive(true);
                 }}
               >
                 <ArchiveIcon />
@@ -1448,6 +1471,127 @@ const TodoItem = (props) => {
   );
 };
 
+const CounterItem = (props) => {
+  const { dispatch, state } = useContext(stateContext);
+  const {
+    todo: todoId,
+    edit,
+    remove,
+    data,
+    lastCompleted,
+    refetchList,
+    refetchPoints,
+  } = props;
+  const [component, { loading, error }] = useComponent(todoId, {
+    data,
+  });
+  const [showMenu, setShowMenu] = useState(false);
+  const [interval, times] = limits[component?.props?.valuePoints] || [0, 1];
+  const canBeCompleted = checkLimits(
+    lastCompleted[component?.props?.valuePoints],
+    component
+  );
+  if (loading) return null;
+
+  return (
+    <Tooltip
+      title={
+        !canBeCompleted && !component?.props?.completed
+          ? `You already completed too many items with ${component?.props?.valuePoints} points`
+          : ''
+      }
+    >
+      <span>
+        <ListItemButton
+          dense
+          sx={{
+            opacity: component?.props?.archived ? 0.5 : 1,
+            pl: edit ? 0 : 2,
+          }}
+          disabled={!component?.props.completed && !edit && !canBeCompleted}
+        >
+          {edit && (
+            <ListItemIcon>
+              <IconButton
+                color="error"
+                onClick={() => remove(component.props.id)}
+              >
+                <RemoveCircleIcon />
+              </IconButton>
+            </ListItemIcon>
+          )}
+          <ListItemText
+            primary={
+              component?.props?.completed ? (
+                <s>{component.props.title}</s>
+              ) : (
+                component.props.title
+              )
+            }
+            sx={{ '&>p': { color: error ? 'red' : 'theme.text' } }}
+            secondary={
+              error
+                ? error.message
+                : component?.props?.archived
+                ? `Archived: ${new Date(
+                    component?.props?.archived
+                  ).toLocaleDateString()}`
+                : ''
+            }
+          />
+          <ListItemSecondaryAction>
+            {!edit && (
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton
+                  disabled={component?.props?.archived}
+                  size="small"
+                  onClick={() => component?.props?.decrease()}
+                >
+                  <RemoveIcon></RemoveIcon>
+                </IconButton>
+                {component?.props?.count}
+                <IconButton
+                  disabled={component?.props?.archived}
+                  size="small"
+                  onClick={() => component?.props?.increase()}
+                >
+                  <AddIcon></AddIcon>
+                </IconButton>
+              </Box>
+              // <Checkbox
+              //   disabled={component?.props?.archived}
+              //   checked={component?.props.completed}
+              //   onClick={async () => {
+              //     await component?.props.toggle();
+              //     dispatch({
+              //       type: Actions.RECORD_CHANGE,
+              //       value: {
+              //         reverse: () => {
+              //           component?.props.toggle();
+              //         },
+              //       },
+              //     });
+              //     await refetchPoints();
+              //   }}
+              // />
+            )}
+            {edit && (
+              <IconButton onClick={() => setShowMenu(true)}>
+                <MoreVertIcon />
+              </IconButton>
+            )}
+            <ListItemMenu
+              component={component}
+              open={showMenu}
+              onClose={() => setShowMenu(false)}
+              refetchList={refetchList}
+            ></ListItemMenu>
+          </ListItemSecondaryAction>
+        </ListItemButton>
+      </span>
+    </Tooltip>
+  );
+};
 const ListItemMenu = (props) => {
   const { dispatch, state } = useContext(stateContext);
   const { component, open, onClose, refetchList } = props;
@@ -1466,8 +1610,8 @@ const ListItemMenu = (props) => {
             }
           }}
         >
-          <DialogContent>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Card>
+            <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
               <Tooltip title="Reset after # days" placement="right">
                 <>
                   <FormLabel>
@@ -1487,6 +1631,21 @@ const ListItemMenu = (props) => {
                     MenuProps={{ disablePortal: true }}
                   >
                     {['-', 1, 7, 14].map((n) => {
+                      return <MenuItem value={n}>{n}</MenuItem>;
+                    })}
+                  </Select>
+                  <FormLabel>Item Type</FormLabel>
+                  <Select
+                    sx={{ minWidth: '100px', ml: 1 }}
+                    onChange={(e) =>
+                      component?.props?.changeType(e.target.value)
+                    }
+                    value={
+                      !component.props?.type ? '-' : component?.props?.type
+                    }
+                    MenuProps={{ disablePortal: true }}
+                  >
+                    {['-', 'Todo', 'Counter'].map((n) => {
                       return <MenuItem value={n}>{n}</MenuItem>;
                     })}
                   </Select>
@@ -1511,8 +1670,18 @@ const ListItemMenu = (props) => {
                   </Select>
                 </>
               </Tooltip>
-            </Box>
-          </DialogContent>
+            </CardContent>
+            <CardActions>
+              <IconButton
+                onClick={async () => {
+                  await component?.props?.archive();
+                  await refetchList();
+                }}
+              >
+                <ArchiveIcon />
+              </IconButton>
+            </CardActions>
+          </Card>
         </ClickAwayListener>
       </Paper>
     </Dialog>
