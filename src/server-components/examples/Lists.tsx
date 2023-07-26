@@ -105,10 +105,10 @@ const limits = {
 const colorMap = {
   '100': 'darkgreen',
   '65': 'green',
-  '44': 'darkblue',
+  '44': 'blue',
   '21': 'purple',
-  '13': 'darkred',
-  '8': 'red',
+  '13': 'red',
+  '8': 'orange',
   '5': 'gold',
   '3': 'silver',
   '2': '#CD7F32',
