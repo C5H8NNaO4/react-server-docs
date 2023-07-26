@@ -1406,7 +1406,7 @@ const TodoItem = (props) => {
                       component?.props?.valuePoints > 1 ? 'white' : 'black',
                     backgroundColor:
                       colorMap[component?.props?.valuePoints] || 'lightgrey',
-                    border: '1px  solid silver',
+                    border: '1px  solid darkgrey',
                   }}
                   label={component?.props?.valuePoints}
                 ></Chip>
