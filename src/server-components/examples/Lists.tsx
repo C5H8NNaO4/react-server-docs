@@ -112,7 +112,7 @@ const colorMap = {
   '5': 'gold',
   '3': 'silver',
   '2': '#CD7F32',
-  '1': 'lightgrey',
+  '1': '#F0F0F0',
   '0': 'lightgrey',
 };
 
@@ -1400,10 +1400,13 @@ const TodoItem = (props) => {
                 } days.`}
               >
                 <Chip
+                  size="small"
                   sx={{
-                    color: 'white',
+                    color:
+                      component?.props?.valuePoints > 1 ? 'white' : 'black',
                     backgroundColor:
-                      colorMap[component?.props?.valuePoints] || 'grey',
+                      colorMap[component?.props?.valuePoints] || 'lightgrey',
+                    border: '1px  solid silver',
                   }}
                   label={component?.props?.valuePoints}
                 ></Chip>
