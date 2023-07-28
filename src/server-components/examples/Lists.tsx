@@ -1687,10 +1687,10 @@ const ListItemMenu = (props) => {
                     {['-', 6, 12, 24, 48, 72, 24 * 7, 24 * 14].map((n) => {
                       return (
                         <MenuItem value={n}>
-                          {n > 48
-                            ? `${n / 24} days`
-                            : n === '-'
+                          {n === '-'
                             ? '-'
+                            : (typeof n === 'number' && n) > 48
+                            ? `${Number(n) / 24} days`
                             : `${n}h`}
                         </MenuItem>
                       );
