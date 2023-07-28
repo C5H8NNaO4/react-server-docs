@@ -21,7 +21,7 @@ export function SortableItem(props) {
   const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
   if (!props.enabled) {
-    return <div>{props.children}</div>;
+    return <div style={style}>{props.children}</div>;
   }
 
   if (props.DragHandle) {
