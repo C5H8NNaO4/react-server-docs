@@ -1043,8 +1043,16 @@ export const List = ({
   useEffect(() => {
     if (!doArchive) return;
     (async () => {
-      for (const c of component?.children || []) {
-        if (c?.props?.completed) await c?.props?.archive();
+      if (component?.props?.settings?.defaultType === 'Expense') {
+        for (const c of component?.children || []) {
+          if (c?.props?.value != 0 && !c?.props?.archived)
+            await c?.props?.archive();
+        }
+      } else {
+        for (const c of component?.children || []) {
+          if (c?.props?.completed && !c?.props?.archived)
+            await c?.props?.archive();
+        }
       }
       setDoArchive(false);
       await refetch();
@@ -1318,7 +1326,11 @@ export const List = ({
             )}
             <Tooltip
               title={
-                edit ? 'Archive this list.' : 'Archive all completed todos.'
+                edit
+                  ? 'Archive this list.'
+                  : listArchiveMessageMap[
+                      component?.props?.settings?.defaultType
+                    ]
               }
             >
               <span>
@@ -1787,7 +1799,7 @@ const ExpenseItem = (props) => {
             }
           />
           <ListItemSecondaryAction>
-            {!edit && (
+            {!edit && !component?.props?.archived && (
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <TextField
                   size="small"
@@ -1802,6 +1814,7 @@ const ExpenseItem = (props) => {
                 />
               </Box>
             )}
+            {component?.props?.archived && <Typography>{value}€</Typography>}
             {edit && (
               <IconButton onClick={() => setShowMenu(true)}>
                 <MoreVertIcon />
@@ -2017,4 +2030,10 @@ const itemMap = {
   Counter: CounterItem,
   Todo: TodoItem,
   Expense: ExpenseItem,
+};
+
+const listArchiveMessageMap = {
+  Todo: 'Archive all completed todos.',
+  Counter: 'Do nothing',
+  Expense: 'Archive all expenses / income.',
 };
