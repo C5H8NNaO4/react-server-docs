@@ -130,7 +130,7 @@ const checkLimits = (items, todo) => {
   return !reachedLimit;
 };
 
-const LIST_ITEM_HEIGHT = 36;
+const LIST_ITEM_HEIGHT = 44;
 
 const isTouchScreenDevice = () => {
   try {
