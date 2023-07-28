@@ -957,14 +957,21 @@ export const List = ({
     setTodoTitle('');
     if (todoTitle === '') return;
     const fn = label ? component.props.addLabel : component.props.add;
-    const res = await fn(
-      label
-        ? { title: todoTitle }
-        : {
-            title: todoTitle,
-            completed: false,
-          }
-    );
+    const arg = {
+      title: todoTitle,
+    };
+    if (!label) {
+      if (component?.props?.settings?.defaultType === 'Todo') {
+        arg.completed = false;
+      }
+      if (component?.props?.settings?.defaultType === 'Counter') {
+        arg.count = 0;
+      }
+      if (component?.props?.settings?.defaultType === 'Expense') {
+        arg.value = 0;
+      }
+    }
+    const res = await fn(arg);
     if (label) {
       await refetch();
     }
@@ -1046,7 +1053,6 @@ export const List = ({
   if (loading) {
     return null;
   }
-
   return (
     <Card
       sx={{
@@ -1164,6 +1170,8 @@ export const List = ({
             {order.map((id, i) => {
               const todo = lkp[id];
               // if (!todo) return null;
+              const Item = itemMap[todo?.props?.type] || TodoItem;
+
               return (
                 <>
                   {canAddLabel && (
@@ -1188,29 +1196,16 @@ export const List = ({
                       }
                       sx={{ display: 'flex' }}
                     >
-                      {todo?.props?.type !== 'Counter' ? (
-                        <TodoItem
-                          key={id}
-                          todo={todo.key}
-                          data={todo}
-                          edit={edit && !labelMode}
-                          remove={component?.props?.remove}
-                          lastCompleted={lastCompleted}
-                          refetchList={refetchList}
-                          refetchPoints={refetchPoints}
-                        />
-                      ) : (
-                        <CounterItem
-                          key={id}
-                          todo={todo.key}
-                          data={todo}
-                          edit={edit && !labelMode}
-                          remove={component?.props?.remove}
-                          lastCompleted={lastCompleted}
-                          refetchList={refetchList}
-                          refetchPoints={refetchPoints}
-                        />
-                      )}
+                      <Item
+                        key={id}
+                        todo={todo.key}
+                        data={todo}
+                        edit={edit && !labelMode}
+                        remove={component?.props?.remove}
+                        lastCompleted={lastCompleted}
+                        refetchList={refetchList}
+                        refetchPoints={refetchPoints}
+                      />
                     </SortableItem>
                   )}
                 </>
@@ -1255,6 +1250,9 @@ export const List = ({
             )}
           </CardActions>
         </CardActionArea>
+      )}
+      {component?.props?.settings?.defaultType === 'Expense' && (
+        <Sum items={component?.children} />
       )}
       {!(component?.props?.settings?.pinned && !hover) && (
         <CardActionArea
@@ -1418,6 +1416,31 @@ export const List = ({
         setColor={component?.props?.setColor}
       ></ColorMenu>
     </Card>
+  );
+};
+
+const Sum = ({ items, sx }) => {
+  const pos = items?.reduce(
+    (acc, item) =>
+      acc + (item?.props?.value > 0 ? Number(item?.props?.value) : 0),
+    0
+  );
+  const neg = items?.reduce(
+    (acc, item) =>
+      acc + (item?.props?.value < 0 ? Number(item?.props?.value) : 0),
+    0
+  );
+
+  if (pos === 0) {
+    return <Alert severity={'error'}>{`You spent ${Math.abs(neg)}€`}</Alert>;
+  }
+  if (neg === 0) {
+    return <Alert severity={'success'}>{`You gained ${Math.abs(pos)}€`}</Alert>;
+  }
+  return (
+    <Alert
+      severity={pos < Math.abs(neg) ? 'error' : 'success'}
+    >{`You spent ${Math.abs(neg)}€ and gained ${pos}€`}</Alert>
   );
 };
 export interface ConfirmationDialogRawProps {
@@ -1698,6 +1721,104 @@ const CounterItem = (props) => {
     </Tooltip>
   );
 };
+
+const ExpenseItem = (props) => {
+  const { dispatch, state } = useContext(stateContext);
+  const {
+    todo: todoId,
+    edit,
+    remove,
+    data,
+    lastCompleted,
+    refetchList,
+    refetchPoints,
+  } = props;
+  const [component, { loading, error }] = useComponent(todoId, {
+    data,
+  });
+  const [showMenu, setShowMenu] = useState(false);
+  const [value, setValue] = useSyncedState(
+    component?.props?.value,
+    async (val) => {
+      await component?.props?.setValue(val);
+      await refetchList();
+    }
+  );
+
+  if (loading) return null;
+
+  return (
+    <Tooltip title={''}>
+      <span>
+        <ListItemButton
+          dense
+          sx={{
+            opacity: component?.props?.archived ? 0.5 : 1,
+            pl: edit ? 0 : 2,
+          }}
+        >
+          {edit && (
+            <ListItemIcon>
+              <IconButton
+                color="error"
+                onClick={() => remove(component.props.id)}
+              >
+                <RemoveCircleIcon />
+              </IconButton>
+            </ListItemIcon>
+          )}
+          <ListItemText
+            primary={
+              component?.props?.completed ? (
+                <s>{component.props.title}</s>
+              ) : (
+                component.props.title
+              )
+            }
+            sx={{ '&>p': { color: error ? 'red' : 'theme.text' } }}
+            secondary={
+              error
+                ? error.message
+                : component?.props?.archived
+                ? `Archived: ${new Date(
+                    component?.props?.archived
+                  ).toLocaleDateString()}`
+                : ''
+            }
+          />
+          <ListItemSecondaryAction>
+            {!edit && (
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <TextField
+                  size="small"
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                  type="number"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">€</InputAdornment>
+                    ),
+                  }}
+                />
+              </Box>
+            )}
+            {edit && (
+              <IconButton onClick={() => setShowMenu(true)}>
+                <MoreVertIcon />
+              </IconButton>
+            )}
+            <ListItemMenu
+              component={component}
+              open={showMenu}
+              onClose={() => setShowMenu(false)}
+              refetchList={refetchList}
+            ></ListItemMenu>
+          </ListItemSecondaryAction>
+        </ListItemButton>
+      </span>
+    </Tooltip>
+  );
+};
 const ListItemMenu = (props) => {
   const { dispatch, state } = useContext(stateContext);
   const { component, open, onClose, refetchList } = props;
@@ -1759,7 +1880,7 @@ const ListItemMenu = (props) => {
                     }
                     MenuProps={{ disablePortal: true }}
                   >
-                    {['-', 'Todo', 'Counter'].map((n) => {
+                    {['-', 'Todo', 'Counter', 'Expense'].map((n) => {
                       return <MenuItem value={n}>{n}</MenuItem>;
                     })}
                   </Select>
@@ -1846,6 +1967,27 @@ const ListMenu = (props) => {
                   </Select>
                 </>
               </Tooltip>
+              <Tooltip title="Default Type" placement="right">
+                <>
+                  <FormLabel>Default type for new items in this list</FormLabel>
+                  <Select
+                    sx={{ minWidth: '100px', ml: 1 }}
+                    id={component?.props?.id}
+                    onChange={(e) =>
+                      component?.props?.updateSettings({
+                        ...component?.props?.settings,
+                        defaultType: e.target.value,
+                      })
+                    }
+                    value={component?.props?.settings?.defaultType ?? '-'}
+                    MenuProps={{ disablePortal: true }}
+                  >
+                    {['-', 'Todo', 'Counter', 'Expense'].map((n) => {
+                      return <MenuItem value={n}>{n}</MenuItem>;
+                    })}
+                  </Select>
+                </>
+              </Tooltip>
             </Box>
           </DialogContent>
         </ClickAwayListener>
@@ -1869,4 +2011,10 @@ const LabelItem = (props) => {
       <ListItemText primary={title} />
     </ListItem>
   );
+};
+
+const itemMap = {
+  Counter: CounterItem,
+  Todo: TodoItem,
+  Expense: ExpenseItem,
 };
