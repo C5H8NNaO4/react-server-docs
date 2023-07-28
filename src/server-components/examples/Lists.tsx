@@ -483,7 +483,7 @@ export const MyLists = (props) => {
           <Tooltip title="Import" placement="left">
             <IconButton
               sx={{ ml: 'auto' }}
-              color={'secondary'}
+              color={'default'}
               onClick={async (e) => {
                 setShowImport(e.target as HTMLElement);
               }}
@@ -496,7 +496,7 @@ export const MyLists = (props) => {
               color={
                 JSON.stringify(data) === JSON.stringify(stored)
                   ? 'success'
-                  : 'secondary'
+                  : 'default'
               }
               onClick={async (e) => {
                 setShowExport(e.target as HTMLElement);
@@ -507,7 +507,7 @@ export const MyLists = (props) => {
           </Tooltip>
           <Tooltip title="Full Width" placement="bottom">
             <IconButton
-              color={fullWidth ? 'success' : 'secondary'}
+              color={fullWidth ? 'success' : 'default'}
               // sx={{ ml: 'auto' }}
               onClick={() => setFullWidth(!fullWidth)}
             >
@@ -516,7 +516,7 @@ export const MyLists = (props) => {
           </Tooltip>
           <Tooltip title="Fullscreen" placement="bottom">
             <IconButton
-              color={state.fullscreen ? 'success' : 'secondary'}
+              color={state.fullscreen ? 'success' : 'default'}
               // sx={{ ml: 'auto' }}
               onClick={() => {
                 dispatch({ type: Actions.TOGGLE_FULLSCREEN });
@@ -531,7 +531,7 @@ export const MyLists = (props) => {
           </Tooltip>
           <Tooltip title="Show archived lists." placement="bottom">
             <IconButton
-              color={showArchived ? 'success' : 'secondary'}
+              color={showArchived ? 'success' : 'default'}
               // sx={{ ml: 'auto' }}
               onClick={() => {
                 setShowArchived(!showArchived);
@@ -1245,7 +1245,7 @@ export const List = ({
           {edit && (
             <Tooltip title="Add / Remove Labels">
               <IconButton
-                color={labelMode ? 'success' : 'secondary'}
+                color={labelMode ? 'success' : 'default'}
                 disabled={!edit}
                 onClick={() => {
                   setLabelMode(!labelMode);
@@ -1257,7 +1257,7 @@ export const List = ({
           )}
           <Tooltip title="Set list color.">
             <IconButton
-              color={showColors ? 'success' : 'secondary'}
+              color={showColors ? 'success' : 'default'}
               // disabled={!edit}
               onClick={(e) => {
                 setShowColors(e.target as HTMLElement);
@@ -1271,7 +1271,7 @@ export const List = ({
           >
             <span>
               <IconButton
-                color={edit ? 'error' : 'secondary'}
+                color={edit ? 'error' : 'default'}
                 // disabled={!edit}
 
                 onClick={async (e) => {
@@ -1294,7 +1294,7 @@ export const List = ({
           >
             <span>
               <IconButton
-                color={showArchived ? 'success' : 'secondary'}
+                color={showArchived ? 'success' : 'default'}
                 disabled={!component?.children?.some((c) => c?.props?.archived)}
                 onClick={async (e) => {
                   setShowArchived(!showArchived);
@@ -1307,7 +1307,7 @@ export const List = ({
           <Tooltip title={'List settings.'}>
             <span>
               <IconButton
-                color={showListMenu ? 'success' : 'secondary'}
+                color={showListMenu ? 'success' : 'default'}
                 onClick={async (e) => {
                   setShowListMenu(!showListMenu);
                 }}
@@ -1320,7 +1320,7 @@ export const List = ({
             <span>
               <IconButton
                 color={
-                  component?.props?.settings?.pinned ? 'success' : 'secondary'
+                  component?.props?.settings?.pinned ? 'success' : 'default'
                 }
                 onClick={async (e) => {
                   await component?.props?.togglePinned();
