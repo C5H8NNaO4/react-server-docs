@@ -529,6 +529,7 @@ export const MyLists = (props) => {
               <FullscreenIcon />
             </IconButton>
           </Tooltip>
+
           <Tooltip title="Show archived lists." placement="bottom">
             <IconButton
               color={showArchived ? 'success' : 'default'}
@@ -1255,23 +1256,25 @@ export const List = ({
               </IconButton>
             </Tooltip>
           )}
-          <Tooltip title="Set list color.">
-            <IconButton
-              color={showColors ? 'success' : 'default'}
-              // disabled={!edit}
-              onClick={(e) => {
-                setShowColors(e.target as HTMLElement);
-              }}
-            >
-              <PaletteIcon />
-            </IconButton>
-          </Tooltip>
+          {!edit && (
+            <Tooltip title="Set list color.">
+              <IconButton
+                color={showColors ? 'success' : 'default'}
+                // disabled={!edit}
+                onClick={(e) => {
+                  setShowColors(e.target as HTMLElement);
+                }}
+              >
+                <PaletteIcon />
+              </IconButton>
+            </Tooltip>
+          )}
           <Tooltip
             title={edit ? 'Archive this list.' : 'Archive all completed todos.'}
           >
             <span>
               <IconButton
-                color={edit ? 'error' : 'default'}
+                color={edit ? 'error' : 'primary'}
                 // disabled={!edit}
 
                 onClick={async (e) => {
@@ -1287,50 +1290,58 @@ export const List = ({
               </IconButton>
             </span>
           </Tooltip>
-          <Tooltip
-            title={
-              showArchived ? 'Hide archived items.' : 'Show archived items'
-            }
-          >
-            <span>
-              <IconButton
-                color={showArchived ? 'success' : 'default'}
-                disabled={!component?.children?.some((c) => c?.props?.archived)}
-                onClick={async (e) => {
-                  setShowArchived(!showArchived);
-                }}
-              >
-                <VisibilityIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title={'List settings.'}>
-            <span>
-              <IconButton
-                color={showListMenu ? 'success' : 'default'}
-                onClick={async (e) => {
-                  setShowListMenu(!showListMenu);
-                }}
-              >
-                <SettingsIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title={'Pin List.'}>
-            <span>
-              <IconButton
-                color={
-                  component?.props?.settings?.pinned ? 'success' : 'default'
-                }
-                onClick={async (e) => {
-                  await component?.props?.togglePinned();
-                  await refetch();
-                }}
-              >
-                <PushPinIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
+          {!edit && (
+            <Tooltip
+              title={
+                showArchived ? 'Hide archived items.' : 'Show archived items'
+              }
+            >
+              <span>
+                <IconButton
+                  color={showArchived ? 'success' : 'default'}
+                  disabled={
+                    !component?.children?.some((c) => c?.props?.archived)
+                  }
+                  onClick={async (e) => {
+                    setShowArchived(!showArchived);
+                  }}
+                >
+                  <VisibilityIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
+          {edit && (
+            <Tooltip title={'List settings.'}>
+              <span>
+                <IconButton
+                  color={showListMenu ? 'success' : 'default'}
+                  onClick={async (e) => {
+                    setShowListMenu(!showListMenu);
+                  }}
+                >
+                  <SettingsIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
+          {!edit && (
+            <Tooltip title={'Pin List.'}>
+              <span>
+                <IconButton
+                  color={
+                    component?.props?.settings?.pinned ? 'success' : 'default'
+                  }
+                  onClick={async (e) => {
+                    await component?.props?.togglePinned();
+                    await refetch();
+                  }}
+                >
+                  <PushPinIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
           <ListMenu
             open={showListMenu}
             component={component}
