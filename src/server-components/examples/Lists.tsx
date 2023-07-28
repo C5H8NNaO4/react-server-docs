@@ -50,6 +50,7 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import { Actions, stateContext } from '../../provider/StateProvider';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PushPinIcon from '@mui/icons-material/PushPin';
 import {
   DndContext,
   KeyboardSensor,
@@ -203,18 +204,33 @@ export const MyLists = (props) => {
       ...acc,
       [list.props.id]: {
         title: list.props.title,
+        order: list.props.order,
+
         id: list.props.id,
+        settings: list.props.settings,
+        createdAt: list.props.createdAt,
+        color: list.props.color,
         todos: list.children.map((todo) => {
           return {
             title: todo.props.title,
             completed: todo.props.completed,
             id: todo.props.id,
+            createdAt: todo.props.createdAt,
+            type: todo.props.type,
+            reset: todo.props.reset,
+            valuePoints: todo.props.valuePoints,
+            creditedValuePoints: todo.props.creditedValuePoints,
+            negativePoints: todo.props.negativePoints,
+            dueDate: todo.props.dueDate,
+            lastModified: todo.props.lastModified,
           };
         }),
       },
     };
   }, {});
-
+  const { signed, points, order, ...stored } = JSON.parse(
+    localStorage.lists || '{}'
+  );
   const handleClose = () => {
     setShowImport(null);
     setShowExport(null);
@@ -287,6 +303,13 @@ export const MyLists = (props) => {
   const optimisticOrder = _optimisticOrder?.filter(
     (id) => lkp[id] && (showArchived || !lkp[id].props.archived)
   );
+
+  const pinnedOrder = optimisticOrder?.filter(
+    (id) => lkp[id] && lkp[id].props.settings.pinned
+  );
+  const unpinnedOrder = optimisticOrder?.filter(
+    (id) => lkp[id] && !lkp[id].props.settings.pinned
+  );
   useEffect(() => {
     if (component?.props?.order && !loading) {
       setOptimisticOrder(items);
@@ -337,37 +360,39 @@ export const MyLists = (props) => {
       >
         <Box sx={{ mx: fullWidth ? 0 : 0 }}>
           <Grid container spacing={1}>
-            {optimisticOrder?.map((id, i) => {
-              const list = lkp[id];
-              if (!list) return null;
-              return (
-                <Grid
-                  item
-                  xs={bp[0]}
-                  sm={bp[1]}
-                  md={bp[2]}
-                  lg={bp[3]}
-                  xl={bp[4]}
-                >
-                  <SortableItem
-                    key={id}
-                    id={id}
-                    fullHeight
-                    enabled={!isTouchScreenDevice()}
+            {[pinnedOrder, unpinnedOrder].map((optimisticOrder) => {
+              return optimisticOrder?.map((id, i) => {
+                const list = lkp[id];
+                if (!list) return null;
+                return (
+                  <Grid
+                    item
+                    xs={bp[0]}
+                    sm={bp[1]}
+                    md={bp[2]}
+                    lg={bp[3]}
+                    xl={bp[4]}
                   >
-                    <List
-                      key={list.key}
-                      list={`${list.key}`}
-                      remove={component?.props?.remove}
-                      id={list.id}
-                      refetch={refetch}
-                      refetchPoints={refetchPoints}
-                      nItems={nItems}
-                      lastCompleted={pointsComponent?.props?.lastCompleted}
-                    />
-                  </SortableItem>
-                </Grid>
-              );
+                    <SortableItem
+                      key={id}
+                      id={id}
+                      fullHeight
+                      enabled={!isTouchScreenDevice()}
+                    >
+                      <List
+                        key={list.key}
+                        list={`${list.key}`}
+                        remove={component?.props?.remove}
+                        id={list.id}
+                        refetch={refetch}
+                        refetchPoints={refetchPoints}
+                        nItems={nItems}
+                        lastCompleted={pointsComponent?.props?.lastCompleted}
+                      />
+                    </SortableItem>
+                  </Grid>
+                );
+              });
             })}
           </Grid>
         </Box>
@@ -455,6 +480,7 @@ export const MyLists = (props) => {
           <Tooltip title="Import" placement="left">
             <IconButton
               sx={{ ml: 'auto' }}
+              color={'secondary'}
               onClick={async (e) => {
                 setShowImport(e.target as HTMLElement);
               }}
@@ -465,9 +491,9 @@ export const MyLists = (props) => {
           <Tooltip title="Export" placement="bottom">
             <IconButton
               color={
-                JSON.stringify(data) === localStorage.getItem('lists')
+                JSON.stringify(data) === JSON.stringify(stored)
                   ? 'success'
-                  : 'warning'
+                  : 'secondary'
               }
               onClick={async (e) => {
                 setShowExport(e.target as HTMLElement);
@@ -478,7 +504,7 @@ export const MyLists = (props) => {
           </Tooltip>
           <Tooltip title="Full Width" placement="bottom">
             <IconButton
-              color={fullWidth ? 'success' : 'default'}
+              color={fullWidth ? 'success' : 'secondary'}
               // sx={{ ml: 'auto' }}
               onClick={() => setFullWidth(!fullWidth)}
             >
@@ -487,7 +513,7 @@ export const MyLists = (props) => {
           </Tooltip>
           <Tooltip title="Fullscreen" placement="bottom">
             <IconButton
-              color={state.fullscreen ? 'success' : 'default'}
+              color={state.fullscreen ? 'success' : 'secondary'}
               // sx={{ ml: 'auto' }}
               onClick={() => {
                 dispatch({ type: Actions.TOGGLE_FULLSCREEN });
@@ -502,7 +528,7 @@ export const MyLists = (props) => {
           </Tooltip>
           <Tooltip title="Show archived lists." placement="bottom">
             <IconButton
-              color={showArchived ? 'success' : 'default'}
+              color={showArchived ? 'success' : 'secondary'}
               // sx={{ ml: 'auto' }}
               onClick={() => {
                 setShowArchived(!showArchived);
@@ -561,6 +587,7 @@ const Labels = ({ labels, onClick, active, ...rest }) => {
     <Box {...rest}>
       {labels?.map((label) => (
         <Chip
+          sx={{ mr: 1 }}
           color={active.includes(label) ? 'success' : 'default'}
           key={label.id}
           label={label}
@@ -1157,7 +1184,7 @@ export const List = ({
         <CardActions>
           <Tooltip title="Edit this list">
             <IconButton
-              color={edit ? 'primary' : 'default'}
+              color={edit ? 'success' : 'primary'}
               onClick={() => {
                 setTodoTitle('');
                 setEdit(!edit);
@@ -1166,31 +1193,35 @@ export const List = ({
               <EditIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Delete this list">
-            <IconButton
-              color="error"
-              disabled={!edit}
-              onClick={() => {
-                setShowDialog(true);
-              }}
-            >
-              <RemoveCircleIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Add / Remove Labels">
-            <IconButton
-              color={labelMode ? 'success' : 'default'}
-              disabled={!edit}
-              onClick={() => {
-                setLabelMode(!labelMode);
-              }}
-            >
-              <LabelIcon />
-            </IconButton>
-          </Tooltip>
+          {edit && (
+            <Tooltip title="Delete this list">
+              <IconButton
+                color="error"
+                disabled={!edit}
+                onClick={() => {
+                  setShowDialog(true);
+                }}
+              >
+                <RemoveCircleIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+          {edit && (
+            <Tooltip title="Add / Remove Labels">
+              <IconButton
+                color={labelMode ? 'success' : 'secondary'}
+                disabled={!edit}
+                onClick={() => {
+                  setLabelMode(!labelMode);
+                }}
+              >
+                <LabelIcon />
+              </IconButton>
+            </Tooltip>
+          )}
           <Tooltip title="Set list color.">
             <IconButton
-              color={showColors ? 'success' : 'default'}
+              color={showColors ? 'success' : 'secondary'}
               // disabled={!edit}
               onClick={(e) => {
                 setShowColors(e.target as HTMLElement);
@@ -1204,7 +1235,7 @@ export const List = ({
           >
             <span>
               <IconButton
-                color={edit ? 'error' : 'primary'}
+                color={edit ? 'error' : 'secondary'}
                 // disabled={!edit}
 
                 onClick={async (e) => {
@@ -1229,7 +1260,7 @@ export const List = ({
           >
             <span>
               <IconButton
-                color={showArchived ? 'success' : 'default'}
+                color={showArchived ? 'success' : 'secondary'}
                 disabled={!component?.children?.some((c) => c?.props?.archived)}
                 onClick={async (e) => {
                   setShowArchived(!showArchived);
@@ -1239,19 +1270,30 @@ export const List = ({
               </IconButton>
             </span>
           </Tooltip>
-          <Tooltip
-            title={
-              showArchived ? 'Hide archived items.' : 'Show archived items'
-            }
-          >
+          <Tooltip title={'List settings.'}>
             <span>
               <IconButton
-                color={showListMenu ? 'success' : 'default'}
+                color={showListMenu ? 'success' : 'secondary'}
                 onClick={async (e) => {
                   setShowListMenu(!showListMenu);
                 }}
               >
                 <SettingsIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title={'Pin List.'}>
+            <span>
+              <IconButton
+                color={
+                  component?.props?.settings?.pinned ? 'success' : 'secondary'
+                }
+                onClick={async (e) => {
+                  await component?.props?.togglePinned();
+                  await refetch();
+                }}
+              >
+                <PushPinIcon />
               </IconButton>
             </span>
           </Tooltip>
@@ -1397,6 +1439,7 @@ const TodoItem = (props) => {
             )}
             {!edit && (
               <Checkbox
+                color="secondary"
                 disabled={component?.props?.archived}
                 checked={component?.props.completed}
                 onClick={async () => {
