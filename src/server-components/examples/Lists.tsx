@@ -55,6 +55,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import ReplayIcon from '@mui/icons-material/Replay';
+import InvertColorsIcon from '@mui/icons-material/InvertColors';
 import {
   DndContext,
   PointerSensor,
@@ -188,7 +189,7 @@ export const MyLists = (props) => {
   const { state, dispatch } = useContext(stateContext);
   const [title, setTitle] = useState('');
   const [fullWidth, setFullWidth] = useLocalStorage('fullWidth', true);
-  const [active, setActive] = useState<string[]>([]);
+  const [active, setActive] = useLocalStorage<string[]>('activeFilter', []);
   const [showArchived, setShowArchived] = useState(false);
   const [showExpenses, setShowExpenses] = useLocalStorage(
     'showExpenses',
@@ -197,6 +198,10 @@ export const MyLists = (props) => {
   const [nItems, setNItems] = useState(5);
   const [showExport, setShowExport] = useState<HTMLElement | null>(null);
   const [showImport, setShowImport] = useState<HTMLElement | null>(null);
+  const [invertFilter, setInvertFilter] = useLocalStorage<boolean>(
+    'invertFilter',
+    false
+  );
 
   const { search } = useLocation();
   const navigate = useNavigate();
@@ -271,7 +276,11 @@ export const MyLists = (props) => {
     ?.filter((list) => {
       if (active.length === 0) return true;
 
-      return list.props.labels.some((label) => active.includes(label.title));
+      const hit = list.props.labels.some((label) =>
+        active.includes(label.title)
+      );
+
+      return invertFilter ? !hit : hit;
     })
     ?.filter((list) => {
       if (!state.search) return true;
@@ -518,6 +527,14 @@ export const MyLists = (props) => {
               setActive(newActive);
             }}
           />
+          <Tooltip title="Invert selection" placement="right">
+            <IconButton
+              color={invertFilter ? 'success' : 'default'}
+              onClick={() => setInvertFilter(!invertFilter)}
+            >
+              <InvertColorsIcon />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Import" placement="left">
             <IconButton
               sx={{ ml: 'auto' }}
