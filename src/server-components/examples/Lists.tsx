@@ -617,7 +617,7 @@ export const MyLists = (props) => {
             </Select>
           </Tooltip>
         </Box>
-        {(onlyExpenses || showExpenses) && (
+        {((onlyExpenses && expenseSum != 0) || showExpenses) && (
           <Alert
             action={
               <IconButton onClick={() => refetch()}>
