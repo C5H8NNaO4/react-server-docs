@@ -942,7 +942,7 @@ export const List = ({
         distance: 10,
       },
     }),
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
         distance: 10,
       },
