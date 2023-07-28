@@ -380,7 +380,9 @@ export const MyLists = (props) => {
                       key={id}
                       id={id}
                       fullHeight
-                      enabled={!isTouchScreenDevice()}
+                      enabled={
+                        !isTouchScreenDevice() && !list?.props?.settings?.pinned
+                      }
                     >
                       <List
                         key={list.key}
