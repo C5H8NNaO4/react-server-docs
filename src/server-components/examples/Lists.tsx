@@ -51,9 +51,10 @@ import DownloadIcon from '@mui/icons-material/Download';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PaletteIcon from '@mui/icons-material/Palette';
 import { Actions, stateContext } from '../../provider/StateProvider';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PushPinIcon from '@mui/icons-material/PushPin';
+import ReplayIcon from '@mui/icons-material/Replay';
 import {
   DndContext,
   PointerSensor,
@@ -189,6 +190,10 @@ export const MyLists = (props) => {
   const [fullWidth, setFullWidth] = useLocalStorage('fullWidth', true);
   const [active, setActive] = useState<string[]>([]);
   const [showArchived, setShowArchived] = useState(false);
+  const [showExpenses, setShowExpenses] = useLocalStorage(
+    'showExpenses',
+    false
+  );
   const [nItems, setNItems] = useState(5);
   const [showExport, setShowExport] = useState<HTMLElement | null>(null);
   const [showImport, setShowImport] = useState<HTMLElement | null>(null);
@@ -313,6 +318,32 @@ export const MyLists = (props) => {
   const unpinnedOrder = optimisticOrder?.filter(
     (id) => lkp[id] && !lkp[id].props.settings.pinned
   );
+
+  const onlyExpenses = filtered?.every(
+    (list) => list.props.settings.defaultType === 'Expense'
+  );
+
+  const expenseSum = filtered?.reduce((acc, list) => {
+    return (
+      acc +
+      list.children.reduce((acc, expense) => {
+        if (!expense.props?.archived) return acc;
+        if (expense?.props.archived < Date.now() - DAY * 7) return acc;
+        return acc + Number(expense.props.value || 0);
+      }, 0)
+    );
+  }, 0);
+
+  const remaining = filtered?.reduce((acc, list) => {
+    return (
+      acc +
+      list.children.reduce((acc, expense) => {
+        if (expense.props?.archived) return acc;
+        if (expense?.props.archived < Date.now() - DAY * 7) return acc;
+        return acc + Number(expense.props.value || 0);
+      }, 0)
+    );
+  }, 0);
   useEffect(() => {
     if (component?.props?.order && !loading) {
       setOptimisticOrder(items);
@@ -408,6 +439,7 @@ export const MyLists = (props) => {
     <>
       <Container maxWidth="xl">
         {error && <Alert severity="error">{error.message}</Alert>}
+
         <Box
           sx={{ display: 'flex', width: '100%', mt: 2, alignItems: 'start' }}
           ref={setNodeRef}
@@ -449,7 +481,10 @@ export const MyLists = (props) => {
           <Box sx={{ ml: 2, display: 'flex' }}>
             <NewListSkeleton
               onAdd={() => {
-                component?.props?.add({ title });
+                component?.props?.add({
+                  title,
+                  settings: { defaultType: 'Todo' },
+                });
                 setTitle('');
               }}
             />
@@ -543,6 +578,17 @@ export const MyLists = (props) => {
               <VisibilityIcon />
             </IconButton>
           </Tooltip>
+          <Tooltip title="Show total of expenses." placement="bottom">
+            <IconButton
+              color={showExpenses ? 'success' : 'default'}
+              // sx={{ ml: 'auto' }}
+              onClick={() => {
+                setShowExpenses(!showExpenses);
+              }}
+            >
+              <AttachMoneyIcon />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Search Distance" placement="right">
             <Select
               sx={{ mr: 1 }}
@@ -570,6 +616,19 @@ export const MyLists = (props) => {
             </Select>
           </Tooltip>
         </Box>
+        {(onlyExpenses || showExpenses) && (
+          <Alert
+            action={
+              <IconButton onClick={() => refetch()}>
+                <ReplayIcon />
+              </IconButton>
+            }
+            severity={expenseSum > 0 ? 'success' : 'error'}
+          >
+            {`Your archived expenses are ${expenseSum}€` +
+              (remaining > 0 ? ` (${remaining}€ open)` : '')}
+          </Alert>
+        )}
         {!fullWidth && content}
       </Container>
       {fullWidth && content}
@@ -1802,6 +1861,7 @@ const ExpenseItem = (props) => {
             {!edit && !component?.props?.archived && (
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <TextField
+                  data-no-dnd="true"
                   size="small"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
