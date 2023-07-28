@@ -1053,9 +1053,10 @@ export const List = ({
       }}
       onMouseOver={() => setHover(true)}
       onMouseLeave={() => setTimeout(setHover, 200, false)}
-      elevation={hover ? 1 : 0}
+      elevation={hover ? 2 : component?.props?.settings?.pinned ? 1 : 0}
     >
       {error && <Alert severity="error">{error.message}</Alert>}
+
       <CardHeader
         title={
           <>
@@ -1208,147 +1209,182 @@ export const List = ({
           </MUIList>
         </SortableContext>
       </DndContext>
-      <CardActionArea
-        sx={{
-          mt: 'auto',
-          opacity: hover ? 1 : 0,
-          transition: 'opacity 200ms ease-in',
-          '&:hover': {
-            transition: 'opacity 200ms ease-out',
-          },
-        }}
-      >
-        <CardActions>
-          <Tooltip title="Edit this list">
-            <IconButton
-              color={edit ? 'success' : 'primary'}
-              onClick={() => {
-                setTodoTitle('');
-                setEdit(!edit);
-              }}
-            >
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
-          {edit && (
-            <Tooltip title="Delete this list">
+      {component?.props?.settings?.pinned && !hover && (
+        <CardActionArea
+          sx={{
+            mt: 'auto',
+          }}
+        >
+          <CardActions sx={{ display: 'flex' }}>
+            {!edit && (
+              <Tooltip title={'Pin List.'}>
+                <Box
+                  sx={{
+                    ml: 'auto',
+                  }}
+                >
+                  <IconButton
+                    color={
+                      component?.props?.settings?.pinned ? 'success' : 'default'
+                    }
+                    onClick={async (e) => {
+                      await component?.props?.togglePinned();
+                      await refetch();
+                    }}
+                  >
+                    <PushPinIcon />
+                  </IconButton>
+                </Box>
+              </Tooltip>
+            )}
+          </CardActions>
+        </CardActionArea>
+      )}
+      {!(component?.props?.settings?.pinned && !hover) && (
+        <CardActionArea
+          sx={{
+            mt: 'auto',
+            opacity: hover ? 1 : 0,
+            transition: 'opacity 200ms ease-in',
+            '&:hover': {
+              transition: 'opacity 200ms ease-out',
+            },
+          }}
+        >
+          <CardActions>
+            <Tooltip title="Edit this list">
               <IconButton
-                color="error"
-                disabled={!edit}
+                color={edit ? 'success' : 'primary'}
                 onClick={() => {
-                  setShowDialog(true);
+                  setTodoTitle('');
+                  setEdit(!edit);
                 }}
               >
-                <RemoveCircleIcon />
+                <EditIcon />
               </IconButton>
             </Tooltip>
-          )}
-          {edit && (
-            <Tooltip title="Add / Remove Labels">
-              <IconButton
-                color={labelMode ? 'success' : 'default'}
-                disabled={!edit}
-                onClick={() => {
-                  setLabelMode(!labelMode);
-                }}
-              >
-                <LabelIcon />
-              </IconButton>
-            </Tooltip>
-          )}
-          {!edit && (
-            <Tooltip title="Set list color.">
-              <IconButton
-                color={showColors ? 'success' : 'default'}
-                // disabled={!edit}
-                onClick={(e) => {
-                  setShowColors(e.target as HTMLElement);
-                }}
-              >
-                <PaletteIcon />
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip
-            title={edit ? 'Archive this list.' : 'Archive all completed todos.'}
-          >
-            <span>
-              <IconButton
-                color={edit ? 'error' : 'primary'}
-                // disabled={!edit}
-
-                onClick={async (e) => {
-                  if (edit) {
-                    await component?.props?.archive();
-                    return;
-                  }
-                  await refetch();
-                  setDoArchive(true);
-                }}
-              >
-                <ArchiveIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
-          {!edit && (
+            {edit && (
+              <Tooltip title="Delete this list">
+                <IconButton
+                  color="error"
+                  disabled={!edit}
+                  onClick={() => {
+                    setShowDialog(true);
+                  }}
+                >
+                  <RemoveCircleIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {edit && (
+              <Tooltip title="Add / Remove Labels">
+                <IconButton
+                  color={labelMode ? 'success' : 'default'}
+                  disabled={!edit}
+                  onClick={() => {
+                    setLabelMode(!labelMode);
+                  }}
+                >
+                  <LabelIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {!edit && (
+              <Tooltip title="Set list color.">
+                <IconButton
+                  color={showColors ? 'success' : 'default'}
+                  // disabled={!edit}
+                  onClick={(e) => {
+                    setShowColors(e.target as HTMLElement);
+                  }}
+                >
+                  <PaletteIcon />
+                </IconButton>
+              </Tooltip>
+            )}
             <Tooltip
               title={
-                showArchived ? 'Hide archived items.' : 'Show archived items'
+                edit ? 'Archive this list.' : 'Archive all completed todos.'
               }
             >
               <span>
                 <IconButton
-                  color={showArchived ? 'success' : 'default'}
-                  disabled={
-                    !component?.children?.some((c) => c?.props?.archived)
-                  }
+                  color={edit ? 'error' : 'primary'}
+                  // disabled={!edit}
+
                   onClick={async (e) => {
-                    setShowArchived(!showArchived);
-                  }}
-                >
-                  <VisibilityIcon />
-                </IconButton>
-              </span>
-            </Tooltip>
-          )}
-          {edit && (
-            <Tooltip title={'List settings.'}>
-              <span>
-                <IconButton
-                  color={showListMenu ? 'success' : 'default'}
-                  onClick={async (e) => {
-                    setShowListMenu(!showListMenu);
-                  }}
-                >
-                  <SettingsIcon />
-                </IconButton>
-              </span>
-            </Tooltip>
-          )}
-          {!edit && (
-            <Tooltip title={'Pin List.'}>
-              <span>
-                <IconButton
-                  color={
-                    component?.props?.settings?.pinned ? 'success' : 'default'
-                  }
-                  onClick={async (e) => {
-                    await component?.props?.togglePinned();
+                    if (edit) {
+                      await component?.props?.archive();
+                      return;
+                    }
                     await refetch();
+                    setDoArchive(true);
                   }}
                 >
-                  <PushPinIcon />
+                  <ArchiveIcon />
                 </IconButton>
               </span>
             </Tooltip>
-          )}
-          <ListMenu
-            open={showListMenu}
-            component={component}
-            onClose={() => setShowListMenu(false)}
-          />
-        </CardActions>
-      </CardActionArea>
+            {!edit && (
+              <Tooltip
+                title={
+                  showArchived ? 'Hide archived items.' : 'Show archived items'
+                }
+              >
+                <span>
+                  <IconButton
+                    color={showArchived ? 'success' : 'default'}
+                    disabled={
+                      !component?.children?.some((c) => c?.props?.archived)
+                    }
+                    onClick={async (e) => {
+                      setShowArchived(!showArchived);
+                    }}
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            )}
+            {edit && (
+              <Tooltip title={'List settings.'}>
+                <span>
+                  <IconButton
+                    color={showListMenu ? 'success' : 'default'}
+                    onClick={async (e) => {
+                      setShowListMenu(!showListMenu);
+                    }}
+                  >
+                    <SettingsIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            )}
+            {!edit && (
+              <Tooltip title={'Pin List.'}>
+                <Box sx={{ ml: 'auto' }}>
+                  <IconButton
+                    color={
+                      component?.props?.settings?.pinned ? 'success' : 'default'
+                    }
+                    onClick={async (e) => {
+                      await component?.props?.togglePinned();
+                      await refetch();
+                    }}
+                  >
+                    <PushPinIcon />
+                  </IconButton>
+                </Box>
+              </Tooltip>
+            )}
+            <ListMenu
+              open={showListMenu}
+              component={component}
+              onClose={() => setShowListMenu(false)}
+            />
+          </CardActions>
+        </CardActionArea>
+      )}
       <ConfirmationDialogRaw
         title="Delete List"
         open={showDialog}

@@ -13,7 +13,7 @@ export function SortableItem(props) {
     transition,
     height: props.fullHeight ? '100%' : undefined,
     overflow: 'hidden',
-
+    padding: '4px',
   };
 
   delete listeners?.onKeyDown;
