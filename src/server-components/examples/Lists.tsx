@@ -327,7 +327,8 @@ export const MyLists = (props) => {
     return (
       acc +
       list.children.reduce((acc, expense) => {
-        if (!expense.props?.archived) return acc;
+        if (!expense?.props?.archived) return acc;
+        if (list.props?.archived && !showArchived) return acc;
         if (expense?.props.archived < Date.now() - DAY * 7) return acc;
         return acc + Number(expense.props.value || 0);
       }, 0)
@@ -625,8 +626,8 @@ export const MyLists = (props) => {
             }
             severity={expenseSum > 0 ? 'success' : 'error'}
           >
-            {`Your archived expenses are ${expenseSum}€` +
-              (remaining > 0 ? ` (${remaining}€ open)` : '')}
+            {`Your archived total is ${expenseSum}€` +
+              (remaining != 0 ? ` (${remaining}€ open)` : '')}
           </Alert>
         )}
         {!fullWidth && content}
@@ -1282,7 +1283,7 @@ export const List = ({
         </SortableContext>
       </DndContext>
       {component?.props?.settings?.defaultType === 'Expense' && (
-        <Sum items={component?.children} />
+        <Sum items={component?.children} includeArchived={showArchived} />
       )}
       {component?.props?.settings?.pinned && !hover && (
         <CardActionArea
@@ -1491,18 +1492,29 @@ export const List = ({
   );
 };
 
-const Sum = ({ items }) => {
+const Sum = ({ items, includeArchived }) => {
   const pos = items?.reduce(
     (acc, item) =>
-      acc + (item?.props?.value > 0 ? Number(item?.props?.value) : 0),
+      acc +
+      (item?.props?.value > 0 && !(item?.props?.archived && !includeArchived)
+        ? Number(item?.props?.value)
+        : 0),
     0
   );
   const neg = items?.reduce(
     (acc, item) =>
-      acc + (item?.props?.value < 0 ? Number(item?.props?.value) : 0),
+      acc +
+      (item?.props?.value < 0 && !(item?.props?.archived && !includeArchived)
+        ? Number(item?.props?.value)
+        : 0),
     0
   );
 
+  if (pos === 0 && neg === 0) {
+    return (
+      <Alert severity={'info'}>{`Go ahead and track your expenses.`}</Alert>
+    );
+  }
   if (pos === 0) {
     return <Alert severity={'error'}>{`You spent ${Math.abs(neg)}€`}</Alert>;
   }
