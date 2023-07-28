@@ -959,7 +959,7 @@ export const List = ({
     const fn = label ? component.props.addLabel : component.props.add;
     const arg = {
       title: todoTitle,
-    };
+    } as any;
     if (!label) {
       if (component?.props?.settings?.defaultType === 'Todo') {
         arg.completed = false;
@@ -1419,7 +1419,7 @@ export const List = ({
   );
 };
 
-const Sum = ({ items, sx }) => {
+const Sum = ({ items }) => {
   const pos = items?.reduce(
     (acc, item) =>
       acc + (item?.props?.value > 0 ? Number(item?.props?.value) : 0),
