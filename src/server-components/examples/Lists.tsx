@@ -1281,6 +1281,9 @@ export const List = ({
           </MUIList>
         </SortableContext>
       </DndContext>
+      {component?.props?.settings?.defaultType === 'Expense' && (
+        <Sum items={component?.children} />
+      )}
       {component?.props?.settings?.pinned && !hover && (
         <CardActionArea
           sx={{
@@ -1318,9 +1321,7 @@ export const List = ({
           </CardActions>
         </CardActionArea>
       )}
-      {component?.props?.settings?.defaultType === 'Expense' && (
-        <Sum items={component?.children} />
-      )}
+
       {!(component?.props?.settings?.pinned && !hover) && (
         <CardActionArea
           sx={{
