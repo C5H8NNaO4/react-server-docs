@@ -33,6 +33,7 @@ import {
   Select,
   Tooltip,
   FormLabel,
+  ButtonGroup,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import TrophyIcon from '@mui/icons-material/EmojiEvents';
@@ -202,7 +203,7 @@ export const MyLists = (props) => {
     'invertFilter',
     false
   );
-
+  const [past, setPast] = useLocalStorage('past', 90);
   const { search } = useLocation();
   const navigate = useNavigate();
 
@@ -338,7 +339,7 @@ export const MyLists = (props) => {
       list.children.reduce((acc, expense) => {
         if (!expense?.props?.archived) return acc;
         if (list.props?.archived && !showArchived) return acc;
-        if (expense?.props.archived < Date.now() - DAY * 7) return acc;
+        if (expense?.props.archived < Date.now() - DAY * past) return acc;
         return acc + Number(expense.props.value || 0);
       }, 0)
     );
@@ -444,6 +445,47 @@ export const MyLists = (props) => {
         </Box>
       </SortableContext>
     </DndContext>
+  );
+
+  const PastButtonGroup = ({ sx, value }) => (
+    <ButtonGroup sx={sx}>
+      <Button
+        variant={value === 1 ? 'contained' : 'outlined'}
+        onClick={() => setPast(1)}
+      >
+        1
+      </Button>
+      <Button
+        variant={value === 7 ? 'contained' : 'outlined'}
+        onClick={() => setPast(7)}
+      >
+        7
+      </Button>
+      <Button
+        variant={value === 14 ? 'contained' : 'outlined'}
+        onClick={() => setPast(14)}
+      >
+        14
+      </Button>
+      <Button
+        variant={value === 30 ? 'contained' : 'outlined'}
+        onClick={() => setPast(30)}
+      >
+        30
+      </Button>
+      <Button
+        variant={value === 90 ? 'contained' : 'outlined'}
+        onClick={() => setPast(90)}
+      >
+        90
+      </Button>
+      <Button
+        variant={value === 365 ? 'contained' : 'outlined'}
+        onClick={() => setPast(365)}
+      >
+        365
+      </Button>
+    </ButtonGroup>
   );
   return (
     <>
@@ -634,19 +676,33 @@ export const MyLists = (props) => {
             </Select>
           </Tooltip>
         </Box>
-        {((onlyExpenses && expenseSum != 0) || showExpenses) && (
-          <Alert
-            action={
-              <IconButton onClick={() => refetch()}>
-                <ReplayIcon />
-              </IconButton>
-            }
-            severity={expenseSum > 0 ? 'success' : 'error'}
-          >
-            {`Your archived total is ${expenseSum?.toFixed(2)}€` +
-              (remaining != 0 ? ` (${remaining?.toFixed(2)}€ open)` : '')}
-          </Alert>
+        {((onlyExpenses && expenseSum != 0) ||
+          (showExpenses && typeof expenseSum !== 'undefined')) && (
+          <>
+            <Alert
+              action={
+                <div>
+                  <PastButtonGroup
+                    value={past}
+                    sx={{ display: { xs: 'none', sm: 'unset' } }}
+                  />
+                  <IconButton onClick={() => refetch()}>
+                    <ReplayIcon />
+                  </IconButton>
+                </div>
+              }
+              severity={expenseSum > 0 ? 'success' : 'error'}
+            >
+              {`Your archived total is ${expenseSum?.toFixed(2)}€` +
+                (remaining != 0 ? ` (${remaining?.toFixed(2)}€ open)` : '')}
+            </Alert>
+            <PastButtonGroup
+              value={past}
+              sx={{ display: { xs: 'block', sm: 'none' } }}
+            />
+          </>
         )}
+
         {!fullWidth && content}
       </Container>
       {fullWidth && content}
