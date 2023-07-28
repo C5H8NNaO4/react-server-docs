@@ -14,6 +14,7 @@ export function SortableItem(props) {
     height: props.fullHeight ? '100%' : undefined,
     overflow: 'hidden',
     padding: '4px',
+    cursor: 'pointer',
   };
 
   delete listeners?.onKeyDown;

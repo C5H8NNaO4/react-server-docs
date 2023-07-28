@@ -56,7 +56,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import {
   DndContext,
-  KeyboardSensor,
   PointerSensor,
   TouchSensor,
   closestCenter,
@@ -89,6 +88,7 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { useLocation, useNavigate } from 'react-router';
 
 import levenshtein from 'fast-levenshtein';
+import { KeyboardSensor, MouseSensor } from '../../lib/Sensors';
 
 const DAY = 1000 * 60 * 60 * 24;
 const limits = {
@@ -319,7 +319,7 @@ export const MyLists = (props) => {
     }
   }, [loading, items]);
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
         distance: 10,
       },
@@ -1132,7 +1132,15 @@ export const List = ({
       ></CardHeader>
       <CardContent>
         {!edit && (
-          <Typography variant="h6">{component?.props?.title}</Typography>
+          <Typography
+            data-no-dnd="true"
+            sx={{
+              cursor: 'text',
+            }}
+            variant="h6"
+          >
+            {component?.props?.title}
+          </Typography>
         )}
       </CardContent>
 
@@ -1219,7 +1227,13 @@ export const List = ({
         >
           <CardActions sx={{ display: 'flex' }}>
             {!edit && (
-              <Tooltip title={'Pin List.'}>
+              <Tooltip
+                title={
+                  component?.props?.settings?.pinned
+                    ? 'Unpin List'
+                    : 'Pin List.'
+                }
+              >
                 <Box
                   sx={{
                     ml: 'auto',
@@ -1718,7 +1732,7 @@ const ListItemMenu = (props) => {
                     value={
                       component.props?.reset === null
                         ? '-'
-                        : component?.props?.reset / (1000 * 60 * 60 * 24)
+                        : component?.props?.reset / (1000 * 60 * 60)
                     }
                     MenuProps={{ disablePortal: true }}
                   >
