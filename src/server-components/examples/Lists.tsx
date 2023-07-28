@@ -1684,8 +1684,16 @@ const ListItemMenu = (props) => {
                     }
                     MenuProps={{ disablePortal: true }}
                   >
-                    {['-', 1, 7, 14].map((n) => {
-                      return <MenuItem value={n}>{n}</MenuItem>;
+                    {['-', 6, 12, 24, 48, 72, 24 * 7, 24 * 14].map((n) => {
+                      return (
+                        <MenuItem value={n}>
+                          {n > 48
+                            ? `${n / 24} days`
+                            : n === '-'
+                            ? '-'
+                            : `${n}h`}
+                        </MenuItem>
+                      );
                     })}
                   </Select>
                   <FormLabel>Item Type</FormLabel>
