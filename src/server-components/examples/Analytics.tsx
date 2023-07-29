@@ -130,19 +130,13 @@ export const AnalyticsPage = (props) => {
     const dates = list.children
       .filter(
         (todo) =>
-          typeof todo.props.archived === 'number' ||
           typeof todo.props.createdAt === 'number' ||
-          typeof todo.props.completed === 'number'
+          typeof todo.props.lastModified === 'number'
       )
       .reduce((acc, todo) => {
+        console.log('Startof', todo.props.lastModified);
         const date = startOfDay(
-          new Date(
-            typeof todo.props.completed === 'number'
-              ? todo.props.completed
-              : todo.props.archived === true
-              ? todo.props.createdAt
-              : todo.props.archived || todo.props.createdAt || Date.now()
-          )
+          new Date(todo.props.lastModified || todo.props.createdAt)
         ).getTime();
 
         return {
