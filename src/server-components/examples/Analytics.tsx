@@ -101,24 +101,30 @@ export const AnalyticsPage = (props) => {
     .map((key) => categories[key]);
 
   const sumPos = Object.values(categories || {}).reduce(
-    (acc, { date, ...data }) => {
+    (acc: any, { date, ...data }: any) => {
       return {
         ...acc,
         [date]: {
-          income: Object.values(data).reduce((acc, value) => {
-            if (value > 0) return acc + value;
-            return acc;
-          }, 0),
-          expenses: Object.values(data).reduce((acc, value) => {
-            if (value < 0) return acc - value;
-            return acc;
-          }, 0),
+          income: Object.values(data as any).reduce(
+            ((acc: number, value: number) => {
+              if (value > 0) return acc + value;
+              return acc;
+            }) as any,
+            0
+          ),
+          expenses: Object.values(data).reduce(
+            ((acc, value) => {
+              if (value < 0) return acc - value;
+              return acc;
+            }) as any,
+            0
+          ),
           date,
         },
       };
     },
-    {}
-  );
+    {} as any
+  ) as Record<string, { income: number; expenses: number }[]>;
 
   const itemsCompleted = component?.children?.reduce((acc, list) => {
     const dates = list.children

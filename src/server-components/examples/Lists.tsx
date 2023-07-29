@@ -2031,7 +2031,7 @@ const ListItemMenu = (props) => {
                         <MenuItem value={n}>
                           {n === '-'
                             ? '-'
-                            : (typeof n === 'number' && n) > 48
+                            : ((typeof n === 'number' && n) || 0) > 48
                             ? `${Number(n) / 24} days`
                             : `${n}h`}
                         </MenuItem>
