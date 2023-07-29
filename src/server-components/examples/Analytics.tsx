@@ -136,7 +136,9 @@ export const AnalyticsPage = (props) => {
       .reduce((acc, todo) => {
         const date = startOfDay(
           new Date(
-            todo.props.archived === true
+            typeof todo.props.completed === 'number'
+              ? todo.props.completed
+              : todo.props.archived === true
               ? todo.props.createdAt
               : todo.props.archived || todo.props.createdAt || Date.now()
           )
