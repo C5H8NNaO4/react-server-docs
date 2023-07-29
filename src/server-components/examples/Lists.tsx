@@ -124,6 +124,7 @@ const colorMap = {
 };
 
 const checkLimits = (items, todo) => {
+  if (!items) return false;
   const [interval, times] = limits[todo.props.valuePoints] || [0, 1];
   const within = (items || []).filter(
     (i) => i.lastModified + interval > Date.now()
@@ -1667,7 +1668,7 @@ const TodoItem = (props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [interval, times] = limits[component?.props?.valuePoints] || [0, 1];
   const canBeCompleted = checkLimits(
-    lastCompleted[component?.props?.valuePoints],
+    lastCompleted?.[component?.props?.valuePoints],
     component
   );
   if (loading) return null;
@@ -1784,7 +1785,7 @@ const CounterItem = (props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [interval, times] = limits[component?.props?.valuePoints] || [0, 1];
   const canBeCompleted = checkLimits(
-    lastCompleted[component?.props?.valuePoints],
+    lastCompleted?.[component?.props?.valuePoints],
     component
   );
   if (loading) return null;
