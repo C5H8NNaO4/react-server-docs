@@ -124,7 +124,7 @@ const colorMap = {
 };
 
 const checkLimits = (items, todo) => {
-  if (!items) return false;
+  if (!items) return true;
   const [interval, times] = limits[todo.props.valuePoints] || [0, 1];
   const within = (items || []).filter(
     (i) => i.lastModified + interval > Date.now()
