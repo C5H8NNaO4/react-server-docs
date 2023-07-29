@@ -89,6 +89,7 @@ import * as XLSX from 'xlsx';
 import { Action } from '@dnd-kit/core/dist/store';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { useLocation, useNavigate } from 'react-router';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 import levenshtein from 'fast-levenshtein';
 import { KeyboardSensor, MouseSensor } from '../../lib/Sensors';
@@ -609,6 +610,15 @@ export const MyLists = (props) => {
               onClick={() => setFullWidth(!fullWidth)}
             >
               <ExpandIcon sx={{ transform: 'rotate(90deg)' }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Analytics" placement="bottom">
+            <IconButton
+              color={'default'}
+              // sx={{ ml: 'auto' }}
+              onClick={() => navigate('/lists/analytics')}
+            >
+              <BarChartIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Fullscreen" placement="bottom">
