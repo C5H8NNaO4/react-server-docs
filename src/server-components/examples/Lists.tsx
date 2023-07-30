@@ -826,7 +826,7 @@ const MoreMenu = ({
                   title={
                     fullWidth ? 'Disable full width.' : 'Enable full width'
                   }
-                  placement="bottom"
+                  placement="left"
                 >
                   <SwitchButton
                     color={fullWidth ? 'success' : undefined}
@@ -843,7 +843,7 @@ const MoreMenu = ({
                       ? 'Show header / footer.'
                       : 'Hide header / footer'
                   }
-                  placement="bottom"
+                  placement="left"
                 >
                   <SwitchButton
                     color={state.fullscreen ? 'success' : undefined}
@@ -866,7 +866,7 @@ const MoreMenu = ({
                       ? 'Hide archived lists'
                       : 'Show archived lists.'
                   }
-                  placement="bottom"
+                  placement="left"
                 >
                   <SwitchButton
                     color={showArchived ? 'success' : undefined}
@@ -879,7 +879,7 @@ const MoreMenu = ({
                     Archived Lists
                   </SwitchButton>
                 </Tooltip>
-                <Tooltip title="Show total of expenses." placement="bottom">
+                <Tooltip title="Show total of expenses." placement="left">
                   <SwitchButton
                     color={showExpenses ? 'success' : 'default'}
                     // sx={{ ml: 'auto' }}
@@ -892,7 +892,7 @@ const MoreMenu = ({
                   </SwitchButton>
                 </Tooltip>
                 <hr />
-                <Tooltip title="Open Analytics" placement="bottom">
+                <Tooltip title="Open Analytics" placement="left">
                   <IconButton
                     color={'default'}
                     // sx={{ ml: 'auto' }}
@@ -1388,25 +1388,31 @@ export const List = ({
     if (!doArchive) return;
     (async () => {
       if (component?.props?.settings?.defaultType === 'Expense') {
+        const promises: Array<Promise<any>> = [];
         for (const c of component?.children || []) {
           if (c?.props?.value != 0 && !c?.props?.archived)
-            await c?.props?.archive();
+            promises.push(c?.props?.archive());
         }
+        await Promise.all(promises);
       } else if (component?.props?.settings?.defaultType === 'Todo') {
         for (const c of component?.children || []) {
           if (c?.props?.completed && !c?.props?.archived)
             await c?.props?.archive();
         }
       } else if (component?.props?.settings?.defaultType === 'Counter') {
+        const promises: Array<Promise<any>> = [];
         for (const c of component?.children || []) {
           if (c?.props?.count != 0 && !c?.props?.archived) {
-            await c?.props?.archive();
-            await addEntry(null, null, {
-              type: 'Counter',
-              title: c?.props?.title,
-            });
+            promises.push(
+              c?.props?.archive() as any,
+              addEntry(null, null, {
+                type: 'Counter',
+                title: c?.props?.title,
+              })
+            );
           }
         }
+        await Promise.all(promises);
       }
       setDoArchive(false);
       await refetch();
