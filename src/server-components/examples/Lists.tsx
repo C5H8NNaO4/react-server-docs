@@ -1254,6 +1254,7 @@ export const List = ({
   const [hover, setHover] = useState(false);
   const [showColors, setShowColors] = useState<HTMLElement | null>(null);
   const [showArchived, setShowArchived] = useState<boolean>(false);
+  const [showType, setShowType] = useState<HTMLElement | null>(null);
 
   const canAddLabel = edit && labelMode;
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -1281,25 +1282,39 @@ export const List = ({
     })
   );
 
-  const addEntry = async (e, label) => {
+  const addEntry = async (e, label, rest?) => {
     setTodoTitle('');
-    if (todoTitle === '') return;
+    console.log('REcreating', todoTitle, rest?.title);
+    if (todoTitle === '' && !rest?.title) return;
     const fn = label ? component.props.addLabel : component.props.add;
     const arg = {
-      title: todoTitle,
+      title: rest?.title || todoTitle,
     } as any;
     if (!label) {
-      if (component?.props?.settings?.defaultType === 'Todo') {
+      if (
+        component?.props?.settings?.defaultType === 'Todo' ||
+        rest?.type === 'Todo'
+      ) {
         arg.completed = false;
       }
-      if (component?.props?.settings?.defaultType === 'Counter') {
+      if (
+        component?.props?.settings?.defaultType === 'Counter' ||
+        rest?.type === 'Counter'
+      ) {
         arg.count = 0;
       }
-      if (component?.props?.settings?.defaultType === 'Expense') {
+      if (
+        component?.props?.settings?.defaultType === 'Expense' ||
+        rest?.type === 'Expense'
+      ) {
         arg.value = 0;
       }
+      if (rest?.type) {
+        arg.type = rest?.type;
+      }
     }
-    const res = await fn(arg);
+    console.log('RECREATING', todoTitle, rest?.title, { ...rest, ...arg });
+    const res = await fn({ ...rest, ...arg });
     if (label) {
       await refetch();
     }
@@ -1367,6 +1382,7 @@ export const List = ({
 
   function handleClose() {
     setShowColors(null);
+    setShowType(null);
   }
   useEffect(() => {
     if (!doArchive) return;
@@ -1376,10 +1392,20 @@ export const List = ({
           if (c?.props?.value != 0 && !c?.props?.archived)
             await c?.props?.archive();
         }
-      } else {
+      } else if (component?.props?.settings?.defaultType === 'Todo') {
         for (const c of component?.children || []) {
           if (c?.props?.completed && !c?.props?.archived)
             await c?.props?.archive();
+        }
+      } else if (component?.props?.settings?.defaultType === 'Counter') {
+        for (const c of component?.children || []) {
+          if (c?.props?.count != 0 && !c?.props?.archived) {
+            await c?.props?.archive();
+            await addEntry(null, null, {
+              type: 'Counter',
+              title: c?.props?.title,
+            });
+          }
         }
       }
       setDoArchive(false);
@@ -1461,10 +1487,7 @@ export const List = ({
                 <IconButton
                   sx={{ mt: 1 }}
                   disabled={!todoTitle}
-                  onClick={async (e) => {
-                    await addEntry(e, canAddLabel);
-                    await refetchPoints();
-                  }}
+                  onClick={(e) => setShowType(e.target)}
                 >
                   <IconMore />
                 </IconButton>
@@ -1757,7 +1780,68 @@ export const List = ({
         open={showColors}
         setColor={component?.props?.setColor}
       ></ColorMenu>
+      <AddMenu
+        onClose={handleClose}
+        open={showType}
+        addEntry={addEntry}
+        refetchPoints={refetchPoints}
+        canAddLabel={canAddLabel}
+      />
     </Card>
+  );
+};
+
+const AddMenu = ({ open, onClose, addEntry, refetchPoints, canAddLabel }) => {
+  return (
+    <Popper
+      open={!!open}
+      anchorEl={open}
+      transition
+      disablePortal
+      sx={{ zIndex: 10 }}
+      placement="bottom"
+    >
+      {({ TransitionProps, placement }) => (
+        <Grow
+          {...TransitionProps}
+          style={{
+            transformOrigin: 'left bottom',
+          }}
+        >
+          <Paper>
+            <ClickAwayListener onClickAway={onClose}>
+              <MenuList
+                autoFocusItem={!!open}
+                id="composition-menu"
+                aria-labelledby="composition-button"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
+                {['Todo', 'Counter', 'Expense'].map((type) => {
+                  return (
+                    <Tooltip title="Import" placement="left">
+                      <Button
+                        // sx={{ ml: 'auto' }}
+                        onClick={async (e) => {
+                          await addEntry(e, canAddLabel, { type });
+                          await refetchPoints();
+                          onClose();
+                        }}
+                      >
+                        {type}
+                      </Button>
+                    </Tooltip>
+                  );
+                })}
+              </MenuList>
+            </ClickAwayListener>
+          </Paper>
+        </Grow>
+      )}
+    </Popper>
   );
 };
 
@@ -2376,6 +2460,6 @@ const itemMap = {
 
 const listArchiveMessageMap = {
   Todo: 'Archive all completed todos.',
-  Counter: 'Do nothing',
+  Counter: 'Recreate all Counters',
   Expense: 'Archive all expenses / income.',
 };
