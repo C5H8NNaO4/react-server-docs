@@ -211,7 +211,7 @@ export const MyLists = (props) => {
   );
   const [nItems, setNItems] = useState(5);
 
-  const [show, setShow] = useState({
+  const [show, setShow] = useState<Record<string, boolean | EventTarget>>({
     export: false,
     import: false,
     save: false,
@@ -937,7 +937,10 @@ export const NewListSkeleton = ({ onAdd }) => {
 };
 
 export const SwitchButton = forwardRef(
-  ({ children, ...rest }: PropsWithChildren, ref) => {
+  (
+    { children, ...rest }: PropsWithChildren<{ color?: any; onClick?: any }>,
+    ref
+  ) => {
     const theme = useTheme();
     const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
     const iconOnly = !lessThanSmall;
