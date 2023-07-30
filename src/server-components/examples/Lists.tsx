@@ -1487,7 +1487,7 @@ export const List = ({
                 <IconButton
                   sx={{ mt: 1 }}
                   disabled={!todoTitle}
-                  onClick={(e) => setShowType(e.target)}
+                  onClick={(e) => setShowType(e.target as HTMLElement)}
                 >
                   <IconMore />
                 </IconButton>
