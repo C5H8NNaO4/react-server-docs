@@ -71,7 +71,7 @@ export default function ButtonAppBar() {
               mx: 'auto',
               background: '#FFF',
               borderRadius: 1,
-              width: lessThanSmall ? '100%' : '50%',
+              width: lessThanSmall ? '100%' : '90%',
               marginTop: 1,
               '& label': {
                 background: '#FFF',

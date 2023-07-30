@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache, split, HttpLink } from '@apollo/client';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
+import { LOCAL_HOST } from '../config';
 
 // Create an HTTP link
 const statelessHttp = new HttpLink({
@@ -36,12 +37,12 @@ const client = new ApolloClient({
 
 // Create an HTTP link
 const localHttp = new HttpLink({
-  uri: 'http://localhost:4000/graphql',
+  uri: `http://${LOCAL_HOST}:4000/graphql`,
 });
 
 // Create a WebSocket link
 const localWs = new WebSocketLink({
-  uri: `ws://localhost:4000/graphql`,
+  uri: `ws://${LOCAL_HOST}:4000/graphql`,
   options: {
     reconnect: true,
   },

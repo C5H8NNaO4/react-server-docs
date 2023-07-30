@@ -34,6 +34,8 @@ import {
   Tooltip,
   FormLabel,
   ButtonGroup,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import TrophyIcon from '@mui/icons-material/EmojiEvents';
@@ -44,7 +46,15 @@ import LabelIcon from '@mui/icons-material/Label';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
-import { useContext, useEffect, useRef, useMemo, useState } from 'react';
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useMemo,
+  useState,
+  forwardRef,
+  PropsWithChildren,
+} from 'react';
 import IconMore from '@mui/icons-material/Add';
 import IconClear from '@mui/icons-material/Clear';
 import ArchiveIcon from '@mui/icons-material/Archive';
@@ -93,6 +103,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 
 import levenshtein from 'fast-levenshtein';
 import { KeyboardSensor, MouseSensor } from '../../lib/Sensors';
+import SyncIcon from '@mui/icons-material/Sync';
 
 const DAY = 1000 * 60 * 60 * 24;
 const limits = {
@@ -199,8 +210,14 @@ export const MyLists = (props) => {
     false
   );
   const [nItems, setNItems] = useState(5);
-  const [showExport, setShowExport] = useState<HTMLElement | null>(null);
-  const [showImport, setShowImport] = useState<HTMLElement | null>(null);
+
+  const [show, setShow] = useState({
+    export: false,
+    import: false,
+    save: false,
+    more: false,
+  });
+
   const [invertFilter, setInvertFilter] = useLocalStorage<boolean>(
     'invertFilter',
     false
@@ -247,9 +264,8 @@ export const MyLists = (props) => {
   const { signed, points, order, ...stored } = JSON.parse(
     localStorage.lists || '{}'
   );
-  const handleClose = () => {
-    setShowImport(null);
-    setShowExport(null);
+  const handleClose = (key) => () => {
+    setShow({ ...show, [key]: false });
   };
 
   const { setNodeRef } = useDroppable({
@@ -571,97 +587,42 @@ export const MyLists = (props) => {
               setActive(newActive);
             }}
           />
-          <Tooltip title="Invert selection" placement="right">
+          {labels?.length > 0 && (
+            <Tooltip title="Invert selection" placement="right">
+              <IconButton
+                color={invertFilter ? 'success' : 'default'}
+                onClick={() => setInvertFilter(!invertFilter)}
+              >
+                <InvertColorsIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+          <Tooltip title="Synchronize Data." placement="bottom">
             <IconButton
-              color={invertFilter ? 'success' : 'default'}
-              onClick={() => setInvertFilter(!invertFilter)}
-            >
-              <InvertColorsIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Import" placement="left">
-            <IconButton
+              color={show.save ? 'success' : 'default'}
               sx={{ ml: 'auto' }}
-              color={'default'}
-              onClick={async (e) => {
-                setShowImport(e.target as HTMLElement);
-              }}
+              onClick={(e) => setShow({ ...show, save: e.target })}
             >
-              <DownloadIcon sx={{ transform: 'rotate(180deg)' }} />
+              <SyncIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Export" placement="bottom">
+          <Tooltip title="More" placement="bottom">
             <IconButton
-              color={
-                JSON.stringify(data) === JSON.stringify(stored)
-                  ? 'success'
-                  : 'default'
-              }
-              onClick={async (e) => {
-                setShowExport(e.target as HTMLElement);
-              }}
+              color={show.more ? 'success' : 'default'}
+              onClick={(e) => setShow({ ...show, more: e.target })}
             >
-              <DownloadIcon />
+              <MoreVertIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Full Width" placement="bottom">
-            <IconButton
-              color={fullWidth ? 'success' : 'default'}
-              // sx={{ ml: 'auto' }}
-              onClick={() => setFullWidth(!fullWidth)}
-            >
-              <ExpandIcon sx={{ transform: 'rotate(90deg)' }} />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Analytics" placement="bottom">
-            <IconButton
-              color={'default'}
-              // sx={{ ml: 'auto' }}
-              onClick={() => navigate('/lists/analytics')}
-            >
-              <BarChartIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Fullscreen" placement="bottom">
-            <IconButton
-              color={state.fullscreen ? 'success' : 'default'}
-              // sx={{ ml: 'auto' }}
-              onClick={() => {
-                dispatch({ type: Actions.TOGGLE_FULLSCREEN });
-                localStorage.setItem(
-                  'fullscreen',
-                  JSON.stringify(!state.fullscreen)
-                );
-              }}
-            >
-              <FullscreenIcon />
-            </IconButton>
-          </Tooltip>
+          <SyncMenu
+            open={show.save}
+            onClose={() => setShow({ ...show, save: false })}
+            setShow={setShow}
+          />
 
-          <Tooltip title="Show archived lists." placement="bottom">
-            <IconButton
-              color={showArchived ? 'success' : 'default'}
-              // sx={{ ml: 'auto' }}
-              onClick={() => {
-                setShowArchived(!showArchived);
-              }}
-            >
-              <VisibilityIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Show total of expenses." placement="bottom">
-            <IconButton
-              color={showExpenses ? 'success' : 'default'}
-              // sx={{ ml: 'auto' }}
-              onClick={() => {
-                setShowExpenses(!showExpenses);
-              }}
-            >
-              <AttachMoneyIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Search Distance" placement="right">
+          {/* <Tooltip title="Search Distance" placement="right">
             <Select
+              size="small"
               sx={{ mr: 1 }}
               onChange={(e) =>
                 dispatch({
@@ -675,9 +636,10 @@ export const MyLists = (props) => {
                 return <MenuItem value={n}>{n}</MenuItem>;
               })}
             </Select>
-          </Tooltip>
-          <Tooltip title="# Items" placement="right">
+          </Tooltip> */}
+          <Tooltip title="# Items" placement="bottom">
             <Select
+              size="small"
               onChange={(e) => setNItems(Number(e.target.value))}
               value={nItems}
             >
@@ -717,15 +679,24 @@ export const MyLists = (props) => {
         {!fullWidth && content}
       </Container>
       {fullWidth && content}
-
+      <MoreMenu
+        open={show.more}
+        onClose={handleClose('more')}
+        fullWidth={fullWidth}
+        setFullWidth={setFullWidth}
+        showArchived={showArchived}
+        showExpenses={showExpenses}
+        setShowArchived={setShowArchived}
+        setShowExpenses={setShowExpenses}
+      />
       <ImportMenu
-        onClose={handleClose}
-        open={showImport}
+        onClose={handleClose('import')}
+        open={show.import}
         importData={component?.props?.importUserData}
       />
       <ExportMenu
-        onClose={handleClose}
-        open={showExport}
+        onClose={handleClose('export')}
+        open={show.export}
         exportData={component?.props?.exportUserData}
       />
     </>
@@ -745,6 +716,203 @@ const Labels = ({ labels, onClick, active, ...rest }) => {
         />
       ))}
     </Box>
+  );
+};
+
+const SyncMenu = ({ open, onClose, setShow }) => {
+  return (
+    <Popper
+      open={!!open}
+      anchorEl={open}
+      transition
+      disablePortal
+      sx={{ zIndex: 10 }}
+      placement="bottom"
+    >
+      {({ TransitionProps, placement }) => (
+        <Grow
+          {...TransitionProps}
+          style={{
+            transformOrigin: 'left bottom',
+          }}
+        >
+          <Paper>
+            <ClickAwayListener onClickAway={onClose}>
+              <MenuList
+                autoFocusItem={!!open}
+                id="composition-menu"
+                aria-labelledby="composition-button"
+                sx={{ display: 'flex', flexDirection: 'column' }}
+              >
+                <Tooltip title="Import" placement="left">
+                  <Button
+                    sx={{ ml: 'auto' }}
+                    onClick={async (e) => {
+                      setShow((show) => ({
+                        ...show,
+                        import: e.target as HTMLElement,
+                      }));
+                    }}
+                  >
+                    <DownloadIcon sx={{ transform: 'rotate(180deg)' }} />
+                    Import
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Export" placement="bottom">
+                  <Button
+                    // color={
+                    //   JSON.stringify(data) === JSON.stringify(stored)
+                    //     ? 'success'
+                    //     : 'default'
+                    // }
+                    onClick={async (e) => {
+                      setShow((show) => ({
+                        ...show,
+                        export: e.target as HTMLElement,
+                      }));
+                    }}
+                  >
+                    <DownloadIcon />
+                    Export
+                  </Button>
+                </Tooltip>
+              </MenuList>
+            </ClickAwayListener>
+          </Paper>
+        </Grow>
+      )}
+    </Popper>
+  );
+};
+
+const MoreMenu = ({
+  open,
+  onClose,
+  fullWidth,
+  setFullWidth,
+  showArchived,
+  setShowArchived,
+  showExpenses,
+  setShowExpenses,
+}) => {
+  const { state, dispatch } = useContext(stateContext);
+  const navigate = useNavigate();
+  return (
+    <Popper
+      open={!!open}
+      anchorEl={open}
+      transition
+      disablePortal
+      sx={{ zIndex: 10 }}
+      placement="bottom"
+    >
+      {({ TransitionProps, placement }) => (
+        <Grow
+          {...TransitionProps}
+          style={{
+            transformOrigin: 'left bottom',
+          }}
+        >
+          <Paper>
+            <ClickAwayListener onClickAway={onClose}>
+              <MenuList
+                autoFocusItem={!!open}
+                id="composition-menu"
+                aria-labelledby="composition-button"
+                // onKeyDown={handleListKeyDown}
+                sx={{ display: 'flex', flexDirection: 'column' }}
+              >
+                <Tooltip
+                  title={
+                    fullWidth ? 'Disable full width.' : 'Enable full width'
+                  }
+                  placement="bottom"
+                >
+                  <SwitchButton
+                    color={fullWidth ? 'success' : undefined}
+                    // sx={{ ml: 'auto' }}
+                    onClick={() => setFullWidth(!fullWidth)}
+                  >
+                    <ExpandIcon sx={{ transform: 'rotate(90deg)' }} />
+                    Full Width
+                  </SwitchButton>
+                </Tooltip>
+                <Tooltip
+                  title={
+                    state.fullscreen
+                      ? 'Show header / footer.'
+                      : 'Hide header / footer'
+                  }
+                  placement="bottom"
+                >
+                  <SwitchButton
+                    color={state.fullscreen ? 'success' : undefined}
+                    // sx={{ ml: 'auto' }}
+                    onClick={() => {
+                      dispatch({ type: Actions.TOGGLE_FULLSCREEN });
+                      localStorage.setItem(
+                        'fullscreen',
+                        JSON.stringify(!state.fullscreen)
+                      );
+                    }}
+                  >
+                    <FullscreenIcon />
+                    Fullscreen
+                  </SwitchButton>
+                </Tooltip>
+                <Tooltip
+                  title={
+                    showArchived
+                      ? 'Hide archived lists'
+                      : 'Show archived lists.'
+                  }
+                  placement="bottom"
+                >
+                  <SwitchButton
+                    color={showArchived ? 'success' : undefined}
+                    // sx={{ ml: 'auto' }}
+                    onClick={() => {
+                      setShowArchived(!showArchived);
+                    }}
+                  >
+                    <VisibilityIcon />
+                    Archived Lists
+                  </SwitchButton>
+                </Tooltip>
+                <Tooltip title="Show total of expenses." placement="bottom">
+                  <SwitchButton
+                    color={showExpenses ? 'success' : 'default'}
+                    // sx={{ ml: 'auto' }}
+                    onClick={() => {
+                      setShowExpenses(!showExpenses);
+                    }}
+                  >
+                    <AttachMoneyIcon />
+                    Show Total
+                  </SwitchButton>
+                </Tooltip>
+                <hr />
+                <Tooltip title="Open Analytics" placement="bottom">
+                  <IconButton
+                    color={'default'}
+                    // sx={{ ml: 'auto' }}
+                    onClick={() => navigate('/lists/analytics')}
+                  >
+                    <BarChartIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Open Settings">
+                  <SwitchButton onClick={() => navigate('/lists/settings')}>
+                    <SettingsIcon />
+                    Settings
+                  </SwitchButton>
+                </Tooltip>
+              </MenuList>
+            </ClickAwayListener>
+          </Paper>
+        </Grow>
+      )}
+    </Popper>
   );
 };
 export const NewListSkeleton = ({ onAdd }) => {
@@ -768,6 +936,19 @@ export const NewListSkeleton = ({ onAdd }) => {
   );
 };
 
+export const SwitchButton = forwardRef(
+  ({ children, ...rest }: PropsWithChildren, ref) => {
+    const theme = useTheme();
+    const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
+    const iconOnly = !lessThanSmall;
+    const Cmp = iconOnly ? IconButton : (Button as any);
+    return (
+      <Cmp ref={ref} {...rest}>
+        {iconOnly ? children?.[0] : children}
+      </Cmp>
+    );
+  }
+);
 export const ColorMenu = ({ open, onClose, setColor }) => {
   const colors = [
     'white',
@@ -1246,6 +1427,7 @@ export const List = ({
                     : setTodoTitle(e.target.value);
                 }}
                 onKeyUp={async (e) => {
+                  e.stopPropagation();
                   if ((!edit || canAddLabel) && e.key === 'Enter') {
                     await addEntry(e, canAddLabel);
                     await refetchPoints();
