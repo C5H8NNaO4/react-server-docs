@@ -180,34 +180,25 @@ export const AnalyticsPage = (props) => {
           (acc, list) => ({
             ...acc,
             [list.props.title]: list.children?.reduce((acc, item) => {
+              if (!item?.props?.createdAt) return acc;
               if (
-                !item?.props?.createdAt ||
-                format(item?.props?.createdAt, 'yy-MM-dd') >
-                  format(entry.date, 'yy-MM-dd')
-              ) {
+                format(item?.props?.createdAt, 'MM.dd') >
+                format(entry.date, 'MM.dd')
+              )
                 return acc;
-              }
+
               if (
-                format(item?.props?.createdAt, 'MM-dd') <
-                  format(entry.date, 'MM-dd') &&
-                !item?.props?.completed
-              ) {
+                item?.props?.lastModified &&
+                item?.props?.completed &&
+                format(item?.props?.lastModified, 'MM.dd') <=
+                  format(entry.date, 'MM.dd')
+              )
+                return acc;
+              if (
+                format(item?.props?.createdAt, 'MM.dd') <=
+                format(entry.date, 'MM.dd')
+              )
                 return acc + 1;
-              }
-              if (
-                item?.props?.lastModified &&
-                format(item?.props?.lastModified, 'MM-dd') ==
-                  format(entry.date, 'MM-dd') &&
-                item?.props?.completed
-              ) {
-                return acc;
-              }
-              const completed =
-                item?.props?.lastModified &&
-                format(item?.props?.lastModified, 'yy-MM-dd') <
-                  format(entry.date, 'yy-MM-dd') &&
-                item?.props?.completed;
-              return acc + (completed ? 0 : 1);
             }, 0),
           }),
           {}
