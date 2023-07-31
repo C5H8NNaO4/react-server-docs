@@ -359,7 +359,13 @@ export const AnalyticsPage = (props) => {
   );
 };
 const expensesToLine = (data) => {};
-const CustomTooltip = ({ active, payload }) => {
+const CustomTooltip = ({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: any;
+}) => {
   return (
     <Paper
       className="noFocus"
