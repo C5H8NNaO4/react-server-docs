@@ -260,7 +260,13 @@ export const AnalyticsPage = (props) => {
     <PieChart>
       <Legend />
       {
-        <Pie data={pieData} dataKey={'value'} nameKey={'name'} fill={colors[0]} label>
+        <Pie
+          data={pieData}
+          dataKey={'value'}
+          nameKey={'name'}
+          fill={colors[0]}
+          label
+        >
           {pieData.map((entry, index) => (
             <Cell fill={colors[index % colors.length]} />
           ))}
@@ -402,16 +408,22 @@ const CustomTooltip = ({
           background: '#000',
         },
         display: 'flex',
-        maxWidth: '250px',
+        maxWidth: '750px',
         flexWrap: 'wrap',
       }}
     >
       {Object.keys(payload?.[0]?.payload || {})
         .filter((key) => !['date'].includes(key))
         .filter((key) => (active ? key === active : true))
-        .map((key) => {
+        .map((key, i, arr) => {
           return (
-            <ListItem key={key} sx={{ maxWidth: '50%' }}>
+            <ListItem
+              key={key}
+              sx={{
+                maxWidth:
+                  arr.length > 20 ? '20%' : arr.length > 10 ? '33%' : '50%',
+              }}
+            >
               <ListItemText
                 sx={{ my: 0, p: 0 }}
                 primary={key}
