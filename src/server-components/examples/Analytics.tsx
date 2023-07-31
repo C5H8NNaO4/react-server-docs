@@ -256,7 +256,7 @@ export const AnalyticsPage = (props) => {
       })}
     </BarChart>
   );
-  const expensePieChart = pieData.length && (
+  const expensePieChart = (
     <PieChart>
       <Legend />
       {
