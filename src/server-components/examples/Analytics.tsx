@@ -232,7 +232,8 @@ export const AnalyticsPage = (props) => {
   const expenseChart = (
     <BarChart data={expenseData}>
       <CartesianGrid strokeDasharray="3 3" />
-      <Tooltip content={<CustomTooltip />} />
+      <Tooltip content={({ payload }) => <CustomTooltip payload={payload} />} />
+
       <XAxis dataKey="date" tickFormatter={DateFormatter('MMMM')} />
       <Legend />
 
@@ -250,7 +251,8 @@ export const AnalyticsPage = (props) => {
   const itemChart = (
     <BarChart data={itemData}>
       <CartesianGrid strokeDasharray="3 3" />
-      <Tooltip content={<CustomTooltip />} />
+      <Tooltip content={({ payload }) => <CustomTooltip payload={payload} />} />
+
       <XAxis dataKey="date" tickFormatter={DateFormatter('dd.MM.yy')} />
       <Legend />
 
@@ -269,7 +271,8 @@ export const AnalyticsPage = (props) => {
   const sumChart = (
     <BarChart data={sumData}>
       <CartesianGrid strokeDasharray="3 3" />
-      <Tooltip content={<CustomTooltip />} />
+      <Tooltip content={({ payload }) => <CustomTooltip payload={payload} />} />
+
       <XAxis dataKey="date" tickFormatter={DateFormatter('MMMM')} />
       <Legend />
 
@@ -282,7 +285,7 @@ export const AnalyticsPage = (props) => {
   const barChart = (
     <BarChart data={countersData}>
       <CartesianGrid strokeDasharray="3 3" />
-      <Tooltip content={<CustomTooltip />} />
+      <Tooltip content={({ payload }) => <CustomTooltip payload={payload} />} />
       <XAxis dataKey="date" tickFormatter={DateFormatter('dd.MM.yy')} />
       <Legend />
       {Object.keys(data[0] || {}).map((key, i) => {
