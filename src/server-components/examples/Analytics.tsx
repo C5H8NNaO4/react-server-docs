@@ -363,7 +363,7 @@ const CustomTooltip = ({
   active,
   payload,
 }: {
-  active?: boolean;
+  active?: null | string;
   payload?: any;
 }) => {
   return (
