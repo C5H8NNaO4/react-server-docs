@@ -602,7 +602,7 @@ export const MyLists = (props) => {
             <IconButton
               color={show.save ? 'success' : 'default'}
               sx={{ ml: 'auto' }}
-              onClick={(e) => setShow({ ...show, save: e.target })}
+              onClick={(e) => setShow({ ...show, more: false, save: e.target })}
             >
               <SyncIcon />
             </IconButton>
@@ -610,14 +610,16 @@ export const MyLists = (props) => {
           <Tooltip title="More" placement="bottom">
             <IconButton
               color={show.more ? 'success' : 'default'}
-              onClick={(e) => setShow({ ...show, more: e.target })}
+              onClick={(e) => setShow({ ...show, save: false, more: e.target })}
             >
               <MoreVertIcon />
             </IconButton>
           </Tooltip>
           <SyncMenu
             open={show.save}
-            onClose={() => setShow({ ...show, save: false })}
+            onClose={() =>
+              !show.import && !show.export && setShow({ ...show, save: false })
+            }
             setShow={setShow}
           />
 
@@ -696,7 +698,9 @@ export const MyLists = (props) => {
         importData={component?.props?.importUserData}
       />
       <ExportMenu
-        onClose={handleClose('export')}
+        onClose={() => {
+          setShow({ ...show, export: false, save: false });
+        }}
         open={show.export}
         exportData={component?.props?.exportUserData}
       />
