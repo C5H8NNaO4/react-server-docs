@@ -1260,7 +1260,6 @@ export const List = ({
   const [showColors, setShowColors] = useState<HTMLElement | null>(null);
   const [showArchived, setShowArchived] = useState<boolean>(false);
   const [showType, setShowType] = useState<HTMLElement | null>(null);
-
   const canAddLabel = edit && labelMode;
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -1576,6 +1575,8 @@ export const List = ({
                         lastCompleted={lastCompleted}
                         refetchList={refetchList}
                         refetchPoints={refetchPoints}
+                        order={component?.props?.order}
+                        setOrder={component?.props?.setOrder}
                       />
                     </SortableItem>
                   )}
@@ -1934,15 +1935,17 @@ function ConfirmationDialogRaw(
 const TodoItem = (props) => {
   const { dispatch, state } = useContext(stateContext);
   const {
-    todo: todoId,
+    todo: todoKey,
     edit,
     remove,
     data,
     lastCompleted,
     refetchList,
     refetchPoints,
+    setOrder,
+    order,
   } = props;
-  const [component, { loading, error }] = useComponent(todoId, {
+  const [component, { loading, error }] = useComponent(todoKey, {
     data,
   });
   const [showMenu, setShowMenu] = useState(false);
@@ -1950,6 +1953,10 @@ const TodoItem = (props) => {
   const canBeCompleted = checkLimits(
     lastCompleted?.[component?.props?.valuePoints],
     component
+  );
+  const [moveToBottom, setMoveToBottom] = useLocalStorage(
+    'moveToBottom',
+    false
   );
   if (loading) return null;
 
@@ -2018,14 +2025,15 @@ const TodoItem = (props) => {
                 checked={component?.props.completed}
                 onClick={async () => {
                   await component?.props.toggle();
-                  dispatch({
-                    type: Actions.RECORD_CHANGE,
-                    value: {
-                      reverse: () => {
-                        component?.props.toggle();
-                      },
-                    },
-                  });
+
+                  if (!component?.props?.completed && moveToBottom)
+                    await setOrder(
+                      arrayMove(
+                        order,
+                        order.indexOf(component?.props?.id),
+                        order?.length
+                      )
+                    );
                   await refetchPoints();
                 }}
               />
@@ -2376,6 +2384,10 @@ const ListItemMenu = (props) => {
 const ListMenu = (props) => {
   const { dispatch, state } = useContext(stateContext);
   const { component, open, onClose } = props;
+  const [moveToBottom, setMoveToBottom] = useLocalStorage(
+    'moveToBottom',
+    false
+  );
   return (
     <Dialog open={open}>
       <Paper sx={{ backgroundColor: 'beige' }}>
@@ -2419,6 +2431,18 @@ const ListMenu = (props) => {
               </Tooltip>
               <Tooltip title="Default Type" placement="right">
                 <>
+                  <MUIList disablePadding>
+                    <ListItem disableGutters>
+                      <ListItemText primary="Move items to bottom when completed" />
+                      <ListItemSecondaryAction>
+                        <Checkbox
+                          checked={moveToBottom}
+                          onChange={(e) => setMoveToBottom(e.target.checked)}
+                        />
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  </MUIList>
+
                   <FormLabel>Default type for new items in this list</FormLabel>
                   <Select
                     sx={{ minWidth: '100px', ml: 1 }}
