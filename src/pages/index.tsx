@@ -18,10 +18,13 @@ import { Poll } from '../server-components/examples/Polls';
 import { Comments } from '../server-components/examples/Comments';
 import { HelloWorldExample2 } from '../server-components/examples';
 import { ChatApp } from '../server-components/examples/ChatApp';
+import { createPortal } from 'react-dom';
+import { DefaultMeta, Meta } from '../components/Meta';
 
 export const IndexPage = () => {
   return (
     <Grid container spacing={1}>
+      <Meta Component={DefaultMeta} />
       <Grid item xs={12} md={4} xl={3} sx={{ mt: 1, p: 1 }}>
         <Grid container spacing={1}>
           <Grid item xs={12}>

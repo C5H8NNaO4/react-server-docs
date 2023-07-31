@@ -104,6 +104,8 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import levenshtein from 'fast-levenshtein';
 import { KeyboardSensor, MouseSensor } from '../../lib/Sensors';
 import SyncIcon from '@mui/icons-material/Sync';
+import { createPortal } from 'react-dom';
+import { ListsMeta, Meta } from '../../components/Meta';
 
 const DAY = 1000 * 60 * 60 * 24;
 const limits = {
@@ -509,7 +511,6 @@ export const MyLists = (props) => {
     <>
       <Container maxWidth="xl">
         {error && <Alert severity="error">{error.message}</Alert>}
-
         <Box
           sx={{ display: 'flex', width: '100%', mt: 2, alignItems: 'start' }}
           ref={setNodeRef}

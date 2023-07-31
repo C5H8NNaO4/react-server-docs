@@ -19,7 +19,9 @@ import {
   startOfDay,
   startOfMonth,
   startOfWeek,
+  subDays,
 } from 'date-fns';
+import { useState } from 'react';
 
 const colors = [
   '#9e0142',
@@ -152,6 +154,90 @@ export const AnalyticsPage = (props) => {
     return deepmerge(acc, dates);
   }, {});
 
+  const lists = component?.children?.filter(
+    (list) => list?.props.settings?.defaultType === 'Todo'
+  );
+
+  console.log(
+    'Completed3',
+    Array.from(Array(7)).map((e, i, arr) => {
+      return {
+        date: subDays(new Date(), arr.length - i),
+      };
+    })
+  );
+  const lastWeek = Array.from(Array(7))
+    .map((e, i, arr) => {
+      return {
+        date: subDays(new Date(), arr.length - (i + 1)),
+      };
+    })
+    .map((entry, week) => {
+      console.log('Completed2', entry.date, week);
+      return {
+        ...entry,
+        ...(lists || []).reduce(
+          (acc, list) => ({
+            ...acc,
+            [list.props.title]: list.children?.reduce((acc, item) => {
+              if (
+                !item?.props?.createdAt ||
+                format(item?.props?.createdAt, 'yy-MM-dd') >
+                  format(entry.date, 'yy-MM-dd')
+              ) {
+                return acc;
+              }
+              if (
+                format(item?.props?.createdAt, 'MM-dd') <
+                  format(entry.date, 'MM-dd') &&
+                !item?.props?.completed
+              ) {
+                return acc + 1;
+              }
+              if (
+                item?.props?.lastModified &&
+                format(item?.props?.lastModified, 'MM-dd') ==
+                  format(entry.date, 'MM-dd') &&
+                item?.props?.completed
+              ) {
+                return acc;
+              }
+              const completed =
+                item?.props?.lastModified &&
+                format(item?.props?.lastModified, 'yy-MM-dd') <
+                  format(entry.date, 'yy-MM-dd') &&
+                item?.props?.completed;
+              return acc + (completed ? 0 : 1);
+            }, 0),
+          }),
+          {}
+        ),
+      };
+    });
+  console.log('Last Week', lists, component?.children, lastWeek);
+  const [active, setActive] = useState(null);
+  const burndownChart = (
+    <LineChart data={lastWeek}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <Tooltip
+        content={({ payload }) => (
+          <CustomTooltip active={active} payload={payload} />
+        )}
+      />
+      <XAxis dataKey="date" tickFormatter={DateFormatter('dd.MM')} />
+      <Legend
+        onClick={(e) => {
+          console.log('Legend Click', e);
+          setActive(e.dataKey === active ? null : e.dataKey);
+        }}
+      />
+
+      {Object.keys(lastWeek[0] || {}).map((key, i) => {
+        if (key === 'date' || (active && key !== active)) return null;
+        return <Line dataKey={key} stroke={colors[i]} />;
+      })}
+    </LineChart>
+  );
   const expenseChart = (
     <BarChart data={expenseData}>
       <CartesianGrid strokeDasharray="3 3" />
@@ -228,6 +314,16 @@ export const AnalyticsPage = (props) => {
             </ResponsiveContainer>
           </>
         )}
+        {lastWeek?.length && (
+          <>
+            <Typography variant="h2" component="h2" gutterBottom>
+              Burndown
+            </Typography>
+            <ResponsiveContainer width="100%" height={250}>
+              {burndownChart}
+            </ResponsiveContainer>
+          </>
+        )}
         {expenseData && (
           <>
             <Typography variant="h2" component="h2" gutterBottom>
@@ -263,7 +359,7 @@ export const AnalyticsPage = (props) => {
   );
 };
 const expensesToLine = (data) => {};
-const CustomTooltip = (props) => {
+const CustomTooltip = ({ active, payload }) => {
   return (
     <Paper
       className="noFocus"
@@ -279,15 +375,16 @@ const CustomTooltip = (props) => {
         flexWrap: 'wrap',
       }}
     >
-      {Object.keys(props?.payload?.[0]?.payload || {})
+      {Object.keys(payload?.[0]?.payload || {})
         .filter((key) => !['date'].includes(key))
+        .filter((key) => (active ? key === active : true))
         .map((key) => {
           return (
             <ListItem key={key} sx={{ maxWidth: '50%' }}>
               <ListItemText
                 sx={{ my: 0, p: 0 }}
                 primary={key}
-                secondary={props.payload[0]?.payload[key]}
+                secondary={payload[0]?.payload[key]}
               />
             </ListItem>
           );
