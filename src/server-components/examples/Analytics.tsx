@@ -4,9 +4,12 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Cell,
   Legend,
   Line,
   LineChart,
+  Pie,
+  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -96,6 +99,16 @@ export const AnalyticsPage = (props) => {
         }, {});
       return deepmerge(acc, dates);
     }, {});
+  const firstMonth = Object.keys(categories || {})[0];
+  const pieData = Object.keys((categories || {})[firstMonth] || {})
+    .filter((key) => key !== 'date')
+    .map((key) => {
+      return {
+        name: key,
+        value: Math.abs(categories[firstMonth][key]),
+      };
+    });
+  console.log('PIE', pieData);
   const expenseData = Object.keys(categories || {})
     .sort((a, b) => {
       return a.localeCompare(b);
@@ -243,6 +256,19 @@ export const AnalyticsPage = (props) => {
       })}
     </BarChart>
   );
+  const expensePieChart = pieData.length && (
+    <PieChart>
+      <Legend />
+      {
+        <Pie data={pieData} dataKey={'value'} nameKey={'name'} fill={colors[0]} label>
+          {pieData.map((entry, index) => (
+            <Cell fill={colors[index % colors.length]} />
+          ))}
+        </Pie>
+      }
+    </PieChart>
+  );
+
   const itemData = Object.keys(itemsCompleted || {})
     .sort((a, b) => {
       return a.localeCompare(b);
@@ -326,6 +352,11 @@ export const AnalyticsPage = (props) => {
             <ResponsiveContainer width="100%" height={250}>
               {expenseChart}
             </ResponsiveContainer>
+            {pieData.length && (
+              <ResponsiveContainer width="100%" height={250}>
+                {expensePieChart}
+              </ResponsiveContainer>
+            )}
           </>
         )}
         {expenseData && (
