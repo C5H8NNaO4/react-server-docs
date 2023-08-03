@@ -55,11 +55,12 @@ export const AnalyticsPage = (props) => {
       .filter((todo) => 'count' in todo.props)
       .reduce((acc, todo) => {
         const date = startOfMonth(
-          new Date(todo.props.createdAt || Date.now())
+          new Date(todo.props.createdAt || todo.props.archived || Date.now())
         ).getTime();
         acc[date] = {
           ...acc[date],
-          [todo.props.title]: todo.props.count,
+          [todo.props.title]:
+            (acc?.[date]?.[todo.props.title] || 0) + todo.props.count,
           date,
         };
         return acc;
@@ -186,7 +187,6 @@ export const AnalyticsPage = (props) => {
       };
     })
     .map((entry, week) => {
-      console.log('Completed2', entry.date, week);
       return {
         ...entry,
         ...(lists || []).reduce(
