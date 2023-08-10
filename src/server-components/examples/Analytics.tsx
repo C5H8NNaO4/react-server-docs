@@ -1,5 +1,5 @@
 import { useComponent } from '@state-less/react-client';
-import { Container, Alert, Typography } from '@mui/material';
+import { Container, Alert, Typography, Box } from '@mui/material';
 import {
   Bar,
   BarChart,
@@ -100,16 +100,18 @@ export const AnalyticsPage = (props) => {
         }, {});
       return deepmerge(acc, dates);
     }, {});
-  const firstMonth = Object.keys(categories || {})[0];
-  const pieData = Object.keys((categories || {})[firstMonth] || {})
-    .filter((key) => key !== 'date')
-    .map((key) => {
-      return {
-        name: key,
-        value: Math.abs(categories[firstMonth][key]),
-      };
-    });
-  console.log('PIE', pieData);
+  const months = Object.keys(categories || {});
+  const pieData = months.map((month) =>
+    Object.keys((categories || {})[month] || {})
+      .filter((key) => key !== 'date')
+      .map((key) => {
+        return {
+          name: key,
+          value: Math.abs(categories[month][key]),
+        };
+      })
+  );
+  console.log('PIE', pieData, months);
   const expenseData = Object.keys(categories || {})
     .sort((a, b) => {
       return a.localeCompare(b);
@@ -256,24 +258,26 @@ export const AnalyticsPage = (props) => {
       })}
     </BarChart>
   );
-  const expensePieChart = (
-    <PieChart>
-      <Legend />
-      {
-        <Pie
-          data={pieData}
-          dataKey={'value'}
-          nameKey={'name'}
-          fill={colors[0]}
-          label
-        >
-          {pieData.map((entry, index) => (
-            <Cell fill={colors[index % colors.length]} />
-          ))}
-        </Pie>
-      }
-    </PieChart>
-  );
+  const expensePieChart = pieData.map((pieData) => {
+    return (
+      <PieChart>
+        <Legend />
+        {
+          <Pie
+            data={pieData || []}
+            dataKey={'value'}
+            nameKey={'name'}
+            fill={colors[0]}
+            label
+          >
+            {(pieData || []).map((entry, index) => (
+              <Cell fill={colors[index % colors.length]} />
+            ))}
+          </Pie>
+        }
+      </PieChart>
+    );
+  });
 
   const itemData = Object.keys(itemsCompleted || {})
     .sort((a, b) => {
@@ -358,11 +362,21 @@ export const AnalyticsPage = (props) => {
             <ResponsiveContainer width="100%" height={250}>
               {expenseChart}
             </ResponsiveContainer>
-            {pieData.length && (
-              <ResponsiveContainer width="100%" height={250}>
-                {expensePieChart}
-              </ResponsiveContainer>
-            )}
+            <Box sx={{ display: 'flex' }}>
+              {pieData.length &&
+                expensePieChart.slice(-3).map((chart, i) => {
+                  return (
+                    <div style={{ flex: 1 }}>
+                      <Typography variant="h3" component="h3" gutterBottom>
+                        {format(+months[i], 'MMMM')}
+                      </Typography>
+                      <ResponsiveContainer width="100%" height={250}>
+                        {chart}
+                      </ResponsiveContainer>
+                    </div>
+                  );
+                })}
+            </Box>
           </>
         )}
         {expenseData && (

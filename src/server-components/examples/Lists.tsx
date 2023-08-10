@@ -16,6 +16,7 @@ import {
   CardContent,
   CardMedia,
   CardActions,
+  ButtonProps,
   Alert,
   Grid,
   InputAdornment,
@@ -591,7 +592,7 @@ export const MyLists = (props) => {
           {labels?.length > 0 && (
             <Tooltip title="Invert selection" placement="right">
               <IconButton
-                color={invertFilter ? 'success' : 'default'}
+                color={invertFilter ? 'success' : undefined}
                 onClick={() => setInvertFilter(!invertFilter)}
               >
                 <InvertColorsIcon />
@@ -600,7 +601,7 @@ export const MyLists = (props) => {
           )}
           <Tooltip title="Synchronize Data." placement="bottom">
             <IconButton
-              color={show.save ? 'success' : 'default'}
+              color={show.save ? 'success' : undefined}
               sx={{ ml: 'auto' }}
               onClick={(e) => setShow({ ...show, more: false, save: e.target })}
             >
@@ -609,7 +610,7 @@ export const MyLists = (props) => {
           </Tooltip>
           <Tooltip title="More" placement="bottom">
             <IconButton
-              color={show.more ? 'success' : 'default'}
+              color={show.more ? 'success' : undefined}
               onClick={(e) => setShow({ ...show, save: false, more: e.target })}
             >
               <MoreVertIcon />
@@ -714,7 +715,7 @@ const Labels = ({ labels, onClick, active, ...rest }) => {
       {labels?.map((label) => (
         <Chip
           sx={{ mr: 1 }}
-          color={active.includes(label) ? 'success' : 'default'}
+          color={active.includes(label) ? 'success' : undefined}
           key={label.id}
           label={label}
           onClick={() => onClick(label)}
@@ -768,7 +769,7 @@ const SyncMenu = ({ open, onClose, setShow }) => {
                     // color={
                     //   JSON.stringify(data) === JSON.stringify(stored)
                     //     ? 'success'
-                    //     : 'default'
+                    //     : undefined
                     // }
                     onClick={async (e) => {
                       setShow((show) => ({
@@ -837,6 +838,8 @@ const MoreMenu = ({
                     color={fullWidth ? 'success' : undefined}
                     // sx={{ ml: 'auto' }}
                     onClick={() => setFullWidth(!fullWidth)}
+                    fullWidth
+                    sx={{ justifyContent: 'start', gap: 1 }}
                   >
                     <ExpandIcon sx={{ transform: 'rotate(90deg)' }} />
                     Full Width
@@ -851,6 +854,8 @@ const MoreMenu = ({
                   placement="left"
                 >
                   <SwitchButton
+                    fullWidth
+                    sx={{ justifyContent: 'start', gap: 1 }}
                     color={state.fullscreen ? 'success' : undefined}
                     // sx={{ ml: 'auto' }}
                     onClick={() => {
@@ -874,11 +879,14 @@ const MoreMenu = ({
                   placement="left"
                 >
                   <SwitchButton
+                    fullWidth
+                    sx={{ justifyContent: 'start', gap: 1 }}
                     color={showArchived ? 'success' : undefined}
                     // sx={{ ml: 'auto' }}
                     onClick={() => {
                       setShowArchived(!showArchived);
                     }}
+                    fullWidth
                   >
                     <VisibilityIcon />
                     Archived Lists
@@ -886,7 +894,9 @@ const MoreMenu = ({
                 </Tooltip>
                 <Tooltip title="Show total of expenses." placement="left">
                   <SwitchButton
-                    color={showExpenses ? 'success' : 'default'}
+                    fullWidth
+                    sx={{ justifyContent: 'start', gap: 1 }}
+                    color={showExpenses ? 'success' : undefined}
                     // sx={{ ml: 'auto' }}
                     onClick={() => {
                       setShowExpenses(!showExpenses);
@@ -898,16 +908,23 @@ const MoreMenu = ({
                 </Tooltip>
                 <hr />
                 <Tooltip title="Open Analytics" placement="left">
-                  <IconButton
-                    color={'default'}
+                  <SwitchButton
+                    fullWidth
+                    sx={{ justifyContent: 'start', gap: 1 }}
+                    color={undefined}
                     // sx={{ ml: 'auto' }}
                     onClick={() => navigate('/lists/analytics')}
                   >
                     <BarChartIcon />
-                  </IconButton>
+                    Analytics
+                  </SwitchButton>
                 </Tooltip>
                 <Tooltip title="Open Settings">
-                  <SwitchButton onClick={() => navigate('/lists/settings')}>
+                  <SwitchButton
+                    onClick={() => navigate('/lists/settings')}
+                    fullWidth
+                    sx={{ justifyContent: 'start', gap: 1 }}
+                  >
                     <SettingsIcon />
                     Settings
                   </SwitchButton>
@@ -943,7 +960,10 @@ export const NewListSkeleton = ({ onAdd }) => {
 
 export const SwitchButton = forwardRef(
   (
-    { children, ...rest }: PropsWithChildren<{ color?: any; onClick?: any }>,
+    {
+      children,
+      ...rest
+    }: PropsWithChildren<{ color?: any; onClick?: any } & ButtonProps>,
     ref
   ) => {
     const theme = useTheme();
@@ -1611,7 +1631,7 @@ export const List = ({
                 >
                   <IconButton
                     color={
-                      component?.props?.settings?.pinned ? 'success' : 'default'
+                      component?.props?.settings?.pinned ? 'success' : undefined
                     }
                     onClick={async (e) => {
                       await component?.props?.togglePinned();
@@ -1666,7 +1686,7 @@ export const List = ({
             {edit && (
               <Tooltip title="Add / Remove Labels">
                 <IconButton
-                  color={labelMode ? 'success' : 'default'}
+                  color={labelMode ? 'success' : undefined}
                   disabled={!edit}
                   onClick={() => {
                     setLabelMode(!labelMode);
@@ -1679,7 +1699,7 @@ export const List = ({
             {!edit && (
               <Tooltip title="Set list color.">
                 <IconButton
-                  color={showColors ? 'success' : 'default'}
+                  color={showColors ? 'success' : undefined}
                   // disabled={!edit}
                   onClick={(e) => {
                     setShowColors(e.target as HTMLElement);
@@ -1724,7 +1744,7 @@ export const List = ({
               >
                 <span>
                   <IconButton
-                    color={showArchived ? 'success' : 'default'}
+                    color={showArchived ? 'success' : undefined}
                     disabled={
                       !component?.children?.some((c) => c?.props?.archived)
                     }
@@ -1741,7 +1761,7 @@ export const List = ({
               <Tooltip title={'List settings.'}>
                 <span>
                   <IconButton
-                    color={showListMenu ? 'success' : 'default'}
+                    color={showListMenu ? 'success' : undefined}
                     onClick={async (e) => {
                       setShowListMenu(!showListMenu);
                     }}
@@ -1756,7 +1776,7 @@ export const List = ({
                 <Box sx={{ ml: 'auto' }}>
                   <IconButton
                     color={
-                      component?.props?.settings?.pinned ? 'success' : 'default'
+                      component?.props?.settings?.pinned ? 'success' : undefined
                     }
                     onClick={async (e) => {
                       await component?.props?.togglePinned();
