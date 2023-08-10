@@ -886,7 +886,6 @@ const MoreMenu = ({
                     onClick={() => {
                       setShowArchived(!showArchived);
                     }}
-                    fullWidth
                   >
                     <VisibilityIcon />
                     Archived Lists
