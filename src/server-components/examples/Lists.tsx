@@ -421,7 +421,7 @@ export const MyLists = (props) => {
       onDragEnd={handleDragEnd}
     >
       <SortableContext
-        items={optimisticOrder || []}
+        items={unpinnedOrder || []}
         strategy={rectSortingStrategy}
       >
         <Box sx={{ mx: fullWidth ? 0 : 0 }}>
@@ -440,7 +440,7 @@ export const MyLists = (props) => {
                     xl={bp[4]}
                   >
                     <SortableItem
-                      key={id}
+                      key={id + i}
                       id={id}
                       fullHeight
                       enabled={
