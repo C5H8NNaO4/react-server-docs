@@ -108,6 +108,18 @@ import SyncIcon from '@mui/icons-material/Sync';
 import { createPortal } from 'react-dom';
 import { ListsMeta, Meta } from '../../components/Meta';
 
+const minWord = (word, str) => {
+  let min = Infinity;
+  for (let i = 0; i < word.length; i++) {
+    min = Math.min(min, levenshtein.get(word.slice(i, str.length + i), str));
+    console.log('Min', word.slice(i, str.length + i), str, min);
+  }
+  return min;
+};
+const inWord = (word, str, distance) => {
+  return minWord(word, str) < distance;
+};
+
 const DAY = 1000 * 60 * 60 * 24;
 const limits = {
   '100': [DAY * 90, 1],
@@ -306,25 +318,22 @@ export const MyLists = (props) => {
     })
     ?.filter((list) => {
       if (!state.search) return true;
-      const dist = list.props.title
-        .split(' ')
-        .some(
-          (word) =>
-            levenshtein.get(word.slice(0, state.search.length), state.search) <
-            state.searchDistance
-        );
+      const dist =
+        list.props.title
+          .split(' ')
+          .some((word) => inWord(word, state.search, state.searchDistance)) ||
+        inWord(list.props.title, state.search, state.searchDistance);
+
       return (
         dist ||
+        // list.props.title?.toLowerCase().includes(state.search?.toLowerCase()) ||
         list.children.some((todo) => {
-          const matched = todo.props.title
-            .split(' ')
-            .some(
-              (word) =>
-                levenshtein.get(
-                  word.slice(0, state.search.length),
-                  state.search
-                ) < state.searchDistance
-            );
+          const matched =
+            todo.props.title
+              .split(' ')
+              .some((word) =>
+                inWord(word, state.search, state.searchDistance)
+              ) || inWord(todo.props.title, state.search, state.searchDistance);
 
           return matched;
         })
@@ -1063,7 +1072,6 @@ export const ImportMenu = ({ open, onClose, importData }) => {
     try {
       const text = await file.text();
       const json = JSON.parse(text);
-      console.log('FILES', file, json, { name: file.name, json });
 
       setFiles([{ name: file.name, json }]);
     } catch (e) {
@@ -1314,7 +1322,6 @@ export const List = ({
 
   const addEntry = async (e, label, rest?) => {
     setTodoTitle('');
-    console.log('REcreating', todoTitle, rest?.title);
     if (todoTitle === '' && !rest?.title) return;
     const fn = label ? component.props.addLabel : component.props.add;
     const arg = {
@@ -1343,7 +1350,6 @@ export const List = ({
         arg.type = rest?.type;
       }
     }
-    console.log('RECREATING', todoTitle, rest?.title, { ...rest, ...arg });
     const res = await fn({ ...rest, ...arg });
     if (label) {
       await refetch();
@@ -1984,6 +1990,9 @@ const TodoItem = (props) => {
     'moveToBottom',
     false
   );
+  const dist = state.search
+    ? minWord(component?.props?.title, state.search)
+    : Infinity;
   if (loading) return null;
 
   return (
@@ -1996,9 +2005,14 @@ const TodoItem = (props) => {
     >
       <span>
         <ListItemButton
+          selected={dist <= 1}
           dense
           sx={{
-            opacity: component?.props?.archived ? 0.5 : 1,
+            opacity: state.search
+              ? 1 - dist / 10
+              : component?.props?.archived
+              ? 0.5
+              : 1,
             pl: edit ? 0 : 2,
           }}
           disabled={!component?.props.completed && !edit && !canBeCompleted}
@@ -2311,7 +2325,6 @@ const ListItemMenu = (props) => {
       <Paper sx={{ backgroundColor: 'beige' }}>
         <ClickAwayListener
           onClickAway={(e) => {
-            console.log(e, component?.props?.id);
             if (
               ![component?.props?.id].includes((e?.target as HTMLElement)?.id)
             ) {
@@ -2419,7 +2432,6 @@ const ListMenu = (props) => {
       <Paper sx={{ backgroundColor: 'beige' }}>
         <ClickAwayListener
           onClickAway={(e) => {
-            console.log(e, component?.props?.id);
             if (
               ![component?.props?.id].includes((e?.target as HTMLElement)?.id)
             ) {
