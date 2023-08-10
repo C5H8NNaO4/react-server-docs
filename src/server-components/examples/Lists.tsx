@@ -582,6 +582,7 @@ export const MyLists = (props) => {
             sx={{ my: 2 }}
             labels={labels}
             active={active}
+            inverted={invertFilter}
             onClick={(label) => {
               const newActive = active.includes(label)
                 ? active.filter((l) => l !== label)
@@ -709,13 +710,19 @@ export const MyLists = (props) => {
   );
 };
 
-const Labels = ({ labels, onClick, active, ...rest }) => {
+const Labels = ({ labels, onClick, active, inverted, ...rest }) => {
   return (
     <Box {...rest}>
       {labels?.map((label) => (
         <Chip
           sx={{ mr: 1 }}
-          color={active.includes(label) ? 'success' : undefined}
+          color={
+            active.includes(label)
+              ? inverted
+                ? 'error'
+                : 'success'
+              : undefined
+          }
           key={label.id}
           label={label}
           onClick={() => onClick(label)}
