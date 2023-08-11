@@ -2008,6 +2008,11 @@ const TodoItem = (props) => {
           selected={dist <= 1}
           dense
           sx={{
+            backgroundColor: component?.props?.color || undefined,
+            '&:hover': {
+              backgroundColor: component?.props?.color || undefined,
+              filter: 'brightness(80%)',
+            },
             opacity: state.search
               ? 1 - dist / 10
               : component?.props?.archived
@@ -2035,7 +2040,7 @@ const TodoItem = (props) => {
                 component.props.title
               )
             }
-            sx={{ '&>p': { color: error ? 'red' : 'theme.text' } }}
+            sx={{ mr: 10, '&>p': { color: error ? 'red' : 'theme.text' } }}
             secondary={error ? error.message : ''}
           />
           <ListItemSecondaryAction>
@@ -2320,6 +2325,11 @@ const ExpenseItem = (props) => {
 const ListItemMenu = (props) => {
   const { dispatch, state } = useContext(stateContext);
   const { component, open, onClose, refetchList } = props;
+
+  const [showColors, setShowColors] = useState<HTMLElement | null>(null);
+  const handleClose = () => {
+    setShowColors(null);
+  };
   return (
     <Dialog open={open}>
       <Paper sx={{ backgroundColor: 'beige' }}>
@@ -2366,6 +2376,22 @@ const ListItemMenu = (props) => {
                       );
                     })}
                   </Select>
+                  <FormLabel>Color</FormLabel>
+                  <IconButton
+                    color={showColors ? 'success' : undefined}
+                    // disabled={!edit}
+                    onClick={(e) => {
+                      setShowColors(e.target as HTMLElement);
+                    }}
+                  >
+                    <PaletteIcon />
+                  </IconButton>
+                  <ColorMenu
+                    onClose={handleClose}
+                    open={showColors}
+                    setColor={component?.props?.setColor}
+                  ></ColorMenu>
+
                   <FormLabel>Item Type</FormLabel>
                   <Select
                     sx={{ minWidth: '100px', ml: 1 }}
