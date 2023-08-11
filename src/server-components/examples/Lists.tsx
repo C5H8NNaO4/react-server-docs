@@ -977,13 +977,16 @@ export const SwitchButton = forwardRef(
   (
     {
       children,
+      expanded,
       ...rest
-    }: PropsWithChildren<{ color?: any; onClick?: any } & ButtonProps>,
+    }: PropsWithChildren<
+      { color?: any; onClick?: any; expanded?: boolean } & ButtonProps
+    >,
     ref
   ) => {
     const theme = useTheme();
     const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
-    const iconOnly = !lessThanSmall;
+    const iconOnly = !lessThanSmall && !expanded;
     const Cmp = iconOnly ? IconButton : (Button as any);
     return (
       <Cmp ref={ref} {...rest}>
@@ -994,6 +997,7 @@ export const SwitchButton = forwardRef(
 );
 export const ColorMenu = ({ open, onClose, setColor }) => {
   const colors = [
+    '',
     'white',
     '#9e0142',
     '#d53e4f',
@@ -2376,16 +2380,18 @@ const ListItemMenu = (props) => {
                       );
                     })}
                   </Select>
-                  <FormLabel>Color</FormLabel>
-                  <IconButton
+                  <SwitchButton
+                    sx={{ gap: 1, justifyContent: 'start' }}
                     color={showColors ? 'success' : undefined}
                     // disabled={!edit}
                     onClick={(e) => {
                       setShowColors(e.target as HTMLElement);
                     }}
+                    expanded
                   >
                     <PaletteIcon />
-                  </IconButton>
+                    Color
+                  </SwitchButton>
                   <ColorMenu
                     onClose={handleClose}
                     open={showColors}
