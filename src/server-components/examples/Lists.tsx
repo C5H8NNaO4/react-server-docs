@@ -1040,7 +1040,7 @@ export const ColorMenu = ({
           }}
         >
           <Paper sx={{ backgroundColor: 'beige' }}>
-            <ClickAwayListener onClickAway={onClose}>
+            <ClickAwayListener onClickAway={() => onClose('')}>
               <Box
                 sx={{
                   display: 'flex',
