@@ -2042,14 +2042,22 @@ const TodoItem = (props) => {
           disabled={!component?.props.completed && !edit && !canBeCompleted}
         >
           {edit && (
-            <ListItemIcon>
-              <IconButton
-                color="error"
-                onClick={() => remove(component.props.id)}
+            <>
+              <ListItemSecondaryAction
+                sx={{
+                  left: 2,
+                  right: 'unset',
+                }}
               >
-                <RemoveCircleIcon />
-              </IconButton>
-            </ListItemIcon>
+                <IconButton
+                  color="error"
+                  onClick={() => remove(component.props.id)}
+                >
+                  <RemoveCircleIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+              <ListItemIcon />
+            </>
           )}
           <ListItemText
             primary={
@@ -2364,8 +2372,6 @@ const ExpenseItem = (props) => {
               open={showMenu}
               onClose={() => setShowMenu(false)}
               refetchList={refetchList}
-              showColors={showColors}
-              setShowColors={setShowColors}
             ></ListItemMenu>
           </ListItemSecondaryAction>
         </ListItemButton>
@@ -2380,9 +2386,11 @@ const ExpenseItem = (props) => {
 };
 const ListItemMenu = (props) => {
   const { dispatch, state } = useContext(stateContext);
-  const { component, open, onClose, refetchList, showColors, setShowColors } =
-    props;
-
+  const { component, open, onClose, refetchList } = props;
+  const [showColors, setShowColors] = useState<HTMLElement | null>(null);
+  const handleClose = () => {
+    setShowColors(null);
+  };
   return (
     <Dialog open={open}>
       <Paper sx={{ backgroundColor: 'beige' }}>
@@ -2441,7 +2449,11 @@ const ListItemMenu = (props) => {
                     <PaletteIcon />
                     Color
                   </SwitchButton>
-
+                  <ColorMenu
+                    onClose={handleClose}
+                    open={showColors}
+                    setColor={component?.props?.setColor}
+                  ></ColorMenu>
                   <FormLabel>Item Type</FormLabel>
                   <Select
                     sx={{ minWidth: '100px', ml: 1 }}
