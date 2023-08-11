@@ -995,7 +995,17 @@ export const SwitchButton = forwardRef(
     );
   }
 );
-export const ColorMenu = ({ open, onClose, setColor }) => {
+export const ColorMenu = ({
+  open,
+  onClose,
+  setColor,
+  popperOptions,
+}: {
+  popperOptions?: any;
+  open: HTMLElement | null;
+  onClose: () => void;
+  setColor: (color: string) => void;
+}) => {
   const colors = [
     '',
     'white',
@@ -1016,9 +1026,10 @@ export const ColorMenu = ({ open, onClose, setColor }) => {
       open={!!open}
       anchorEl={open}
       role={undefined}
-      placement="top"
+      placement="bottom"
       transition
       disablePortal
+      {...popperOptions}
       sx={{ zIndex: 10 }}
     >
       {({ TransitionProps, placement }) => (
@@ -1984,6 +1995,10 @@ const TodoItem = (props) => {
   const [component, { loading, error }] = useComponent(todoKey, {
     data,
   });
+  const [showColors, setShowColors] = useState<HTMLElement | null>(null);
+  const handleClose = () => {
+    setShowColors(null);
+  };
   const [showMenu, setShowMenu] = useState(false);
   const [interval, times] = limits[component?.props?.valuePoints] || [0, 1];
   const canBeCompleted = checkLimits(
@@ -2054,17 +2069,34 @@ const TodoItem = (props) => {
                   interval / DAY
                 } days.`}
               >
-                <Chip
-                  size="small"
-                  sx={{
-                    color:
-                      component?.props?.valuePoints > 1 ? 'white' : 'black',
-                    backgroundColor:
-                      colorMap[component?.props?.valuePoints] || 'lightgrey',
-                    border: '1px  solid darkgrey',
-                  }}
-                  label={component?.props?.valuePoints}
-                ></Chip>
+                <span>
+                  {!edit && (
+                    <Chip
+                      size="small"
+                      sx={{
+                        color:
+                          component?.props?.valuePoints > 1 ? 'white' : 'black',
+                        backgroundColor:
+                          colorMap[component?.props?.valuePoints] ||
+                          'lightgrey',
+                        border: '1px  solid darkgrey',
+                      }}
+                      label={component?.props?.valuePoints}
+                    ></Chip>
+                  )}
+                  {edit && (
+                    <IconButton
+                      sx={{ gap: 1, justifyContent: 'start' }}
+                      color={showColors ? 'success' : undefined}
+                      // disabled={!edit}
+                      onClick={(e) => {
+                        setShowColors(e.target as HTMLElement);
+                      }}
+                    >
+                      <PaletteIcon />
+                    </IconButton>
+                  )}
+                </span>
               </Tooltip>
             )}
             {!edit && (
@@ -2098,6 +2130,15 @@ const TodoItem = (props) => {
               onClose={() => setShowMenu(false)}
               refetchList={refetchList}
             ></ListItemMenu>
+            <ColorMenu
+              onClose={handleClose}
+              open={showColors}
+              setColor={component?.props?.setColor}
+              popperOptions={{
+                disablePortal: false,
+                placement: 'bottom',
+              }}
+            ></ColorMenu>
           </ListItemSecondaryAction>
         </ListItemButton>
       </span>
@@ -2249,6 +2290,10 @@ const ExpenseItem = (props) => {
       await refetchList();
     }
   );
+  const [showColors, setShowColors] = useState<HTMLElement | null>(null);
+  const handleClose = () => {
+    setShowColors(null);
+  };
 
   if (loading) return null;
 
@@ -2319,21 +2364,25 @@ const ExpenseItem = (props) => {
               open={showMenu}
               onClose={() => setShowMenu(false)}
               refetchList={refetchList}
+              showColors={showColors}
+              setShowColors={setShowColors}
             ></ListItemMenu>
           </ListItemSecondaryAction>
         </ListItemButton>
+        <ColorMenu
+          onClose={handleClose}
+          open={showColors}
+          setColor={component?.props?.setColor}
+        ></ColorMenu>
       </span>
     </Tooltip>
   );
 };
 const ListItemMenu = (props) => {
   const { dispatch, state } = useContext(stateContext);
-  const { component, open, onClose, refetchList } = props;
+  const { component, open, onClose, refetchList, showColors, setShowColors } =
+    props;
 
-  const [showColors, setShowColors] = useState<HTMLElement | null>(null);
-  const handleClose = () => {
-    setShowColors(null);
-  };
   return (
     <Dialog open={open}>
       <Paper sx={{ backgroundColor: 'beige' }}>
@@ -2392,11 +2441,6 @@ const ListItemMenu = (props) => {
                     <PaletteIcon />
                     Color
                   </SwitchButton>
-                  <ColorMenu
-                    onClose={handleClose}
-                    open={showColors}
-                    setColor={component?.props?.setColor}
-                  ></ColorMenu>
 
                   <FormLabel>Item Type</FormLabel>
                   <Select
