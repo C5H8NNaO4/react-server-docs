@@ -1003,7 +1003,7 @@ export const ColorMenu = ({
 }: {
   popperOptions?: any;
   open: HTMLElement | null;
-  onClose: () => void;
+  onClose: (color?: string) => void;
   setColor: (color: string) => void;
 }) => {
   const colors = [
