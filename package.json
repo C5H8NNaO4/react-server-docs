@@ -17,6 +17,7 @@
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.13",
+    "@mui/x-date-pickers": "^6.11.1",
     "@state-less/react-client": "^2.0.5",
     "change-case": "^4.1.2",
     "clsx": "^1.2.1",

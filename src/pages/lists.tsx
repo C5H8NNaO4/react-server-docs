@@ -1,4 +1,4 @@
-import { Paper, Container, Alert } from '@mui/material';
+import { Paper, Container, Alert, Button, Link } from '@mui/material';
 
 import { Markdown } from '../components/Markdown';
 import { getRawPath } from '../components/CollabEditButton';
@@ -7,6 +7,7 @@ import { MyLists } from '../server-components/examples/Lists';
 import { useContext } from 'react';
 import { authContext } from '@state-less/react-client';
 import { ListsMeta, Meta } from '../components/Meta';
+import { Link as RouterLink } from 'react-router-dom';
 
 const PAGE_SRC = 'src/pages/lists.md';
 
@@ -15,10 +16,20 @@ export const ListsPage = () => {
 
   return (
     <>
-      {/* <Alert severity="warning">
-        Please don't store any valuable data in Lists for now, as they will be
-        deleted on every deploy.
-      </Alert> */}
+      <Alert
+        severity="warning"
+        action={
+          <Button>
+            <Link to="/lists/about" component={RouterLink}>
+              More
+            </Link>
+          </Button>
+        }
+      >
+        Please backup / sync your data frequently as there's currently no
+        database connected to the server. Data-loss may occur in unexpected
+        circumstances.
+      </Alert>
       <Meta Component={ListsMeta} />
       <MyLists key={ctx?.session?.id} />
 

@@ -7,18 +7,18 @@ export default defineConfig({
   envPrefix: 'REACT_APP_',
   plugins: [
     react(),
-    // VitePWA({
-    //   srcDir: 'src',
-    //   filename: 'service-worker.js',
-    //   strategies: 'injectManifest',
-    //   injectRegister: false,
-    //   manifest: false,
-    //   injectManifest: {
-    //     injectionPoint: null,
-    //   },
-    //   devOptions: {
-    //     enabled: true,
-    //   },
-    // }),
+    VitePWA({
+      srcDir: 'src',
+      filename: 'service-worker2.js',
+      strategies: 'injectManifest',
+      injectRegister: false,
+      manifest: false,
+      injectManifest: {
+        injectionPoint: null,
+      },
+      devOptions: {
+        enabled: true,
+      },
+    }),
   ],
 });

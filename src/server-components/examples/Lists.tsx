@@ -17,6 +17,8 @@ import {
   CardMedia,
   CardActions,
   ButtonProps,
+  InputLabel,
+  FormControl,
   Alert,
   Grid,
   InputAdornment,
@@ -39,6 +41,7 @@ import {
   useTheme,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import TrophyIcon from '@mui/icons-material/EmojiEvents';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -107,6 +110,11 @@ import { KeyboardSensor, MouseSensor } from '../../lib/Sensors';
 import SyncIcon from '@mui/icons-material/Sync';
 import { createPortal } from 'react-dom';
 import { ListsMeta, Meta } from '../../components/Meta';
+
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { TimePicker } from '@mui/x-date-pickers';
 
 const minWord = (word, str) => {
   let min = Infinity;
@@ -209,6 +217,11 @@ const exportToLocalStorage = (data) => {
 };
 
 const unique = (arr) => [...new Set(arr)];
+const requestNotificationPermission = async () => {
+  const permission = await window.Notification.requestPermission();
+
+  return permission;
+};
 export const MyLists = (props) => {
   const [component, { loading, error, refetch }] = useComponent('my-lists', {});
   const [pointsComponent, { refetch: refetchPoints }] = useComponent(
@@ -415,6 +428,73 @@ export const MyLists = (props) => {
       });
     }
   }
+  const [permission, setPermission] = useLocalStorage<{
+    notification: string | null;
+    subscription: boolean | null;
+  }>('permission', {
+    notification: null,
+    subscription: null,
+  });
+  const [pushManager] = useComponent('web-push');
+  useEffect(() => {
+    (async () => {
+      const reg = await navigator.serviceWorker.getRegistration();
+      const sub = await reg?.pushManager.getSubscription();
+      setPermission({
+        notification: Notification.permission,
+        subscription: !!sub,
+      });
+    })();
+  }, []);
+  const toggleNotifications = async () => {
+    const reg = await navigator.serviceWorker.getRegistration();
+    const sub = await reg?.pushManager.getSubscription();
+    console.log('Sub', sub);
+    if (
+      Notification.permission !== 'granted' ||
+      (Notification.permission === 'granted' && !sub)
+    ) {
+      const perm = await requestNotificationPermission();
+      if (perm === 'granted') {
+        if (!sub) {
+          const sub = await reg?.pushManager.subscribe({
+            applicationServerKey: pushManager.props.vapid,
+            userVisibleOnly: true,
+          });
+          console.log('New Sub', sub);
+          await pushManager.props.subscribe(JSON.stringify(sub));
+          setPermission({
+            ...permission,
+            subscription: true,
+          });
+        }
+        const res = await pushManager.props.sendNotification({
+          title: 'Welcome to Lists',
+          body: 'You have been granted permission to receive notifications',
+        });
+      } else {
+        setPermission({
+          notification: perm,
+          subscription: !!sub,
+        });
+      }
+    } else {
+      // reg.pushManager.getSubscription().then((sub) => {
+      //   console.log('Sub', JSON.stringify(sub));
+      // });
+      await pushManager.props.sendNotification({
+        title: 'Goodbye',
+        body: "You won't receive any more notifications.",
+      });
+      const res = await sub?.unsubscribe();
+      console.log('Unsubscribe', res);
+      setPermission({
+        ...permission,
+        subscription: false,
+      });
+      await pushManager.props.unsubscribe(JSON.stringify(sub));
+    }
+  };
 
   const bps = [12, 12, 6, 4, 3];
   const bpsFw = [12, 6, 4, 3, 2];
@@ -611,8 +691,23 @@ export const MyLists = (props) => {
           )}
           <Tooltip title="Synchronize Data." placement="bottom">
             <IconButton
-              color={show.save ? 'success' : undefined}
+              disabled={permission.notification === 'denied'}
+              color={
+                permission.notification === 'granted'
+                  ? permission.subscription
+                    ? 'success'
+                    : 'warning'
+                  : undefined
+              }
               sx={{ ml: 'auto' }}
+              onClick={(e) => toggleNotifications()}
+            >
+              <NotificationsNoneIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Synchronize Data." placement="bottom">
+            <IconButton
+              color={show.save ? 'success' : undefined}
               onClick={(e) => setShow({ ...show, more: false, save: e.target })}
             >
               <SyncIcon />
@@ -1389,9 +1484,14 @@ export const List = ({
   const [showListMenu, setShowListMenu] = useState(false);
   const [doArchive, setDoArchive] = useState(false);
 
-  const itemLkp = (component?.children || []).reduce((acc, child) => {
-    return { ...acc, [child.props.id]: child };
-  }, {});
+  const itemLkp = useMemo(
+    () =>
+      (component?.children || []).reduce((acc, child) => {
+        return { ...acc, [child.props.id]: child };
+      }, {}),
+    [component?.children?.length]
+  );
+
   const labelLkp = (component?.props.labels || []).reduce((acc, child) => {
     return { ...acc, [child.id]: child };
   }, {});
@@ -1605,7 +1705,8 @@ export const List = ({
                     <SortableItem
                       key={id}
                       id={id}
-                      enabled={isTouchScreenDevice() ? edit : true}
+                      // enabled={false}
+                      enabled={true}
                       DragHandle={
                         isTouchScreenDevice()
                           ? (props) => <DragIndicatorIcon {...props} />
@@ -1995,6 +2096,9 @@ const TodoItem = (props) => {
   const [component, { loading, error }] = useComponent(todoKey, {
     data,
   });
+  useEffect(() => {
+    console.log('Data changed');
+  }, [data]);
   const [showColors, setShowColors] = useState<HTMLElement | null>(null);
   const handleClose = () => {
     setShowColors(null);
@@ -2391,6 +2495,10 @@ const ListItemMenu = (props) => {
   const handleClose = () => {
     setShowColors(null);
   };
+  const [syncedTitle, setTitle] = useSyncedState(
+    component?.props?.title,
+    component?.props?.setTitle
+  );
   return (
     <Dialog open={open}>
       <Paper sx={{ backgroundColor: 'beige' }}>
@@ -2408,68 +2516,122 @@ const ListItemMenu = (props) => {
           <Card>
             <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
               <Tooltip title="Reset after # days" placement="right">
-                <>
-                  <FormLabel>
-                    Reset after{' '}
-                    {component?.props?.reset / (1000 * 60 * 60 * 24) || '#'}{' '}
-                    days
-                  </FormLabel>
-                  <Select
-                    sx={{ minWidth: '100px', ml: 1 }}
-                    id={component?.props?.id}
-                    onChange={(e) => component?.props?.setReset(e.target.value)}
-                    value={
-                      component.props?.reset === null
-                        ? '-'
-                        : component?.props?.reset / (1000 * 60 * 60)
-                    }
-                    MenuProps={{ disablePortal: true }}
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Box
+                    sx={{ gap: 1, flexDirection: 'column', display: 'flex' }}
                   >
-                    {['-', 6, 12, 24, 48, 72, 24 * 7, 24 * 14].map((n) => {
-                      return (
-                        <MenuItem value={n}>
-                          {n === '-'
+                    <TextField
+                      label="Title"
+                      value={syncedTitle}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <DatePicker
+                      label="Due Date"
+                      value={
+                        component?.props?.dueDate &&
+                        new Date(component?.props?.dueDate)
+                      }
+                      onChange={(e) => {
+                        component?.props?.setDueDate(e);
+                      }}
+                      slotProps={{
+                        textField: {
+                          InputProps: {
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  onClick={(e) => {
+                                    component?.props?.setDueDate(null);
+                                    e.stopPropagation();
+                                  }}
+                                  disabled={!component?.props?.dueDate}
+                                >
+                                  <IconClear />
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          },
+                        },
+                      }}
+                    />
+                    <TimePicker
+                      label="Due Time"
+                      value={
+                        component?.props?.dueTime &&
+                        new Date(component?.props?.dueTime)
+                      }
+                      onChange={(e) => {
+                        component?.props?.setDueTime(e);
+                      }}
+                    />
+                    <FormControl>
+                      <InputLabel id="reset-after">
+                        Reset after{' '}
+                        {component?.props?.reset / (1000 * 60 * 60 * 24) || '#'}{' '}
+                        days
+                      </InputLabel>
+                      <Select
+                        labelId="reset-after"
+                        label={''}
+                        sx={{ minWidth: '100px' }}
+                        id={component?.props?.id}
+                        onChange={(e) =>
+                          component?.props?.setReset(e.target.value)
+                        }
+                        value={
+                          component.props?.reset === null
                             ? '-'
-                            : ((typeof n === 'number' && n) || 0) > 48
-                            ? `${Number(n) / 24} days`
-                            : `${n}h`}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                  <SwitchButton
-                    sx={{ gap: 1, justifyContent: 'start' }}
-                    color={showColors ? 'success' : undefined}
-                    // disabled={!edit}
-                    onClick={(e) => {
-                      setShowColors(e.target as HTMLElement);
-                    }}
-                    expanded
-                  >
-                    <PaletteIcon />
-                    Color
-                  </SwitchButton>
-                  <ColorMenu
-                    onClose={handleClose}
-                    open={showColors}
-                    setColor={component?.props?.setColor}
-                  ></ColorMenu>
-                  <FormLabel>Item Type</FormLabel>
-                  <Select
-                    sx={{ minWidth: '100px', ml: 1 }}
-                    onChange={(e) =>
-                      component?.props?.changeType(e.target.value)
-                    }
-                    value={
-                      !component.props?.type ? '-' : component?.props?.type
-                    }
-                    MenuProps={{ disablePortal: true }}
-                  >
-                    {['-', 'Todo', 'Counter', 'Expense'].map((n) => {
-                      return <MenuItem value={n}>{n}</MenuItem>;
-                    })}
-                  </Select>
-                </>
+                            : component?.props?.reset / (1000 * 60 * 60)
+                        }
+                        MenuProps={{ disablePortal: true }}
+                      >
+                        {['-', 6, 12, 24, 48, 72, 24 * 7, 24 * 14].map((n) => {
+                          return (
+                            <MenuItem value={n}>
+                              {n === '-'
+                                ? '-'
+                                : ((typeof n === 'number' && n) || 0) > 48
+                                ? `${Number(n) / 24} days`
+                                : `${n}h`}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                    <SwitchButton
+                      sx={{ gap: 1, justifyContent: 'start' }}
+                      color={showColors ? 'success' : undefined}
+                      // disabled={!edit}
+                      onClick={(e) => {
+                        setShowColors(e.target as HTMLElement);
+                      }}
+                      expanded
+                    >
+                      <PaletteIcon />
+                      Color
+                    </SwitchButton>
+                    <ColorMenu
+                      onClose={handleClose}
+                      open={showColors}
+                      setColor={component?.props?.setColor}
+                    ></ColorMenu>
+                    <FormLabel>Item Type</FormLabel>
+                    <Select
+                      sx={{ minWidth: '100px', ml: 1 }}
+                      onChange={(e) =>
+                        component?.props?.changeType(e.target.value)
+                      }
+                      value={
+                        !component.props?.type ? '-' : component?.props?.type
+                      }
+                      MenuProps={{ disablePortal: true }}
+                    >
+                      {['-', 'Todo', 'Counter', 'Expense'].map((n) => {
+                        return <MenuItem value={n}>{n}</MenuItem>;
+                      })}
+                    </Select>
+                  </Box>
+                </LocalizationProvider>
               </Tooltip>
               <Tooltip title="Value Points" placement="right">
                 <>
