@@ -8,6 +8,10 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker2.js');
+}
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <App />
 );
