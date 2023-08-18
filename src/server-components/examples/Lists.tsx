@@ -1492,6 +1492,10 @@ export const List = ({
     [component?.children?.length]
   );
 
+  useEffect(() => {
+    console.log('LKP CHANGED');
+  }, [itemLkp]);
+
   const labelLkp = (component?.props.labels || []).reduce((acc, child) => {
     return { ...acc, [child.id]: child };
   }, {});
@@ -1697,7 +1701,7 @@ export const List = ({
               const Item = itemMap[todo?.props?.type] || TodoItem;
 
               return (
-                <>
+                <div key={id}>
                   {canAddLabel && (
                     <LabelItem
                       edit={edit}
@@ -1735,7 +1739,7 @@ export const List = ({
                       />
                     </SortableItem>
                   )}
-                </>
+                </div>
               );
             })}
           </MUIList>
@@ -2100,12 +2104,15 @@ const TodoItem = (props) => {
     setOrder,
     order,
   } = props;
+  const memoizedData = useMemo(() => {
+    return data;
+  }, []);
   const [component, { loading, error }] = useComponent(todoKey, {
-    data,
+    data: memoizedData,
   });
   useEffect(() => {
     console.log('Data changed');
-  }, [data]);
+  }, [memoizedData]);
   const [showColors, setShowColors] = useState<HTMLElement | null>(null);
   const handleClose = () => {
     setShowColors(null);

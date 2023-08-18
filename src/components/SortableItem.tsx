@@ -22,12 +22,17 @@ export function SortableItem(props) {
   const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
   if (!props.enabled) {
-    return <div style={style}>{props.children}</div>;
+    return (
+      <div key="draghandle" style={style}>
+        {props.children}
+      </div>
+    );
   }
 
   if (props.DragHandle) {
     return (
       <Box
+        key="draghandle"
         ref={setNodeRef}
         style={style}
         sx={{ display: 'flex', alignItems: 'center' }}
