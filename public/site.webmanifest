@@ -1,6 +1,7 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "React Server",
+    "short_name": "React Server",
+    "description": "React Server is a new framework that allows you to build serverside components using JSX/TSX along with a reactive coding style known from the frontend library React. (components, hooks, effects etc.)",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",

@@ -1623,6 +1623,9 @@ export const List = ({
                   e.stopPropagation();
                 }}
                 InputProps={{
+                  inputProps: {
+                    enterKeyHint: 'enter',
+                  },
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
