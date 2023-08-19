@@ -260,35 +260,37 @@ export const MyLists = (props) => {
       navigate('/lists');
     }
   });
-  const data = component?.children?.reduce((acc, list) => {
-    return {
-      ...acc,
-      [list.props.id]: {
-        title: list.props.title,
-        order: list.props.order,
+  const data = component?.children
+    ?.filter((list) => list?.props?.id)
+    ?.reduce((acc, list) => {
+      return {
+        ...acc,
+        [list.props.id]: {
+          title: list.props.title,
+          order: list.props.order,
 
-        id: list.props.id,
-        settings: list.props.settings,
-        createdAt: list.props.createdAt,
-        color: list.props.color,
-        todos: list.children.map((todo) => {
-          return {
-            title: todo.props.title,
-            completed: todo.props.completed,
-            id: todo.props.id,
-            createdAt: todo.props.createdAt,
-            type: todo.props.type,
-            reset: todo.props.reset,
-            valuePoints: todo.props.valuePoints,
-            creditedValuePoints: todo.props.creditedValuePoints,
-            negativePoints: todo.props.negativePoints,
-            dueDate: todo.props.dueDate,
-            lastModified: todo.props.lastModified,
-          };
-        }),
-      },
-    };
-  }, {});
+          id: list.props.id,
+          settings: list.props.settings,
+          createdAt: list.props.createdAt,
+          color: list.props.color,
+          todos: list.children.map((todo) => {
+            return {
+              title: todo.props.title,
+              completed: todo.props.completed,
+              id: todo.props.id,
+              createdAt: todo.props.createdAt,
+              type: todo.props.type,
+              reset: todo.props.reset,
+              valuePoints: todo.props.valuePoints,
+              creditedValuePoints: todo.props.creditedValuePoints,
+              negativePoints: todo.props.negativePoints,
+              dueDate: todo.props.dueDate,
+              lastModified: todo.props.lastModified,
+            };
+          }),
+        },
+      };
+    }, {});
   const { signed, points, order, ...stored } = JSON.parse(
     localStorage.lists || '{}'
   );
@@ -301,6 +303,7 @@ export const MyLists = (props) => {
   });
   const labels = unique(
     component?.children
+      ?.filter((list) => list?.props?.id)
       ?.reduce((acc, list) => acc.concat(list?.props?.labels), [])
       .map((label) => label.title)
   );
@@ -320,6 +323,7 @@ export const MyLists = (props) => {
   }, [state]);
   const inputRef = useRef<HTMLInputElement>(null);
   const filtered = component?.children
+    ?.filter((list) => list?.props?.id)
     ?.filter((list) => {
       if (active.length === 0) return true;
 
@@ -352,6 +356,8 @@ export const MyLists = (props) => {
         })
       );
     });
+
+  console.log('Filtered', filtered, component?.children);
   const items = useMemo(
     () => component?.props?.order,
     [JSON.stringify(component?.props?.order)]
@@ -501,7 +507,7 @@ export const MyLists = (props) => {
   const bp = fullWidth ? bpsFw : bps;
 
   const exists = component?.children?.some(
-    (todo) => todo.props.title === title
+    (todo) => todo?.props?.title === title
   );
   const content = (
     <DndContext
