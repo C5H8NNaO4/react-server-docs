@@ -2513,6 +2513,10 @@ const ListItemMenu = (props) => {
     component?.props?.title,
     component?.props?.setTitle
   );
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Dialog open={open}>
       <Paper sx={{ backgroundColor: 'beige' }}>
@@ -2529,57 +2533,98 @@ const ListItemMenu = (props) => {
         >
           <Card>
             <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Tooltip title="Reset after # days" placement="right">
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <Box
-                    sx={{ gap: 1, flexDirection: 'column', display: 'flex' }}
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <Box sx={{ gap: 1, flexDirection: 'column', display: 'flex' }}>
+                  <Tooltip
+                    title="Change the title of the item"
+                    placement={isMobile ? 'top' : 'left'}
                   >
                     <TextField
                       label="Title"
                       value={syncedTitle}
                       onChange={(e) => setTitle(e.target.value)}
                     />
-                    <DatePicker
-                      label="Due Date"
-                      value={
-                        component?.props?.dueDate &&
-                        new Date(component?.props?.dueDate)
-                      }
-                      onChange={(e) => {
-                        component?.props?.setDueDate(e);
-                      }}
-                      slotProps={{
-                        textField: {
-                          InputProps: {
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <IconButton
-                                  onClick={(e) => {
-                                    component?.props?.setDueDate(null);
-                                    e.stopPropagation();
-                                  }}
-                                  disabled={!component?.props?.dueDate}
-                                >
-                                  <IconClear />
-                                </IconButton>
-                              </InputAdornment>
-                            ),
+                  </Tooltip>
+                  <Tooltip
+                    title="Setting a due date will notify you on that specific date only. Leaving it blank and setting a time will trigger a notification every day."
+                    placement={isMobile ? 'top' : 'left'}
+                  >
+                    <Box sx={{ width: '100%' }}>
+                      <DatePicker
+                        label="Due Date"
+                        value={
+                          component?.props?.dueDate &&
+                          new Date(component?.props?.dueDate)
+                        }
+                        onChange={(e) => {
+                          component?.props?.setDueDate(e);
+                        }}
+                        slotProps={{
+                          textField: {
+                            fullWidth: true,
+                            InputProps: {
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <IconButton
+                                    onClick={(e) => {
+                                      component?.props?.setDueDate(null);
+                                      e.stopPropagation();
+                                    }}
+                                    disabled={!component?.props?.dueDate}
+                                  >
+                                    <IconClear />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            },
                           },
-                        },
-                      }}
-                    />
-                    <TimePicker
-                      label="Due Time"
-                      value={
-                        component?.props?.dueTime &&
-                        new Date(component?.props?.dueTime)
-                      }
-                      onChange={(e) => {
-                        component?.props?.setDueTime(e);
-                      }}
-                    />
+                        }}
+                      />
+                    </Box>
+                  </Tooltip>
+                  <Tooltip
+                    title="Setting a time enables notification and will notify you 15min before the set time."
+                    placement={isMobile ? 'top' : 'left'}
+                  >
+                    <Box sx={{ width: '100%', mb: 1 }}>
+                      <TimePicker
+                        label="Due Time"
+                        value={
+                          component?.props?.dueTime &&
+                          new Date(component?.props?.dueTime)
+                        }
+                        onChange={(e) => {
+                          component?.props?.setDueTime(e);
+                        }}
+                        slotProps={{
+                          textField: {
+                            fullWidth: true,
+                            InputProps: {
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <IconButton
+                                    onClick={(e) => {
+                                      component?.props?.setDueTime(null);
+                                      e.stopPropagation();
+                                    }}
+                                    disabled={!component?.props?.dueTime}
+                                  >
+                                    <IconClear />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            },
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Tooltip>
+                  <Tooltip
+                    title="Resets the completed state in the given interval. Useful for recurring tasks"
+                    placement={isMobile ? 'top' : 'left'}
+                  >
                     <FormControl>
-                      <InputLabel id="reset-after">
+                      <InputLabel id="reset-after" sx={{ bgcolor: '#FFF' }}>
                         Reset after{' '}
                         {component?.props?.reset / (1000 * 60 * 60 * 24) || '#'}{' '}
                         days
@@ -2612,46 +2657,49 @@ const ListItemMenu = (props) => {
                         })}
                       </Select>
                     </FormControl>
-                    <SwitchButton
-                      sx={{ gap: 1, justifyContent: 'start' }}
-                      color={showColors ? 'success' : undefined}
-                      // disabled={!edit}
-                      onClick={(e) => {
-                        setShowColors(e.target as HTMLElement);
-                      }}
-                      expanded
-                    >
-                      <PaletteIcon />
-                      Color
-                    </SwitchButton>
-                    <ColorMenu
-                      onClose={handleClose}
-                      open={showColors}
-                      setColor={component?.props?.setColor}
-                    ></ColorMenu>
-                    <FormLabel>Item Type</FormLabel>
-                    <Select
-                      sx={{ minWidth: '100px', ml: 1 }}
-                      onChange={(e) =>
-                        component?.props?.changeType(e.target.value)
-                      }
-                      value={
-                        !component.props?.type ? '-' : component?.props?.type
-                      }
-                      MenuProps={{ disablePortal: true }}
-                    >
-                      {['-', 'Todo', 'Counter', 'Expense'].map((n) => {
-                        return <MenuItem value={n}>{n}</MenuItem>;
-                      })}
-                    </Select>
-                  </Box>
-                </LocalizationProvider>
-              </Tooltip>
-              <Tooltip title="Value Points" placement="right">
-                <>
-                  <FormLabel>Points for completing this item</FormLabel>
+                  </Tooltip>
+
+                  <ColorMenu
+                    onClose={handleClose}
+                    open={showColors}
+                    setColor={component?.props?.setColor}
+                  ></ColorMenu>
+                  <Tooltip
+                    title="You can transform an item to a different type."
+                    placement={isMobile ? 'top' : 'left'}
+                  >
+                    <FormControl sx={{ mt: 1 }}>
+                      <InputLabel sx={{ bgcolor: '#FFF' }} id="item-type-label">
+                        Item Type
+                      </InputLabel>
+                      <Select
+                        labelId="item-type-label"
+                        sx={{ minWidth: '100px' }}
+                        onChange={(e) =>
+                          component?.props?.changeType(e.target.value)
+                        }
+                        value={
+                          !component.props?.type ? '-' : component?.props?.type
+                        }
+                        MenuProps={{ disablePortal: true }}
+                      >
+                        {['-', 'Todo', 'Counter', 'Expense'].map((n) => {
+                          return <MenuItem value={n}>{n}</MenuItem>;
+                        })}
+                      </Select>
+                    </FormControl>
+                  </Tooltip>
+                </Box>
+              </LocalizationProvider>
+              <Tooltip
+                title="Earn points by completing items. This let's you prioritize your work and rewards you with artificial internet points."
+                placement={isMobile ? 'top' : 'left'}
+              >
+                <FormControl sx={{mt: 2}}>
+                  <InputLabel id="points-label" sx={{bgcolor: '#FFF'}}>Value Points</InputLabel>
                   <Select
-                    sx={{ minWidth: '100px', ml: 1 }}
+                    labelId="points-label"
+                    sx={{ minWidth: '100px'}}
                     id={component?.props?.id}
                     onChange={async (e) => {
                       await component?.props?.setValuePoints(e.target.value);
@@ -2664,7 +2712,7 @@ const ListItemMenu = (props) => {
                       return <MenuItem value={n}>{n}</MenuItem>;
                     })}
                   </Select>
-                </>
+                </FormControl>
               </Tooltip>
             </CardContent>
             <CardActions>
@@ -2676,6 +2724,20 @@ const ListItemMenu = (props) => {
               >
                 <ArchiveIcon />
               </IconButton>
+              <Tooltip title="Choose a color for your item." placement={isMobile ? 'top' : 'bottom'}>
+                <SwitchButton
+                  sx={{ gap: 1, justifyContent: 'start' }}
+                  color={showColors ? 'success' : undefined}
+                  // disabled={!edit}
+                  onClick={(e) => {
+                    setShowColors(e.target as HTMLElement);
+                  }}
+                  expanded
+                >
+                  <PaletteIcon />
+                  Color
+                </SwitchButton>
+              </Tooltip>
             </CardActions>
           </Card>
         </ClickAwayListener>
