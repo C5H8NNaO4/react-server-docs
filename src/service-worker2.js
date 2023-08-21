@@ -38,7 +38,7 @@ self.addEventListener('notificationclick', (event) => {
   });
   if (action === 'complete') {
     try {
-        const promise = fetch(`http://backend.state-less.cloud/todos/${id}/toggle`, {
+        const promise = fetch(`https://backend.state-less.cloud/todos/${id}/toggle`, {
         method: 'GET',
         headers: {
           Authorization: bearer,
