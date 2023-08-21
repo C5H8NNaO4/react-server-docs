@@ -1,4 +1,4 @@
-let lastNotificationData = null;
+let lastNotificationData = {};
 self.addEventListener('push', function (event) {
   if (event.data) {
     try {
@@ -15,7 +15,7 @@ self.addEventListener('push', function (event) {
           ],
         });
       }
-      lastNotificationData = json;
+      lastNotificationData[json.id] = json;
       showLocalNotification(json.title, json.body, self.registration, options);
     } catch (error) {
       showLocalNotification('Error', event.data.text(), self.registration);
@@ -29,13 +29,10 @@ self.addEventListener('notificationclick', (event) => {
   const clickedNotification = event.notification;
   clickedNotification.close();
   const [action, id] = event.action.split(':');
-  const { token, clientId } = lastNotificationData;
+  const { token, clientId } = lastNotificationData[id];
+  delete lastNotificationData[id];
   const bearer = `Bearer ${token}`;
-  // Do something as the result of the notification click
-  console.log('Headers', id, {
-    Authorization: bearer,
-    'X-Unique-Id': clientId,
-  });
+
   if (action === 'complete') {
     try {
       const promise = fetch(`http://localhost:4000/todos/${id}/toggle`, {
