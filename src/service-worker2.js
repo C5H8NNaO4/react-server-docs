@@ -35,7 +35,7 @@ self.addEventListener('notificationclick', (event) => {
 
   if (action === 'complete') {
     try {
-      const promise = fetch(`http://localhost:4000/todos/${id}/toggle`, {
+        const promise = fetch(`https://graphql.state-less.cloud/todos/${id}/toggle`, {
         method: 'GET',
         headers: {
           Authorization: bearer,
