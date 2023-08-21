@@ -49,7 +49,11 @@ import AddIcon from '@mui/icons-material/Add';
 import LabelIcon from '@mui/icons-material/Label';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { useComponent, useLocalStorage } from '@state-less/react-client';
+import {
+  authContext,
+  useComponent,
+  useLocalStorage,
+} from '@state-less/react-client';
 import {
   useContext,
   useEffect,
@@ -68,6 +72,7 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import { Actions, stateContext } from '../../provider/StateProvider';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import ReplayIcon from '@mui/icons-material/Replay';
 import InvertColorsIcon from '@mui/icons-material/InvertColors';
@@ -224,6 +229,8 @@ const requestNotificationPermission = async () => {
 };
 export const MyLists = (props) => {
   const [component, { loading, error, refetch }] = useComponent('my-lists', {});
+  const ctx = useContext(authContext);
+
   const [pointsComponent, { refetch: refetchPoints }] = useComponent(
     'my-lists-points',
     {}
@@ -253,7 +260,10 @@ export const MyLists = (props) => {
   const [past, setPast] = useLocalStorage('past', 90);
   const { search } = useLocation();
   const navigate = useNavigate();
-
+  useEffect(() => {
+    refetch();
+    refetchPoints();
+  }, [ctx?.session?.id]);
   useEffect(() => {
     if (search.includes('?fs') && !state.fullscreen) {
       dispatch({ type: Actions.TOGGLE_FULLSCREEN });
@@ -1410,9 +1420,15 @@ export const List = ({
   const [showColors, setShowColors] = useState<HTMLElement | null>(null);
   const [showArchived, setShowArchived] = useState<boolean>(false);
   const [showType, setShowType] = useState<HTMLElement | null>(null);
+  const [sort, setSort] = useState(0);
   const canAddLabel = edit && labelMode;
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const toggleSort = async () => {
+    await refetchList();
+    const nextSort = ((sort + 2) % 3) - 1;
+    setSort(nextSort);
+  };
   const exists =
     todoTitle !== '' &&
     component.children.some(
@@ -1495,7 +1511,7 @@ export const List = ({
       (component?.children || []).reduce((acc, child) => {
         return { ...acc, [child.props.id]: child };
       }, {}),
-    [component?.children?.length]
+    [component?.children]
   );
 
   useEffect(() => {
@@ -1520,10 +1536,26 @@ export const List = ({
   }, [JSON.stringify(component?.props?.order)]);
 
   const labelOrder = (component?.props?.labels || []).map((l) => l.id);
-  const filteredItemOrder = itemOrder?.filter((id) => {
+  let filteredItemOrder = itemOrder?.filter((id) => {
     const todo = itemLkp[id];
     return todo && (showArchived || !todo?.props?.archived);
   });
+
+  if (sort !== 0) {
+    filteredItemOrder.sort((a, b) => {
+      const aUpdated =
+        lkp[a]?.props?.archived ||
+        lkp[a]?.props?.lastModified ||
+        lkp[a]?.props?.createdAt;
+      const bUpdated =
+        lkp[b]?.props?.archived ||
+        lkp[b]?.props?.lastModified ||
+        lkp[b]?.props?.createdAt;
+
+      return (bUpdated - aUpdated) * sort;
+    });
+  }
+
   const order = !canAddLabel ? filteredItemOrder : labelOrder;
 
   function handleDragEnd(event) {
@@ -1723,9 +1755,9 @@ export const List = ({
                       key={id}
                       id={id}
                       // enabled={false}
-                      enabled={true}
+                      enabled={sort === 0}
                       DragHandle={
-                        isTouchScreenDevice()
+                        isTouchScreenDevice() && sort === 0
                           ? (props) => <DragIndicatorIcon {...props} />
                           : null
                       }
@@ -1916,6 +1948,16 @@ export const List = ({
                 </span>
               </Tooltip>
             )}
+            <Tooltip title="Enable to override manual sort (sorting by archived, lastModified, createdAt)">
+              <IconButton
+                color={
+                  sort === -1 ? 'error' : sort === 1 ? 'success' : undefined
+                }
+                onClick={toggleSort}
+              >
+                <SortByAlphaIcon />
+              </IconButton>
+            </Tooltip>
             {!edit && (
               <Tooltip title={'Pin List.'}>
                 <Box sx={{ ml: 'auto' }}>
@@ -2701,11 +2743,13 @@ const ListItemMenu = (props) => {
                 title="Earn points by completing items. This let's you prioritize your work and rewards you with artificial internet points."
                 placement={isMobile ? 'top' : 'left'}
               >
-                <FormControl sx={{mt: 2}}>
-                  <InputLabel id="points-label" sx={{bgcolor: '#FFF'}}>Value Points</InputLabel>
+                <FormControl sx={{ mt: 2 }}>
+                  <InputLabel id="points-label" sx={{ bgcolor: '#FFF' }}>
+                    Value Points
+                  </InputLabel>
                   <Select
                     labelId="points-label"
-                    sx={{ minWidth: '100px'}}
+                    sx={{ minWidth: '100px' }}
                     id={component?.props?.id}
                     onChange={async (e) => {
                       await component?.props?.setValuePoints(e.target.value);
@@ -2730,7 +2774,10 @@ const ListItemMenu = (props) => {
               >
                 <ArchiveIcon />
               </IconButton>
-              <Tooltip title="Choose a color for your item." placement={isMobile ? 'top' : 'bottom'}>
+              <Tooltip
+                title="Choose a color for your item."
+                placement={isMobile ? 'top' : 'bottom'}
+              >
                 <SwitchButton
                   sx={{ gap: 1, justifyContent: 'start' }}
                   color={showColors ? 'success' : undefined}

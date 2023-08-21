@@ -31,21 +31,7 @@ export const ListsPage = () => {
         circumstances.
       </Alert>
       <Meta Component={ListsMeta} />
-      <MyLists key={ctx?.session?.id} />
-
-      {/* <Paper
-        sx={{
-          mt: 1,
-          marginBottom: 1,
-          padding: {
-            xs: 1,
-            sm: 4,
-            md: 8,
-          },
-        }}
-      >
-        <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown>
-      </Paper> */}
+      <MyLists />
     </>
   );
 };
