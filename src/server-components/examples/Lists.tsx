@@ -49,7 +49,11 @@ import AddIcon from '@mui/icons-material/Add';
 import LabelIcon from '@mui/icons-material/Label';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { useComponent, useLocalStorage } from '@state-less/react-client';
+import {
+  authContext,
+  useComponent,
+  useLocalStorage,
+} from '@state-less/react-client';
 import {
   useContext,
   useEffect,
@@ -225,6 +229,8 @@ const requestNotificationPermission = async () => {
 };
 export const MyLists = (props) => {
   const [component, { loading, error, refetch }] = useComponent('my-lists', {});
+  const ctx = useContext(authContext);
+
   const [pointsComponent, { refetch: refetchPoints }] = useComponent(
     'my-lists-points',
     {}
@@ -254,7 +260,10 @@ export const MyLists = (props) => {
   const [past, setPast] = useLocalStorage('past', 90);
   const { search } = useLocation();
   const navigate = useNavigate();
-
+  useEffect(() => {
+    refetch();
+    refetchPoints();
+  }, [ctx?.session?.id]);
   useEffect(() => {
     if (search.includes('?fs') && !state.fullscreen) {
       dispatch({ type: Actions.TOGGLE_FULLSCREEN });
@@ -1939,12 +1948,16 @@ export const List = ({
                 </span>
               </Tooltip>
             )}
-            <IconButton
-              color={sort === -1 ? 'error' : sort === 1 ? 'success' : undefined}
-              onClick={toggleSort}
-            >
-              <SortByAlphaIcon />
-            </IconButton>
+            <Tooltip title="Enable to override manual sort (sorting by archived, lastModified, createdAt)">
+              <IconButton
+                color={
+                  sort === -1 ? 'error' : sort === 1 ? 'success' : undefined
+                }
+                onClick={toggleSort}
+              >
+                <SortByAlphaIcon />
+              </IconButton>
+            </Tooltip>
             {!edit && (
               <Tooltip title={'Pin List.'}>
                 <Box sx={{ ml: 'auto' }}>
