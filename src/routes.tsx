@@ -22,6 +22,7 @@ import { ChangeLog } from './pages/changelog';
 import { ChatPage } from './pages/examples/chat';
 import { ListsPage } from './pages/lists';
 import { AnalyticsPage } from './server-components/examples/Analytics';
+import { ListsAboutPage } from './pages/lists/about';
 
 export const navigation = [
   ['/', 'Home'],
@@ -36,6 +37,7 @@ export const navigation = [
   ['/SSR', 'SSR', 'src/examples/SSR.md'],
   ['/lists', 'Lists', 'src/pages/lists.md', 'Lists'],
   ['/lists/analytics', 'Analytics', 'src/pages/lists.md', 'Analytics'],
+  ['/lists/about', 'About Lists', 'src/lists/about.md', 'Lists'],
   ['/examples', 'Examples', 'src/examples'],
   ['/examples/comments', 'Comments', 'src/examples/comments.md'],
   ['/examples/votings', 'Voting', 'src/examples/voting.md'],
@@ -85,6 +87,7 @@ export const routes = [
   <Route path="/authentication" Component={AuthPage} />,
   <Route path="/lists" Component={ListsPage} />,
   <Route path="/lists/analytics" Component={AnalyticsPage} />,
+  <Route path="/lists/about" Component={ListsAboutPage} />,
   <Route path="/examples" Component={FunctionsPage} />,
   <Route path="/examples/comments" Component={CommentsPage} />,
   <Route path="/examples/chat" Component={ChatPage} />,
