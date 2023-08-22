@@ -97,7 +97,7 @@ const Comment = ({ comment, canDelete, wilson }) => {
     <Card sx={{ m: 1 }}>
       <Box sx={{ display: 'flex', ml: 1, mt: 1 }}>
         <UpDownButtons id={component?.children[0].key} wilson={wilson} />
-        <CardContent sx={{ display: 'flex' }}>
+        <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
           <Markdown>{props?.message}</Markdown>
         </CardContent>
       </Box>
