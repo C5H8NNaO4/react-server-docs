@@ -14,7 +14,6 @@ import {
   ListItemText,
   TextField,
   CardContent,
-  CardMedia,
   CardActions,
   ButtonProps,
   InputLabel,
@@ -26,7 +25,6 @@ import {
   Container,
   CardActionArea,
   Chip,
-  Menu,
   MenuItem,
   Popper,
   Grow,
@@ -41,7 +39,6 @@ import {
   useTheme,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import TrophyIcon from '@mui/icons-material/EmojiEvents';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -49,11 +46,7 @@ import AddIcon from '@mui/icons-material/Add';
 import LabelIcon from '@mui/icons-material/Label';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import {
-  authContext,
-  useComponent,
-  useLocalStorage,
-} from '@state-less/react-client';
+import { useComponent, useLocalStorage } from '@state-less/react-client';
 import {
   useContext,
   useEffect,
@@ -76,24 +69,22 @@ import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import ReplayIcon from '@mui/icons-material/Replay';
 import InvertColorsIcon from '@mui/icons-material/InvertColors';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+
 import {
   DndContext,
-  PointerSensor,
   TouchSensor,
   closestCenter,
-  useDraggable,
   useDroppable,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
 
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-  horizontalListSortingStrategy,
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
 import { SortableItem } from '../../components/SortableItem';
@@ -105,7 +96,6 @@ import Dialog from '@mui/material/Dialog';
 import ExpandIcon from '@mui/icons-material/Expand';
 import save from 'save-file';
 import * as XLSX from 'xlsx';
-import { Action } from '@dnd-kit/core/dist/store';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { useLocation, useNavigate } from 'react-router';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -113,19 +103,18 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import levenshtein from 'fast-levenshtein';
 import { KeyboardSensor, MouseSensor } from '../../lib/Sensors';
 import SyncIcon from '@mui/icons-material/Sync';
-import { createPortal } from 'react-dom';
-import { ListsMeta, Meta } from '../../components/Meta';
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { TimePicker } from '@mui/x-date-pickers';
+import { NotificationButton } from '../../components/NotificationButton';
+import { format } from 'date-fns';
 
-const minWord = (word, str) => {
+const minWord = (word: string, str: string) => {
   let min = Infinity;
   for (let i = 0; i < word.length; i++) {
     min = Math.min(min, levenshtein.get(word.slice(i, str.length + i), str));
-    console.log('Min', word.slice(i, str.length + i), str, min);
   }
   return min;
 };
@@ -187,11 +176,11 @@ const isTouchScreenDevice = () => {
 
 function downloadExcel(data: Record<string, Record<string, any>>) {
   /* create a new blank workbook */
-  var wb = XLSX.utils.book_new();
+  const wb = XLSX.utils.book_new();
   const titles = {};
   for (const [id, list] of Object.entries(data)) {
     /* create a worksheet for books */
-    var wsBooks = XLSX.utils.json_to_sheet(list.todos || []);
+    const wsBooks = XLSX.utils.json_to_sheet(list.todos || []);
     /* Add the worksheet to the workbook */
     XLSX.utils.book_append_sheet(
       wb,
@@ -229,8 +218,6 @@ const requestNotificationPermission = async () => {
 };
 export const MyLists = (props) => {
   const [component, { loading, error, refetch }] = useComponent('my-lists', {});
-  const ctx = useContext(authContext);
-
   const [pointsComponent, { refetch: refetchPoints }] = useComponent(
     'my-lists-points',
     {}
@@ -260,10 +247,7 @@ export const MyLists = (props) => {
   const [past, setPast] = useLocalStorage('past', 90);
   const { search } = useLocation();
   const navigate = useNavigate();
-  useEffect(() => {
-    refetch();
-    refetchPoints();
-  }, [ctx?.session?.id]);
+
   useEffect(() => {
     if (search.includes('?fs') && !state.fullscreen) {
       dispatch({ type: Actions.TOGGLE_FULLSCREEN });
@@ -367,7 +351,6 @@ export const MyLists = (props) => {
       );
     });
 
-  console.log('Filtered', filtered, component?.children);
   const items = useMemo(
     () => component?.props?.order,
     [JSON.stringify(component?.props?.order)]
@@ -444,73 +427,6 @@ export const MyLists = (props) => {
       });
     }
   }
-  const [permission, setPermission] = useLocalStorage<{
-    notification: string | null;
-    subscription: boolean | null;
-  }>('permission', {
-    notification: null,
-    subscription: null,
-  });
-  const [pushManager] = useComponent('web-push');
-  useEffect(() => {
-    (async () => {
-      const reg = await navigator.serviceWorker.getRegistration();
-      const sub = await reg?.pushManager.getSubscription();
-      setPermission({
-        notification: Notification.permission,
-        subscription: !!sub,
-      });
-    })();
-  }, []);
-  const toggleNotifications = async () => {
-    const reg = await navigator.serviceWorker.getRegistration();
-    const sub = await reg?.pushManager.getSubscription();
-    console.log('Sub', sub);
-    if (
-      Notification.permission !== 'granted' ||
-      (Notification.permission === 'granted' && !sub)
-    ) {
-      const perm = await requestNotificationPermission();
-      if (perm === 'granted') {
-        if (!sub) {
-          const sub = await reg?.pushManager.subscribe({
-            applicationServerKey: pushManager.props.vapid,
-            userVisibleOnly: true,
-          });
-          console.log('New Sub', sub);
-          await pushManager.props.subscribe(JSON.stringify(sub));
-          setPermission({
-            ...permission,
-            subscription: true,
-          });
-        }
-        const res = await pushManager.props.sendNotification({
-          title: 'Welcome to Lists',
-          body: 'You have been granted permission to receive notifications',
-        });
-      } else {
-        setPermission({
-          notification: perm,
-          subscription: !!sub,
-        });
-      }
-    } else {
-      // reg.pushManager.getSubscription().then((sub) => {
-      //   console.log('Sub', JSON.stringify(sub));
-      // });
-      await pushManager.props.sendNotification({
-        title: 'Goodbye',
-        body: "You won't receive any more notifications.",
-      });
-      const res = await sub?.unsubscribe();
-      console.log('Unsubscribe', res);
-      setPermission({
-        ...permission,
-        subscription: false,
-      });
-      await pushManager.props.unsubscribe(JSON.stringify(sub));
-    }
-  };
 
   const bps = [12, 12, 6, 4, 3];
   const bpsFw = [12, 6, 4, 3, 2];
@@ -706,20 +622,7 @@ export const MyLists = (props) => {
             </Tooltip>
           )}
           <Tooltip title="Synchronize Data." placement="bottom">
-            <IconButton
-              disabled={permission.notification === 'denied'}
-              color={
-                permission.notification === 'granted'
-                  ? permission.subscription
-                    ? 'success'
-                    : 'warning'
-                  : undefined
-              }
-              sx={{ ml: 'auto' }}
-              onClick={(e) => toggleNotifications()}
-            >
-              <NotificationsNoneIcon />
-            </IconButton>
+            <NotificationButton />
           </Tooltip>
           <Tooltip title="Synchronize Data." placement="bottom">
             <IconButton
@@ -746,22 +649,22 @@ export const MyLists = (props) => {
           />
 
           {/* <Tooltip title="Search Distance" placement="right">
-            <Select
-              size="small"
-              sx={{ mr: 1 }}
-              onChange={(e) =>
-                dispatch({
-                  type: Actions.SET_SEARCH_DISTANCE,
-                  value: Number(e.target.value),
-                })
-              }
-              value={state.searchDistance}
-            >
-              {[0, 1, 2, 3].map((n) => {
-                return <MenuItem value={n}>{n}</MenuItem>;
-              })}
-            </Select>
-          </Tooltip> */}
+              <Select
+                size="small"
+                sx={{ mr: 1 }}
+                onChange={(e) =>
+                  dispatch({
+                    type: Actions.SET_SEARCH_DISTANCE,
+                    value: Number(e.target.value),
+                  })
+                }
+                value={state.searchDistance}
+              >
+                {[0, 1, 2, 3].map((n) => {
+                  return <MenuItem value={n}>{n}</MenuItem>;
+                })}
+              </Select>
+            </Tooltip> */}
           <Tooltip title="# Items" placement="bottom">
             <Select
               size="small"
@@ -1039,7 +942,7 @@ const MoreMenu = ({
                     sx={{ justifyContent: 'start', gap: 1 }}
                     color={undefined}
                     // sx={{ ml: 'auto' }}
-                    onClick={() => navigate('/lists/analytics')}
+                    onClick={() => navigate('/analytics')}
                   >
                     <BarChartIcon />
                     Analytics
@@ -1514,10 +1417,6 @@ export const List = ({
     [component?.children]
   );
 
-  useEffect(() => {
-    console.log('LKP CHANGED');
-  }, [itemLkp]);
-
   const labelLkp = (component?.props.labels || []).reduce((acc, child) => {
     return { ...acc, [child.id]: child };
   }, {});
@@ -1536,7 +1435,7 @@ export const List = ({
   }, [JSON.stringify(component?.props?.order)]);
 
   const labelOrder = (component?.props?.labels || []).map((l) => l.id);
-  let filteredItemOrder = itemOrder?.filter((id) => {
+  const filteredItemOrder = itemOrder?.filter((id) => {
     const todo = itemLkp[id];
     return todo && (showArchived || !todo?.props?.archived);
   });
@@ -1597,7 +1496,7 @@ export const List = ({
         for (const c of component?.children || []) {
           if (c?.props?.count != 0 && !c?.props?.archived) {
             promises.push(
-              c?.props?.archive() as any,
+              c?.props?.archive(),
               addEntry(null, null, {
                 type: 'Counter',
                 title: c?.props?.title,
@@ -2158,9 +2057,7 @@ const TodoItem = (props) => {
   const [component, { loading, error }] = useComponent(todoKey, {
     data: memoizedData,
   });
-  useEffect(() => {
-    console.log('Data changed');
-  }, [memoizedData]);
+
   const [showColors, setShowColors] = useState<HTMLElement | null>(null);
   const handleClose = () => {
     setShowColors(null);
@@ -2192,6 +2089,7 @@ const TodoItem = (props) => {
         <ListItemButton
           selected={dist <= 1}
           dense
+          disableGutters
           sx={{
             backgroundColor: component?.props?.color || undefined,
             '&:hover': {
@@ -2236,7 +2134,21 @@ const TodoItem = (props) => {
             sx={{ mr: 10, '&>p': { color: error ? 'red' : 'theme.text' } }}
             secondary={error ? error.message : ''}
           />
-          <ListItemSecondaryAction>
+          <ListItemSecondaryAction
+            sx={{ display: 'flex', alignItems: 'center' }}
+          >
+            {(component?.props?.dueDate || component?.props?.dueTime) && (
+              <Tooltip
+                title={`${
+                  component?.props?.dueDate
+                    ? format(new Date(component?.props?.dueDate), 'dd.MM')
+                    : ''
+                } ${format(new Date(component?.props?.dueTime), 'HH:mm')}`}
+                placement='left'
+              >
+                <NotificationsNoneIcon sx={{ mr: 1 }}></NotificationsNoneIcon>
+              </Tooltip>
+            )}
             {component?.props?.valuePoints > 0 && (
               <Tooltip
                 title={`Can be completed ${times} times within ${
