@@ -8,6 +8,15 @@ body {
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
   margin: 0px;
+  height: 100vh;
+}
+
+#root {
+  height: 100%;
+}
+
+.App {
+  height: 100%;
 }
 
 h1,
@@ -23,6 +32,11 @@ code {
   font-family: 'Roboto Mono', monospace;
 }
 
+#bg {
+  background: url('/bg.png');
+  background-size: cover;
+}
+
 pre {
   background: #1e1f2799;
   color: #ffffff;
@@ -31,10 +45,9 @@ pre {
   border-radius: 5px;
   margin: 10px 0px;
 }
-.light.animated .MuiPaper-root:not(.opaque) {
+.light .MuiPaper-root:not(.opaque) {
   /* background-color: #1E1F27AA !important; */
-  background-color: #ffffff33 !important;
-
+  background-color: #ffffff33;
   backdrop-filter: blur(6px);
 }
 
