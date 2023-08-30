@@ -19,7 +19,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { UpDownButtons, VotingApp } from './VotingApp';
 import { Markdown } from '../../components/Markdown';
 
-export const Comments = ({ id = 'comments', title }: { id: string, title?: string}) => {
+export const Comments = ({ id = 'comments', title }: { id?: string, title?: string}) => {
   const [component, { error, loading }] = useComponent(id, {});
   const [features, { loading: featuresLoading }] = useComponent('features');
   const [comment, setComment] = useState('');

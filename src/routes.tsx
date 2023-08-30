@@ -25,13 +25,41 @@ import { AnalyticsPage } from './server-components/examples/Analytics';
 import { ListsAboutPage } from './pages/lists/about';
 import { WhyPage } from './pages/why';
 
+import HomeIcon from '@mui/icons-material/Home';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import InstallDesktopIcon from '@mui/icons-material/InstallDesktop';
+import StorageIcon from '@mui/icons-material/Storage';
+import AppsIcon from '@mui/icons-material/Apps';
+
 export const navigation = [
-  ['/', 'Home'],
-  ['/why', 'Why?'],
-  ['/installation', 'Installation'],
-  ['/states', 'States', 'src/pages/States.md'],
-  ['/components', 'Components', 'src/pages/Components.md'],
-  ['/react-server', 'React Server', 'src/pages/react-server/index.md'],
+  ['/', 'Home', null, ({ color }) => <HomeIcon color={color} />],
+  ['/why', 'Why', null, ({ color }) => <QuestionMarkIcon color={color} />],
+  [
+    '/installation',
+    'Installation',
+    null,
+    ({ color }) => <InstallDesktopIcon color={color} />,
+  ],
+  [
+    '/states',
+    'States',
+    'src/pages/States.md',
+    ({ color }) => <StorageIcon color={color} />,
+  ],
+  [
+    '/components',
+    'Components',
+    'src/pages/Components.md',
+    ({ color }) => <AppsIcon color={color} />,
+  ],
+  [
+    '/react-server',
+    'React Server',
+    'src/pages/react-server/index.md',
+    ({ color }) => (
+      <img src="/react-server.png" style={{ width: 24, height: 24 }} />
+    ),
+  ],
   ['/react-server/hooks', 'Hooks', 'src/pages/react-server/hooks.md'],
   ['/stores', 'Stores', 'src/pages/Stores.md'],
   ['/server', 'Server', 'src/playground/Server.md'],
