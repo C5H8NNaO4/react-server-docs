@@ -39,7 +39,11 @@ import { SidebarNavigation } from '../components/SidebarNavigation';
 import ChatIcon from '@mui/icons-material/Chat';
 import Snackbar from '@mui/material/Snackbar';
 import HeartIcon from '@mui/icons-material/Favorite';
-import { authContext, useComponent, useLocalStorage } from '@state-less/react-client';
+import {
+  authContext,
+  useComponent,
+  useLocalStorage,
+} from '@state-less/react-client';
 import { ViewCounter } from '../server-components/examples/ViewCounter';
 
 declare let gtag: Function;
@@ -124,6 +128,7 @@ export const Layout = () => {
           <header>
             <ButtonAppBar />
             <LinearProgress
+              color="secondary"
               variant="determinate"
               value={time / 10}
               sx={{ mt: 8 }}
@@ -132,6 +137,23 @@ export const Layout = () => {
         }
         <main>
           <SidebarNavigation />
+
+          {!state.fullscreen && (
+            <Alert
+              severity="info"
+              // sx={{ mt: 8 }}
+              action={
+                <Button>
+                  <Link component={RouterLink} to="/changes">
+                    Changes
+                  </Link>
+                </Button>
+              }
+            >
+              {time < 1000 ? messages[1] : messages[3]}
+            </Alert>
+          )}
+
           {cookieConsent === null && (
             <Alert
               severity="info"
@@ -159,23 +181,7 @@ export const Layout = () => {
               We use Google Analytics to track page views.
             </Alert>
           )}
-    
-          {!state.fullscreen && (
-            <Alert
-              severity="info"
-              // sx={{ mt: 8 }}
-              action={
-                <Button>
-                  <Link component={RouterLink} to="/changes">
-                    Changes
-                  </Link>
-                </Button>
-              }
-            >
-              {time < 1000 ? messages[1] : messages[3]}
-            </Alert>
-          )}
-          
+
           {state.messages.map((message) => {
             return (
               <Snackbar
