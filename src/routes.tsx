@@ -31,7 +31,7 @@ import InstallDesktopIcon from '@mui/icons-material/InstallDesktop';
 import StorageIcon from '@mui/icons-material/Storage';
 import AppsIcon from '@mui/icons-material/Apps';
 
-export const navigation = [
+export const navigation: any[] = [
   ['/', 'Home', null, ({ color }) => <HomeIcon color={color} />],
   ['/why', 'Why', null, ({ color }) => <QuestionMarkIcon color={color} />],
   [
