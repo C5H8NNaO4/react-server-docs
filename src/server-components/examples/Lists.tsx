@@ -2144,7 +2144,7 @@ const TodoItem = (props) => {
                     ? format(new Date(component?.props?.dueDate), 'dd.MM')
                     : ''
                 } ${format(new Date(component?.props?.dueTime), 'HH:mm')}`}
-                placement='left'
+                placement="left"
               >
                 <NotificationsNoneIcon sx={{ mr: 1 }}></NotificationsNoneIcon>
               </Tooltip>
@@ -2741,7 +2741,7 @@ const ListMenu = (props) => {
                   </FormLabel>
                   <Select
                     sx={{ minWidth: '100px', ml: 1 }}
-                    id={component?.props?.id}
+                    id={component?.props?.id + 'value-points'}
                     onChange={(e) =>
                       component?.props?.updateSettings({
                         defaultValuePoints: e.target.value,
@@ -2757,6 +2757,28 @@ const ListMenu = (props) => {
                     })}
                   </Select>
                 </>
+              </Tooltip>
+              <Tooltip title="List size" placement="right">
+                <span>
+                  <FormLabel>
+                    Default value points for completing items in this list
+                  </FormLabel>
+                  <Select
+                    sx={{ minWidth: '100px', ml: 1 }}
+                    id={component?.props?.id + 'list-size'}
+                    onChange={(e) =>
+                      component?.props?.updateSettings({
+                        listSize: e.target.value,
+                      })
+                    }
+                    value={component?.props?.settings?.listSize ?? '-'}
+                    MenuProps={{ disablePortal: true }}
+                  >
+                    {[3, 5, 10, 15, 20, 999].map((n) => {
+                      return <MenuItem value={n}>{n}</MenuItem>;
+                    })}
+                  </Select>
+                </span>
               </Tooltip>
               <Tooltip title="Default Type" placement="right">
                 <>

@@ -25,43 +25,8 @@ export const IndexPage = () => {
   return (
     <Grid container spacing={1}>
       <Meta Component={DefaultMeta} />
-      <Grid item xs={12} md={4} xl={3} sx={{ mt: 1, p: 1 }}>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <Poll
-              id="poll-open"
-              message={({ voted }) => {
-                if (voted === 0) {
-                  return (
-                    <Alert severity="success">
-                      Thank you for your feedback!
-                    </Alert>
-                  );
-                }
-                if (voted === 1) {
-                  return (
-                    <Alert severity="info">
-                      Please consider leaving some feedback on what to improve.
-                    </Alert>
-                  );
-                }
-                if (voted === 2) {
-                  return (
-                    <Alert severity="info">
-                      Please consider opening an issue on Github. This will help
-                      us a lot.
-                    </Alert>
-                  );
-                }
-              }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Comments />
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={12} md={8} xl={6}>
+
+      <Grid item xs={12} md={12} xl={12}>
         <Paper
           sx={{
             mt: 1,
@@ -106,6 +71,42 @@ export const IndexPage = () => {
             <NavigationButton2D next />
           </Box>
         </Paper>
+      </Grid>
+      <Grid item xs={12} md={12} xl={12} sx={{ mt: 1, p: 1 }}>
+        <Grid container spacing={1}>
+          <Grid item xs={12} lg={6}>
+            <Poll
+              id="poll-open"
+              message={({ voted }) => {
+                if (voted === 0) {
+                  return (
+                    <Alert severity="success">
+                      Thank you for your feedback!
+                    </Alert>
+                  );
+                }
+                if (voted === 1) {
+                  return (
+                    <Alert severity="info">
+                      Please consider leaving some feedback on what to improve.
+                    </Alert>
+                  );
+                }
+                if (voted === 2) {
+                  return (
+                    <Alert severity="info">
+                      Please consider opening an issue on Github. This will help
+                      us a lot.
+                    </Alert>
+                  );
+                }
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} lg={6}>
+            <Comments title="Comments"/>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );

@@ -91,7 +91,6 @@ export const Layout = () => {
     null
   );
   useEffect(() => {
-    console.log ("COOKIES", cookieConsent)
     if (cookieConsent && 'gtag' in window) {
       gtag('event', 'load', { event_category: 'page' });
     } else {

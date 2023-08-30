@@ -23,9 +23,11 @@ import { ChatPage } from './pages/examples/chat';
 import { ListsPage } from './pages/lists';
 import { AnalyticsPage } from './server-components/examples/Analytics';
 import { ListsAboutPage } from './pages/lists/about';
+import { WhyPage } from './pages/why';
 
 export const navigation = [
   ['/', 'Home'],
+  ['/why', 'Why?'],
   ['/installation', 'Installation'],
   ['/states', 'States', 'src/pages/States.md'],
   ['/components', 'Components', 'src/pages/Components.md'],
@@ -57,6 +59,7 @@ export const navigation = [
 
 export const routes = [
   <Route path="/" Component={IndexPage} />,
+  <Route path="/why" Component={WhyPage} />,
   <Route path="/installation" Component={InstallationPage} />,
   <Route path="/faq" Component={FAQPage} />,
   <Route path="/changes" Component={ChangeLog} />,

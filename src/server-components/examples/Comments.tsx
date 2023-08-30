@@ -10,7 +10,7 @@ import {
   IconButton,
   TextField,
   Tooltip,
-  Typography,
+  CardHeader,
 } from '@mui/material';
 import { authContext, useComponent } from '@state-less/react-client';
 import { useContext, useState } from 'react';
@@ -19,7 +19,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { UpDownButtons, VotingApp } from './VotingApp';
 import { Markdown } from '../../components/Markdown';
 
-export const Comments = ({ id = 'comments' }) => {
+export const Comments = ({ id = 'comments', title }) => {
   const [component, { error, loading }] = useComponent(id, {});
   const [features, { loading: featuresLoading }] = useComponent('features');
   const [comment, setComment] = useState('');
@@ -31,6 +31,7 @@ export const Comments = ({ id = 'comments' }) => {
   // return <>{JSON.stringify(component)}</>;
   return (
     <Card>
+      {title && <CardHeader title={title} />}
       {loading ||
         (featuresLoading && <Alert severity="info">Loading...</Alert>)}
       {error && <Alert severity="error">{error.message}</Alert>}
