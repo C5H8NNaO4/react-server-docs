@@ -49,7 +49,11 @@ export default function ButtonAppBar() {
         </IconButton>
         {!lessThanSmall && (
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <img src="/react-server.webp" style={{ width: 24, height: 24 }} loading='lazy'/>
+            <img
+              src="/react-server.webp"
+              style={{ width: 24, height: 24 }}
+              loading="lazy"
+            />
             <Link component={RouterLink} to="/" sx={{ color: 'white' }}>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 {navigation.find((nav) => nav[0] === pathname)?.[3] ||
@@ -111,12 +115,18 @@ export default function ButtonAppBar() {
           <Box sx={{ display: 'flex' }}>
             <ConnectionCounter />
             <IconButton
-              color={state.animatedBackground == 2 ? 'secondary' : state.animatedBackground == 1 ? 'info' : 'default'}
+              color={
+                state.animatedBackground == 2
+                  ? 'secondary'
+                  : state.animatedBackground == 1
+                  ? 'info'
+                  : 'default'
+              }
               onClick={() => {
                 dispatch({ type: Actions.TOGGLE_ANIMATED_BACKGROUND });
                 localStorage.setItem(
                   'animatedBackgroundUser',
-                  (!state.animatedBackground).toString()
+                  (((Number(state.animatedBackground) || 0) + 1) % 3).toString()
                 );
               }}
             >
