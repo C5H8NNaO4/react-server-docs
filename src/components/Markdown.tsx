@@ -115,7 +115,7 @@ export const Markdown = ({ children, src, disablePadding, optimisticHeight = '0p
         },
         a: (props: any) => {
           return (
-            <Link to={props.href} component={RouterLink}>
+            <Link to={props.href} component={RouterLink} sx={{color: 'info.main'}}>
               {props.children}
             </Link>
           );

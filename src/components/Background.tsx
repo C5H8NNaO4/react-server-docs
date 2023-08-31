@@ -57,25 +57,28 @@ export const VantaBackground: FunctionComponent<
     return () => {
       if (instance.current && instance.current.destroy)
         instance.current.destroy();
+      instance.current = null;
     };
   }, []);
 
   const render = useMemo(
     () => () => {
       const fn = window.VANTA[type] || window.VANTA.CLOUDS;
-      if (enabled) {
+      if (enabled && !instance.current) {
         instance.current = fn({
           ...sharedProps,
           ...rest,
         });
-      } else if (instance.current && instance.current.destroy) {
+      } else if (!enabled && instance.current && instance.current.destroy) {
         instance.current.destroy();
+        instance.current = null;
       }
     },
     [enabled, dark, light, type]
   );
 
   useEffect(() => {
+    console.log('VANTA', window.VANTA, enabled, instance.current);
     if (!window.VANTA) return;
 
     render();
@@ -83,6 +86,7 @@ export const VantaBackground: FunctionComponent<
     return () => {
       if (instance.current && instance.current.destroy)
         instance.current.destroy();
+      instance.current = null;
     };
   }, [enabled, dark, light, type]);
 

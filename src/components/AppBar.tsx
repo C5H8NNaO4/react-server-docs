@@ -111,7 +111,7 @@ export default function ButtonAppBar() {
           <Box sx={{ display: 'flex' }}>
             <ConnectionCounter />
             <IconButton
-              color={state.animatedBackground ? 'primary' : 'inherit'}
+              color={state.animatedBackground ? 'info' : 'inherit'}
               onClick={() => {
                 dispatch({ type: Actions.TOGGLE_ANIMATED_BACKGROUND });
                 localStorage.setItem(

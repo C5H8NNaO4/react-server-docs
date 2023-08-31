@@ -52,7 +52,7 @@ export const LoggedInGoogleButton = () => {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
-        color={state.animatedBackground ? 'primary' : 'info'}
+        color={state.animatedBackground ? 'info' : 'info'}
       >
         <Avatar
           src={decoded.picture}
@@ -98,7 +98,7 @@ export const GoogleLoginButton = () => {
       render={(props) => {
         return (
           <Button
-            color={state.animatedBackground ? 'primary' : 'info'}
+            color={state.animatedBackground ? 'info' : 'info'}
             {...props}
           >
             <GoogleIcon sx={{ mr: 1 }} />
