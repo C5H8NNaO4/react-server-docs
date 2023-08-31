@@ -1,3 +1,4 @@
+import React from 'react'
 import { Route } from 'react-router';
 import { StatesPage, IndexPage, ComponentsPage } from './pages';
 import { AuthPage } from './pages/authentication';
@@ -20,8 +21,7 @@ import { ReactServerPage } from './pages/react-server';
 import { ReactServerHooksPage } from './pages/react-server/hooks';
 import { ChangeLog } from './pages/changelog';
 import { ChatPage } from './pages/examples/chat';
-import { ListsPage } from './pages/lists';
-import { AnalyticsPage } from './server-components/examples/Analytics';
+
 import { ListsAboutPage } from './pages/lists/about';
 import { WhyPage } from './pages/why';
 
@@ -33,7 +33,13 @@ import AppsIcon from '@mui/icons-material/Apps';
 
 export const navigation: any[] = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
-  ['/why', 'Why', null,null, ({ color }) => <QuestionMarkIcon color={color} />],
+  [
+    '/why',
+    'Why',
+    null,
+    null,
+    ({ color }) => <QuestionMarkIcon color={color} />,
+  ],
   [
     '/installation',
     'Installation',
@@ -61,7 +67,11 @@ export const navigation: any[] = [
     'src/pages/react-server/index.md',
     null,
     ({ color }) => (
-      <img src="/react-server.webp" style={{ width: 24, height: 24 }} loading='lazy'/>
+      <img
+        src="/react-server.webp"
+        style={{ width: 24, height: 24 }}
+        loading="lazy"
+      />
     ),
   ],
   ['/react-server/hooks', 'Hooks', 'src/pages/react-server/hooks.md'],
@@ -120,8 +130,13 @@ export const routes = [
   <Route path="/stores" Component={StoresPage} />,
   <Route path="/server" Component={ServerPage} />,
   <Route path="/authentication" Component={AuthPage} />,
-  <Route path="/lists" Component={ListsPage} />,
-  <Route path="/lists/analytics" Component={AnalyticsPage} />,
+  <Route path="/lists" Component={React.lazy(() => import('./pages/lists'))} />,
+  <Route
+    path="/lists/analytics"
+    Component={React.lazy(
+      () => import('./server-components/examples/Analytics')
+    )}
+  />,
   <Route path="/lists/about" Component={ListsAboutPage} />,
   <Route path="/examples" Component={FunctionsPage} />,
   <Route path="/examples/comments" Component={CommentsPage} />,

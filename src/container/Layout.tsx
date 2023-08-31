@@ -46,6 +46,7 @@ import {
 } from '@state-less/react-client';
 import { ViewCounter } from '../server-components/examples/ViewCounter';
 import Helmet from 'react-helmet';
+import { Suspense } from 'react';
 
 declare let gtag: Function;
 
@@ -219,7 +220,9 @@ export const Layout = () => {
                 />
               );
             })}
-            <Routes>{routes}</Routes>
+            <Suspense fallback={<h1>Loading...</h1>}>
+              <Routes>{routes}</Routes>
+            </Suspense>
           </main>
           {!state.fullscreen && (
             <footer>
