@@ -32,11 +32,12 @@ import StorageIcon from '@mui/icons-material/Storage';
 import AppsIcon from '@mui/icons-material/Apps';
 
 export const navigation: any[] = [
-  ['/', 'Home', null, ({ color }) => <HomeIcon color={color} />],
-  ['/why', 'Why', null, ({ color }) => <QuestionMarkIcon color={color} />],
+  ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
+  ['/why', 'Why', null,null, ({ color }) => <QuestionMarkIcon color={color} />],
   [
     '/installation',
     'Installation',
+    null,
     null,
     ({ color }) => <InstallDesktopIcon color={color} />,
   ],
@@ -44,18 +45,21 @@ export const navigation: any[] = [
     '/states',
     'States',
     'src/pages/States.md',
+    null,
     ({ color }) => <StorageIcon color={color} />,
   ],
   [
     '/components',
     'Components',
     'src/pages/Components.md',
+    null,
     ({ color }) => <AppsIcon color={color} />,
   ],
   [
     '/react-server',
     'React Server',
     'src/pages/react-server/index.md',
+    null,
     ({ color }) => (
       <img src="/react-server.png" style={{ width: 24, height: 24 }} />
     ),
