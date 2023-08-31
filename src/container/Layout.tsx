@@ -215,7 +215,7 @@ export const Layout = () => {
                   open={true}
                   autoHideDuration={6000}
                   onClose={() => dispatch({ type: Actions.HIDE_MESSAGE })}
-                  message={message}
+                  message={message.message}
                 />
               );
             })}
