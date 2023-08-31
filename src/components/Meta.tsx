@@ -27,7 +27,7 @@ export const DefaultMeta = () => {
       />
       <meta
         property="og:image"
-        content="https://state-less.cloud/react-server.png"
+        content="https://state-less.cloud/react-server.webp"
       />
       <meta property="og:url" content="https://state-less.cloud/lists" />
       <meta property="og:type" content="website" />
@@ -42,7 +42,7 @@ export const DefaultMeta = () => {
       />
       <meta
         name="twitter:image"
-        content="https://state-less.cloud/react-server.png"
+        content="https://state-less.cloud/react-server.webp"
       />
     </>
   );
@@ -73,7 +73,7 @@ export const ListsMeta = () => {
       />
       <meta
         property="og:image"
-        content="https://state-less.cloud/react-server.png"
+        content="https://state-less.cloud/react-server.webp"
       />
       <meta property="og:url" content="https://state-less.cloud/lists" />
       <meta property="og:type" content="website" />
@@ -88,7 +88,7 @@ export const ListsMeta = () => {
       />
       <meta
         name="twitter:image"
-        content="https://state-less.cloud/react-server.png"
+        content="https://state-less.cloud/react-server.webp"
       />
     </>
   );

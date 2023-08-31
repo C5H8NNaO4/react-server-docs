@@ -25,6 +25,7 @@ type MarkdownProps = {
   children: string;
   src?: string;
   disablePadding?: boolean;
+  optimisticHeight?: string;
 };
 
 mermaid.initialize({
@@ -41,7 +42,7 @@ const Mermaid = (props) => {
 
   return <div className="mermaid">{props.children}</div>;
 };
-export const Markdown = ({ children, src, disablePadding }: MarkdownProps) => {
+export const Markdown = ({ children, src, disablePadding, optimisticHeight = '0px' }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(children || '');
   const { state, dispatch } = useContext(stateContext);
 
@@ -70,6 +71,7 @@ export const Markdown = ({ children, src, disablePadding }: MarkdownProps) => {
   };
 
   return (
+    <div style={{minHeight: optimisticHeight, width: '100%'}}>
     <ReactMarkdown
       rehypePlugins={[rehypeRaw]}
       remarkPlugins={[remarkGfm]}
@@ -160,5 +162,6 @@ export const Markdown = ({ children, src, disablePadding }: MarkdownProps) => {
     >
       {src ? markdown : children}
     </ReactMarkdown>
+    </div>
   );
 };

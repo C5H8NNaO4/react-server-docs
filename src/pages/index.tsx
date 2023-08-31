@@ -43,17 +43,24 @@ export const IndexPage = () => {
             sx={{ display: 'flex', justifyContent: 'space-between', gap: 4 }}
           >
             <img
-              src="/react-server.png"
+              src="/react-server.webp"
               alt="React Server"
               style={{ width: 256, height: 256 }}
             />
-            <div>
-              <Markdown src={getRawPath('src/pages/index/introduction.md')}>
-                Loading...
-              </Markdown>
-            </div>
+
+            <Markdown
+              src={getRawPath('src/pages/index/introduction.md')}
+              optimisticHeight="278px"
+            >
+              Loading...
+            </Markdown>
           </Box>
-          <Markdown src={getRawPath('src/pages/index.md')}>Loading...</Markdown>
+          <Markdown
+            src={getRawPath('src/pages/index.md')}
+            optimisticHeight="1235px"
+          >
+            Loading...
+          </Markdown>
           <Alert severity="info">
             Increase the count by clicking the button below. The count is stored
             on our server.
@@ -104,7 +111,7 @@ export const IndexPage = () => {
             />
           </Grid>
           <Grid item xs={12} lg={6}>
-            <Comments title="Comments"/>
+            <Comments title="Comments" />
           </Grid>
         </Grid>
       </Grid>

@@ -9,19 +9,25 @@ body {
   font-weight: 300;
   margin: 0px;
   height: 100vh;
+  width: 100vw;
 }
 
 #root {
   height: 100%;
+  width: 100%;
 }
 
 .App {
   height: 100%;
+  width: 100%;
 }
 
 h1,
 h2 {
   font-weight: 400;
+  margin: 0px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 /* Apply monospace Roboto font to pre code elements */
 pre code {
@@ -33,7 +39,7 @@ code {
 }
 
 #bg {
-  background: url('/bg.png');
+  background: url('/bg.webp');
   background-size: cover;
 }
 
