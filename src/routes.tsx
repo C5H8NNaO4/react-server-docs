@@ -61,7 +61,7 @@ export const navigation: any[] = [
     'src/pages/react-server/index.md',
     null,
     ({ color }) => (
-      <img src="/react-server.webp" style={{ width: 24, height: 24 }} />
+      <img src="/react-server.webp" style={{ width: 24, height: 24 }} loading='lazy'/>
     ),
   ],
   ['/react-server/hooks', 'Hooks', 'src/pages/react-server/hooks.md'],

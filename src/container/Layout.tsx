@@ -59,8 +59,7 @@ const messages = [
 export const Layout = () => {
   const { state, dispatch } = useContext(stateContext);
   const [features, { loading: featuresLoading }] = useComponent('features');
-  const [_animated, setAnim] = useState(false);
-
+  const _animated = state.animatedBackground;
   const [time, setTime] = useState(0);
 
   useEffect(() => {
@@ -70,12 +69,6 @@ export const Layout = () => {
       setTimeout(setTime, 100, time + 100);
     }
   }, [time, _animated]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setAnim(state?.animatedBackground);
-    }, 0);
-  }, [state?.animatedBackground]);
 
   useEffect(() => {
     localStorage.setItem('animatedBackground', features?.props?.animated);
@@ -124,7 +117,7 @@ export const Layout = () => {
   };
   return (
     <>
-      {_animated && (
+      {_animated > 0 && (
         <Helmet key={loaded} onChangeClientState={handleChangeClientState}>
           <script
             async={false}
@@ -142,7 +135,8 @@ export const Layout = () => {
       <VantaBackground
         light={SunnyBlueClouds}
         dark={DarkWaves}
-        enabled={_animated && loaded > 1}
+        enabled={_animated == 2 && loaded > 1}
+        bg={_animated > 0}
       >
         <Box
           key={pathname}
@@ -173,7 +167,11 @@ export const Layout = () => {
                 // sx={{ mt: 8 }}
                 action={
                   <Button>
-                    <Link component={RouterLink} to="/changes" sx={{color: 'info.main'}}>
+                    <Link
+                      component={RouterLink}
+                      to="/changes"
+                      sx={{ color: 'info.main' }}
+                    >
                       Changes
                     </Link>
                   </Button>

@@ -38,7 +38,7 @@ code {
   font-family: 'Roboto Mono', monospace;
 }
 
-#bg {
+#bg.bg {
   background: url('/bg.webp');
   background-size: cover;
 }
@@ -51,7 +51,7 @@ pre {
   border-radius: 5px;
   margin: 10px 0px;
 }
-.light .MuiPaper-root:not(.opaque) {
+.light.bg .MuiPaper-root:not(.opaque) {
   /* background-color: #1E1F27AA !important; */
   background-color: #ffffff33;
   backdrop-filter: blur(6px);

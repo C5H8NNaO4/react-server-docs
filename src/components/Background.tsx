@@ -8,6 +8,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState
 } from 'react';
 
 enum Vanta {
@@ -32,6 +33,7 @@ type VantaBackgroudProps = {
   enabled?: boolean;
   light: any;
   dark: any;
+  bg?: boolean;
 };
 
 export const VantaBackground: FunctionComponent<
@@ -41,10 +43,12 @@ export const VantaBackground: FunctionComponent<
   children,
   light = SunnyBlueClouds,
   dark = DarkFog,
+  bg,
 }) => {
   const instance = useRef<any>();
   const theme = useTheme();
   const { type, ...rest } = theme.palette.mode === 'light' ? light : dark;
+  
   const sharedProps = {
     el: '#bg',
     mouseControls: false,
@@ -110,7 +114,8 @@ export const VantaBackground: FunctionComponent<
   return (
     <div
       id="bg"
-      className={clsx(theme.palette.mode, 'fh', {
+      className={clsx(theme.palette.mode, 'fh',  {
+        bg,
         animated: enabled,
       })}
       style={{ overflow: 'hidden' }}

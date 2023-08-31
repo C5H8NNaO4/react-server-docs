@@ -46,6 +46,7 @@ export const IndexPage = () => {
               src="/react-server.webp"
               alt="React Server"
               style={{ width: 256, height: 256 }}
+              loading='lazy'
             />
 
             <Markdown
