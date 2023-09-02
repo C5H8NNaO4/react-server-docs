@@ -8,7 +8,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from 'react';
 
 enum Vanta {
@@ -48,7 +48,7 @@ export const VantaBackground: FunctionComponent<
   const instance = useRef<any>();
   const theme = useTheme();
   const { type, ...rest } = theme.palette.mode === 'light' ? light : dark;
-  
+
   const sharedProps = {
     el: '#bg',
     mouseControls: false,
@@ -59,9 +59,10 @@ export const VantaBackground: FunctionComponent<
   /** Destroy the background on unmount */
   useEffect(() => {
     return () => {
-      if (instance.current && instance.current.destroy)
+      if (instance.current && instance.current.destroy) {
         instance.current.destroy();
-      instance.current = null;
+        instance.current = null;
+      }
     };
   }, []);
 
@@ -114,7 +115,7 @@ export const VantaBackground: FunctionComponent<
   return (
     <div
       id="bg"
-      className={clsx(theme.palette.mode, 'fh',  {
+      className={clsx(theme.palette.mode, 'fh', {
         bg,
         animated: enabled,
       })}
