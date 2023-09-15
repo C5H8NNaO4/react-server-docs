@@ -43,7 +43,7 @@ export const IndexPage = () => {
             sx={{ display: 'flex', justifyContent: 'space-between', gap: 4 }}
           >
             <img
-              src="/react-server.png"
+              src="/favicon.svg"
               alt="React Server"
               style={{ width: 256, height: 256 }}
             />

@@ -144,7 +144,7 @@ export const Layout = () => {
               // sx={{ mt: 8 }}
               action={
                 <Button>
-                  <Link component={RouterLink} to="/changes">
+                  <Link component={RouterLink} to="/changes" sx={{color: 'info.main'}}>
                     Changes
                   </Link>
                 </Button>
