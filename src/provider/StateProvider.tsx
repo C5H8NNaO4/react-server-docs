@@ -2,8 +2,9 @@ import React, { createContext, Dispatch, useReducer } from 'react';
 
 type State = {
   menuOpen: boolean;
-  animatedBackground: boolean;
-  messages: string[];
+  animatedBackground: number;
+  messages: {message: string, action?: () => void}[];
+  alerts: Record<string, string[]>;
   history: HistoryAction[];
   fullscreen: boolean;
   search: string;
@@ -19,9 +20,13 @@ type HistoryAction = {
 const initialState: State = {
   menuOpen: false,
   animatedBackground: localStorage.getItem('animatedBackgroundUser')
-    ? localStorage.getItem('animatedBackgroundUser') === 'true'
-    : localStorage.getItem('animatedBackground') === 'true',
-  messages: [],
+    ? Number(localStorage.getItem('animatedBackgroundUser'))
+    : Number(localStorage.getItem('animatedBackground')),
+  messages: [] as any[],
+  alerts: {
+    info: [],
+    warning: [],
+  },
   history: [],
   fullscreen: localStorage.getItem('fullscreen') === 'true',
   search: '',
@@ -45,7 +50,7 @@ export const stateContext = createContext({
   dispatch: (() => {}) as Dispatch<any>,
 });
 
-export type Action = { type: Actions; value: any };
+export type Action = { type: Actions; value: any, action?: () => void };
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -57,12 +62,12 @@ const reducer = (state: State, action: Action) => {
     case Actions.TOGGLE_ANIMATED_BACKGROUND:
       return {
         ...state,
-        animatedBackground: !state.animatedBackground,
+        animatedBackground: (~~state.animatedBackground + 1) % 3,
       };
     case Actions.SHOW_MESSAGE:
       return {
         ...state,
-        messages: [...state.messages, action.value],
+        messages: [...state.messages, {message: action.value, action: action.action}],
       };
     case Actions.HIDE_MESSAGE:
       return {

@@ -9,19 +9,25 @@ body {
   font-weight: 300;
   margin: 0px;
   height: 100vh;
+  width: 100vw;
 }
 
 #root {
   height: 100%;
+  width: 100%;
 }
 
 .App {
   height: 100%;
+  width: 100%;
 }
 
 h1,
 h2 {
   font-weight: 400;
+  margin: 0px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 /* Apply monospace Roboto font to pre code elements */
 pre code {
@@ -32,8 +38,8 @@ code {
   font-family: 'Roboto Mono', monospace;
 }
 
-#bg {
-  background: url('/bg.png');
+#bg.bg {
+  background: url('/bg.webp');
   background-size: cover;
 }
 
@@ -45,7 +51,7 @@ pre {
   border-radius: 5px;
   margin: 10px 0px;
 }
-.light .MuiPaper-root:not(.opaque) {
+.light.bg .MuiPaper-root:not(.opaque) {
   /* background-color: #1E1F27AA !important; */
   background-color: #ffffff33;
   backdrop-filter: blur(6px);

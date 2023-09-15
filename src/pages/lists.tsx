@@ -56,3 +56,5 @@ export const ListsPage = () => {
     </>
   );
 };
+
+export default ListsPage;

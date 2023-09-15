@@ -449,3 +449,5 @@ const CustomTooltip = ({
     </Paper>
   );
 };
+
+export default AnalyticsPage

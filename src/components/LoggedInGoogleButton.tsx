@@ -98,7 +98,7 @@ export const GoogleLoginButton = () => {
       render={(props) => {
         return (
           <Button
-            color={state.animatedBackground ? 'primary' : 'info'}
+            color={state.animatedBackground ? 'info' : 'info'}
             {...props}
           >
             <GoogleIcon sx={{ mr: 1 }} />

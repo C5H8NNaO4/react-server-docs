@@ -8,6 +8,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 
 enum Vanta {
@@ -32,6 +33,7 @@ type VantaBackgroudProps = {
   enabled?: boolean;
   light: any;
   dark: any;
+  bg?: boolean;
 };
 
 export const VantaBackground: FunctionComponent<
@@ -41,10 +43,12 @@ export const VantaBackground: FunctionComponent<
   children,
   light = SunnyBlueClouds,
   dark = DarkFog,
+  bg,
 }) => {
   const instance = useRef<any>();
   const theme = useTheme();
   const { type, ...rest } = theme.palette.mode === 'light' ? light : dark;
+
   const sharedProps = {
     el: '#bg',
     mouseControls: false,
@@ -55,27 +59,31 @@ export const VantaBackground: FunctionComponent<
   /** Destroy the background on unmount */
   useEffect(() => {
     return () => {
-      if (instance.current && instance.current.destroy)
+      if (instance.current && instance.current.destroy) {
         instance.current.destroy();
+        instance.current = null;
+      }
     };
   }, []);
 
   const render = useMemo(
     () => () => {
       const fn = window.VANTA[type] || window.VANTA.CLOUDS;
-      if (enabled) {
+      if (enabled && !instance.current) {
         instance.current = fn({
           ...sharedProps,
           ...rest,
         });
-      } else if (instance.current && instance.current.destroy) {
+      } else if (!enabled && instance.current && instance.current.destroy) {
         instance.current.destroy();
+        instance.current = null;
       }
     },
     [enabled, dark, light, type]
   );
 
   useEffect(() => {
+    console.log('VANTA', window.VANTA, enabled, instance.current);
     if (!window.VANTA) return;
 
     render();
@@ -83,6 +91,7 @@ export const VantaBackground: FunctionComponent<
     return () => {
       if (instance.current && instance.current.destroy)
         instance.current.destroy();
+      instance.current = null;
     };
   }, [enabled, dark, light, type]);
 
@@ -107,6 +116,7 @@ export const VantaBackground: FunctionComponent<
     <div
       id="bg"
       className={clsx(theme.palette.mode, 'fh', {
+        bg,
         animated: enabled,
       })}
       style={{ overflow: 'hidden' }}
