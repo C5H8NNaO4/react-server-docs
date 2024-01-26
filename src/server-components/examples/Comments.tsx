@@ -73,6 +73,7 @@ export const CommunityComments = ({
           >
             <span>
               <Button
+                
                 onClick={() => {
                   component?.props?.comment(comment);
                   setComment('');
