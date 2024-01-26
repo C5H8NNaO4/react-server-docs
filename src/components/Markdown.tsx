@@ -20,12 +20,14 @@ import copy from 'copy-to-clipboard';
 import { Actions, stateContext } from '../provider/StateProvider';
 import rehypeRaw from 'rehype-raw';
 import mermaid from 'mermaid';
+import clsx from 'clsx';
 
 type MarkdownProps = {
   children: string;
   src?: string;
   disablePadding?: boolean;
   optimisticHeight?: string;
+  small?: boolean;
 };
 
 mermaid.initialize({
@@ -47,6 +49,7 @@ export const Markdown = ({
   src,
   disablePadding,
   optimisticHeight = '0px',
+  small = false,
 }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(children || '');
   const { state, dispatch } = useContext(stateContext);
@@ -76,8 +79,16 @@ export const Markdown = ({
   };
 
   return (
-    <div style={{ minHeight: optimisticHeight, width: '100%', }}>
+    <div
+      style={{
+        minHeight: optimisticHeight,
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
       <ReactMarkdown
+        className={clsx({ 'markdown-small': small })}
         rehypePlugins={[rehypeRaw]}
         remarkPlugins={[remarkGfm]}
         components={{

@@ -73,7 +73,6 @@ export const CommunityComments = ({
           >
             <span>
               <Button
-                
                 onClick={() => {
                   component?.props?.comment(comment);
                   setComment('');
@@ -215,7 +214,9 @@ const CommunityComment = ({ comment, canDelete, wilson }) => {
     <Box sx={{ m: 0 }}>
       <Box sx={{ display: 'flex', ml: 1, mt: 1, alignContent: 'center' }}>
         <UpButton id={component?.children[0].key} wilson={wilson} />
-        <Markdown>{props?.message + ` *- ${props?.identity.name}*`}</Markdown>
+        <Markdown small>
+          {props?.message + ` *- ${props?.identity.name}*`}
+        </Markdown>
         {(canDelete || isOwnComment) && (
           <IconButton size="small" onClick={() => component?.props?.del()}>
             <DeleteIcon />

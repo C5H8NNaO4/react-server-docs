@@ -73,3 +73,7 @@ pre {
 div > p {
   margin: 0px;
 }
+
+.markdown-small p {
+  font-size: 0.8rem;
+}
