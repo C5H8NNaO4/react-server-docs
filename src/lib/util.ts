@@ -11,23 +11,3 @@ export const urlB64ToUint8Array = (base64String) => {
   return outputArray;
 };
 
-export const useSyncedState = (defValue, updateFn, successFn?) => {
-  const timeout = useRef<any>(null);
-  const [localValue, setLocalValue] = useState(defValue);
-
-  const setValue = async (value) => {
-    setLocalValue(value);
-
-    clearTimeout(timeout.current);
-    timeout.current = setTimeout(async () => {
-      await updateFn(value);
-      successFn?.(value);
-    }, 1500);
-  };
-
-  useEffect(() => {
-    setLocalValue(defValue);
-  }, [defValue]);
-
-  return [localValue, setValue];
-};

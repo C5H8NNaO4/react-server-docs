@@ -46,7 +46,7 @@ export const PostsPage = (props) => {
   );
 };
 
-const Post = ({ id, deletePost }) => {
+const Post = ({ id }) => {
   const [forum] = useComponent('community-forum');
   const [component, { error, refetch }] = useComponent(id);
   const [edit, setEdit] = useState(false);
