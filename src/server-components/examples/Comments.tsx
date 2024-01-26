@@ -11,6 +11,10 @@ import {
   TextField,
   Tooltip,
   CardHeader,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemIcon,
 } from '@mui/material';
 import { authContext, useComponent } from '@state-less/react-client';
 import { useContext, useState } from 'react';
@@ -38,7 +42,7 @@ export const CommunityComments = ({
   const [showComment, setShowComment] = useState(false);
   // return <>{JSON.stringify(component)}</>;
   return (
-    <Box sx={{ ml: 2 }}>
+    <>
       {title && <CardHeader title={title} />}
       {loading ||
         (featuresLoading && <Alert severity="info">Loading...</Alert>)}
@@ -47,45 +51,56 @@ export const CommunityComments = ({
         <Alert severity="info">You need to be logged in to comment.</Alert>
       )}
 
-      {(component?.children || []).map((child, index) => {
-        return (
-          <CommunityComment
-            comment={child}
-            canDelete={canDelete}
-            wilson={features?.props?.wilson}
-          />
-        );
-      })}
+      <List dense>
+        {(component?.children || []).map((child, index) => {
+          return (
+            <ListItem dense>
+              <CommunityComment
+                comment={child}
+                canDelete={canDelete}
+                wilson={features?.props?.wilson}
+              />
+            </ListItem>
+          );
+        })}
+      </List>
       {!showComment && (
-        <Button onClick={() => setShowComment(true)}>Add comment</Button>
+        <CardActions>
+          <Button onClick={() => setShowComment(true)}>Add comment</Button>
+        </CardActions>
       )}
+
       {showComment && (
-        <CardContent sx={{ display: 'flex' }}>
-          <TextField
-            multiline
-            rows={3}
-            onChange={(e) => setComment(e.target.value)}
-            fullWidth
-            value={comment}
-          />
-          <Tooltip
-            title={canComment ? '' : 'You need to be logged in to comment.'}
-          >
-            <span>
-              <Button
-                onClick={() => {
-                  component?.props?.comment(comment);
-                  setComment('');
-                }}
-                disabled={!canComment}
-              >
-                Add comment
-              </Button>
-            </span>
-          </Tooltip>
-        </CardContent>
+        <>
+          <CardContent sx={{ display: 'flex' }}>
+            <TextField
+              multiline
+              rows={3}
+              onChange={(e) => setComment(e.target.value)}
+              fullWidth
+              value={comment}
+            />
+          </CardContent>
+          <CardActions>
+            <Tooltip
+              title={canComment ? '' : 'You need to be logged in to comment.'}
+            >
+              <span>
+                <Button
+                  onClick={() => {
+                    component?.props?.comment(comment);
+                    setComment('');
+                  }}
+                  disabled={!canComment}
+                >
+                  Add comment
+                </Button>
+              </span>
+            </Tooltip>
+          </CardActions>
+        </>
       )}
-    </Box>
+    </>
   );
 };
 
@@ -211,18 +226,21 @@ const CommunityComment = ({ comment, canDelete, wilson }) => {
   const Icon = StrategyIcons[props?.identity?.strategy];
 
   return (
-    <Box sx={{ m: 0 }}>
-      <Box sx={{ display: 'flex', ml: 1, mt: 1, alignContent: 'center' }}>
+    <>
+      <ListItemIcon>
         <UpButton id={component?.children[0].key} wilson={wilson} />
-        <Markdown small>
-          {props?.message + ` *- ${props?.identity.name}*`}
-        </Markdown>
-        {(canDelete || isOwnComment) && (
+      </ListItemIcon>
+      <Markdown small>
+        {props?.message + ` *- ${props?.identity.name}*`}
+      </Markdown>
+
+      {(canDelete || isOwnComment) && (
+        <ListItemSecondaryAction>
           <IconButton size="small" onClick={() => component?.props?.del()}>
             <DeleteIcon />
           </IconButton>
-        )}
-      </Box>
-    </Box>
+        </ListItemSecondaryAction>
+      )}
+    </>
   );
 };

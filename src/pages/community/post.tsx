@@ -11,6 +11,7 @@ import {
   Chip,
   CardActions,
   Alert,
+  CardActionArea,
 } from '@mui/material';
 
 import { Markdown } from '../../components/Markdown';
@@ -94,7 +95,9 @@ const Post = ({ id }) => {
         </FlexBox>
         <CardActions>
           {component?.props?.canDelete && (
-            <Button onClick={() => component.props.del()}>Delete</Button>
+            <Button color="error" onClick={() => component.props.del()}>
+              Delete
+            </Button>
           )}
           {component?.props?.canDelete && (
             <Button key={editTitle} onClick={() => setEdit(!edit)}>
@@ -103,28 +106,69 @@ const Post = ({ id }) => {
           )}
         </CardActions>
       </Card>
-      {component?.children.slice(1)?.map((comment) => {
-        return (
-          <Card sx={{ mb: 1 }} color="info">
-            <FlexBox>
-              <UpDownButtons
-                id={comment?.children[0]?.component}
-                wilson={false}
-              />
-              <Box>
-                <CardContent>
-                  <Markdown>{comment?.props?.body}</Markdown>
-                </CardContent>
-              </Box>
-            </FlexBox>
-            <CommunityComments id={comment?.children[1]?.component} />
-          </Card>
-        );
+      {component?.children.slice(1)?.map((answer) => {
+        return <Answer answer={answer} />;
       })}
     </>
   );
 };
 
+const Answer = ({ answer }) => {
+  const [component, { error, refetch }] = useComponent(answer?.component, {
+    data: answer,
+  });
+  const [edit, setEdit] = useState(false);
+  const [body, setBody, { loading }] = useSyncedState(
+    component?.props?.body,
+    component?.props?.setBody
+  );
+  return (
+    <Card sx={{ mb: 1 }} color="info">
+      <FlexBox>
+        <UpDownButtons id={answer?.children[0]?.component} wilson={false} />
+        <Box sx={{ width: '100%' }}>
+          {component?.props?.deleted && (
+            <Alert severity="error">This post has been deleted.</Alert>
+          )}
+          <CardContent sx={{ flex: 1 }}>
+            {edit && (
+              <TextField
+                color={component?.props?.body === body ? 'success' : 'primary'}
+                multiline
+                fullWidth
+                label={'Body' + (component?.props?.body !== body ? '...' : '')}
+                rows={7}
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+              ></TextField>
+            )}
+            {!edit && <Markdown>{answer?.props?.body}</Markdown>}
+          </CardContent>
+        </Box>
+      </FlexBox>
+
+      {component?.props?.canDelete && (
+        <CardActions
+          sx={{
+            borderWidth: '0px',
+            borderBottomWidth: '1px',
+            borderStyle: 'dashed',
+            borderColor: 'secondary.main',
+          }}
+        >
+          <Button color="error" onClick={() => component?.props?.del(!edit)}>
+            Delete
+          </Button>
+          <Button onClick={() => setEdit(!edit)}>
+            {!edit ? 'Edit' : 'Ok'}
+          </Button>
+        </CardActions>
+      )}
+
+      <CommunityComments id={answer?.children[1]?.component} />
+    </Card>
+  );
+};
 const ComposeAnswer = ({ id }) => {
   const [component, { error, loading }] = useComponent(id);
   const [body, setBody] = useState('');
