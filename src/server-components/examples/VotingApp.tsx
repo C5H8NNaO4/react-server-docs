@@ -13,7 +13,10 @@ import { useComponent } from '@state-less/react-client';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-const calc = (votes = 0, { lb = 0, ub = 0, random = false, wilson = true }) => {
+export const calc = (
+  votes = 0,
+  { lb = 0, ub = 0, random = false, wilson = true }
+) => {
   const diff = ub - lb;
   const lbv = Math.round(lb * votes);
   const rand = Math.round(Math.random() * diff * votes);
@@ -70,6 +73,56 @@ export const UpDownButtons = ({
       >
         <KeyboardArrowDownIcon />
       </IconButton>
+    </Box>
+  );
+};
+
+export const UpButton = ({
+  random,
+  wilson,
+  id = 'votings',
+}: {
+  random?: boolean;
+  wilson?: boolean;
+  hideVotes?: boolean;
+  id?: string;
+}) => {
+  const [component, { loading, error }] = useComponent(id, {});
+  const { score, upvotes, downvotes, voted, policies } = component?.props || {};
+
+  const sum =
+    calc(upvotes, {
+      lb: score?.upvote[0],
+      ub: score?.upvote[1],
+      wilson,
+      random,
+    }) -
+    calc(downvotes, {
+      lb: score?.downvote[0],
+      ub: score?.downvote[1],
+      wilson,
+      random,
+    });
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row-reverse',
+        alignItems: 'center',
+        justifyContent: 'start',
+        mr: 1,
+      }}
+    >
+      <IconButton
+        sx={{ p: 0 }}
+        color={voted === 1 ? 'success' : 'default'}
+        onClick={() => component?.props.upvote()}
+        disabled={voted === -1 && policies.includes('single-vote')}
+      >
+        <KeyboardArrowUpIcon />
+      </IconButton>
+      {loading ? <CircularProgress size={'14px'} /> : sum}
     </Box>
   );
 };

@@ -31,7 +31,7 @@ const CustomCheckbox = styled(Checkbox)(({ theme }) => ({
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#66BEE7', //'#FDD804',
+      main: '#001F3F', //'#FDD804',
     },
     secondary: {
       main: '#348C31', //'#F66528',

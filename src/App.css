@@ -69,3 +69,7 @@ pre {
   display: flex;
   flex-direction: column;
 }
+
+div > p {
+  margin: 0px;
+}

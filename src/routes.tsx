@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Route } from 'react-router';
 import { StatesPage, IndexPage, ComponentsPage } from './pages';
 import { AuthPage } from './pages/authentication';
@@ -30,6 +30,9 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import InstallDesktopIcon from '@mui/icons-material/InstallDesktop';
 import StorageIcon from '@mui/icons-material/Storage';
 import AppsIcon from '@mui/icons-material/Apps';
+import ForumIcon from '@mui/icons-material/Forum';
+import { CommunityPage } from './pages/community';
+import { PostsPage } from './pages/community/post';
 
 export const navigation: any[] = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
@@ -46,6 +49,13 @@ export const navigation: any[] = [
     null,
     null,
     ({ color }) => <InstallDesktopIcon color={color} />,
+  ],
+  [
+    '/community',
+    'Community',
+    null,
+    null,
+    ({ color }) => <ForumIcon color={color} />,
   ],
   [
     '/states',
@@ -104,6 +114,8 @@ export const routes = [
   <Route path="/why" Component={WhyPage} />,
   <Route path="/installation" Component={InstallationPage} />,
   <Route path="/faq" Component={FAQPage} />,
+  <Route path="/community" Component={CommunityPage} />,
+  <Route path="/community/:post" Component={PostsPage} />,
   <Route path="/changes" Component={ChangeLog} />,
   <Route
     path="/collaborating"

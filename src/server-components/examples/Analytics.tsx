@@ -223,7 +223,7 @@ export const AnalyticsPage = (props) => {
   console.log('Last Week', lists, component?.children, lastWeek);
   const [active, setActive] = useState(null);
   const burndownChart = (
-    <LineChart data={lastWeek}>
+    <LineChart data={lastWeek} fill="red">
       <CartesianGrid strokeDasharray="3 3" />
       <Tooltip
         content={({ payload }) => (
@@ -246,7 +246,7 @@ export const AnalyticsPage = (props) => {
   );
   const expenseChart = (
     <BarChart data={expenseData}>
-      <CartesianGrid strokeDasharray="3 3" />
+      <CartesianGrid strokeDasharray="3 3" fill="white" />
       <Tooltip content={({ payload }) => <CustomTooltip payload={payload} />} />
 
       <XAxis dataKey="date" tickFormatter={DateFormatter('MMMM')} />
@@ -286,7 +286,7 @@ export const AnalyticsPage = (props) => {
     .map((key) => itemsCompleted[key]);
   const itemChart = (
     <BarChart data={itemData}>
-      <CartesianGrid strokeDasharray="3 3" />
+      <CartesianGrid strokeDasharray="3 3" fill="white" />
       <Tooltip content={({ payload }) => <CustomTooltip payload={payload} />} />
 
       <XAxis dataKey="date" tickFormatter={DateFormatter('dd.MM.yy')} />
@@ -306,7 +306,7 @@ export const AnalyticsPage = (props) => {
 
   const sumChart = (
     <BarChart data={sumData}>
-      <CartesianGrid strokeDasharray="3 3" />
+      <CartesianGrid strokeDasharray="3 3" fill="white" />
       <Tooltip content={({ payload }) => <CustomTooltip payload={payload} />} />
 
       <XAxis dataKey="date" tickFormatter={DateFormatter('MMMM')} />
@@ -320,7 +320,7 @@ export const AnalyticsPage = (props) => {
   );
   const barChart = (
     <BarChart data={countersData}>
-      <CartesianGrid strokeDasharray="3 3" />
+      <CartesianGrid strokeDasharray="3 3" fill="white" />
       <Tooltip content={({ payload }) => <CustomTooltip payload={payload} />} />
       <XAxis dataKey="date" tickFormatter={DateFormatter('dd.MM.yy')} />
       <Legend />
@@ -349,6 +349,7 @@ export const AnalyticsPage = (props) => {
             <Typography variant="h2" component="h2" gutterBottom>
               Burndown
             </Typography>
+
             <ResponsiveContainer width="100%" height={250}>
               {burndownChart}
             </ResponsiveContainer>
@@ -450,4 +451,4 @@ const CustomTooltip = ({
   );
 };
 
-export default AnalyticsPage
+export default AnalyticsPage;
