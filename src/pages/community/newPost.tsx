@@ -19,7 +19,7 @@ import { useComponent } from '@state-less/react-client';
 import { useNavigate } from 'react-router';
 
 export const Tags = ({ onChange }) => {
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState<Array<string>>([]);
   const [tag, setTag] = useState('');
   const ref = useRef();
   const onKeyDown = (e) => {

@@ -223,7 +223,7 @@ export const AnalyticsPage = (props) => {
   console.log('Last Week', lists, component?.children, lastWeek);
   const [active, setActive] = useState(null);
   const burndownChart = (
-    <LineChart data={lastWeek} fill="red">
+    <LineChart data={lastWeek}>
       <CartesianGrid strokeDasharray="3 3" />
       <Tooltip
         content={({ payload }) => (

@@ -11,8 +11,6 @@ import { GithubPage } from './pages/GithubPage';
 import { ServerPage } from './pages/server';
 import { StoresPage } from './pages/stores';
 import { Poll } from './server-components/examples/Polls';
-import { TodoApp } from './server-components/examples/TodoApp';
-import { VotingApp } from './server-components/examples/VotingApp';
 import { CommentsPage } from './pages/examples/comments';
 import { InstallationPage } from './pages/installation';
 import { VotingPage } from './pages/examples/voting';
