@@ -150,7 +150,7 @@ const Answer = ({ answer }) => {
                 onChange={(e) => setBody(e.target.value)}
               ></TextField>
             )}
-            {!edit && <Markdown>{answer?.props?.body}</Markdown>}
+            {!edit && <Markdown>{component?.props?.body}</Markdown>}
           </CardContent>
         </Box>
       </FlexBox>
