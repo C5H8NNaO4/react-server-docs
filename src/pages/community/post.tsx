@@ -12,6 +12,7 @@ import {
   CardActions,
   Alert,
   CardActionArea,
+  LinearProgress,
 } from '@mui/material';
 
 import { Markdown } from '../../components/Markdown';
@@ -49,14 +50,21 @@ export const PostsPage = (props) => {
 
 const Post = ({ id }) => {
   const [forum] = useComponent('community-forum');
-  const [component, { error, refetch }] = useComponent(id);
+  const [component, { error, loading, refetch }] = useComponent(id);
   const [edit, setEdit] = useState(false);
-  const [body, setBody, { loading }] = useSyncedState(
+  const [body, setBody, { loading: bodyLoading }] = useSyncedState(
     component?.props?.body,
     component?.props?.setBody
   );
   const editTitle = edit ? 'Ok' : 'Edit';
   if (error) return null;
+  if (loading)
+    return (
+      <>
+        <Alert severity="info">Loading...</Alert>
+        <LinearProgress variant="indeterminate" />
+      </>
+    );
   return (
     <>
       <FlexBox sx={{ alignItems: 'center', height: 'min-content' }}>
