@@ -92,7 +92,7 @@ const Post = ({ id }) => {
                 flex: 1,
               }}
             >
-              {edit && (
+              {edit && !component?.props?.deleted && (
                 <TextField
                   color={
                     component?.props?.body === body ? 'success' : 'primary'
@@ -107,7 +107,9 @@ const Post = ({ id }) => {
                   onChange={(e) => !loading && setBody(e.target.value)}
                 ></TextField>
               )}
-              {!edit && <Markdown>{component?.props?.body}</Markdown>}
+              {(!edit || component?.props?.deleted) && (
+                <Markdown>{component?.props?.body}</Markdown>
+              )}
             </CardContent>
           </Box>
         </FlexBox>
@@ -179,7 +181,7 @@ const Answer = ({ answer }) => {
             <Alert severity="error">This post has been deleted.</Alert>
           )}
           <CardContent sx={{ flex: 1 }}>
-            {edit && (
+            {edit && !component?.props?.deleted && (
               <TextField
                 color={component?.props?.body === body ? 'success' : 'primary'}
                 multiline
@@ -190,7 +192,9 @@ const Answer = ({ answer }) => {
                 onChange={(e) => !loading && setBody(e.target.value)}
               ></TextField>
             )}
-            {!edit && <Markdown>{component?.props?.body}</Markdown>}
+            {(!edit || component?.props?.deleted) && (
+              <Markdown>{component?.props?.body}</Markdown>
+            )}
           </CardContent>
         </Box>
       </FlexBox>
