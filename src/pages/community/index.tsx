@@ -147,7 +147,7 @@ const Posts = () => {
   const [component, { error, loading }] = useComponent('community-forum', {
     props: {
       page: page,
-      pageSize: 1,
+      pageSize: 25,
       compound: false,
     },
   });
