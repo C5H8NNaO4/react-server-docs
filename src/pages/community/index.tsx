@@ -9,6 +9,7 @@ import {
   CardContent,
   Chip,
   Link,
+  Pagination,
 } from '@mui/material';
 
 import { Markdown } from '../../components/Markdown';
@@ -17,7 +18,7 @@ import { FlexBox } from '../../components/FlexBox';
 import { useComponent } from '@state-less/react-client';
 import { calc } from '../../server-components/examples/VotingApp';
 import { Link as RouterLink } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 const PAGE_SRC = 'src/pages/States.md';
 
 export const CommunityPage = () => {
@@ -142,13 +143,26 @@ const Post = (post) => {
 };
 
 const Posts = () => {
-  const [component, { error, loading }] = useComponent('community-forum');
+  const [page, setPage] = useState(1);
+  const [component, { error, loading }] = useComponent('community-forum', {
+    props: {
+      page: page,
+      pageSize: 1,
+      compound: false,
+    },
+  });
 
   return (
     <FlexBox sx={{ flexDirection: 'column', gap: 1 }}>
+      {page}
       {component?.children?.map((post) => {
         return <Post {...post} />;
       })}
+      <Pagination
+        count={component?.props?.totalCount || 0}
+        page={page}
+        onChange={(_, p) => setPage(p)}
+      />
     </FlexBox>
   );
 };
