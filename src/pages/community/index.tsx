@@ -154,7 +154,6 @@ const Posts = () => {
 
   return (
     <FlexBox sx={{ flexDirection: 'column', gap: 1 }}>
-      {page}
       {component?.children?.map((post) => {
         return <Post {...post} />;
       })}
