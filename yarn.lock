@@ -24,7 +24,7 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@apollo/client@^3.7.10", "@apollo/client@^3.8.10":
+"@apollo/client@^3.8.10":
   version "3.8.10"
   resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.8.10.tgz#db6ee4378212d93c1f22b90a2aa474f6e9664b68"
   integrity sha512-p/22RZ8ehHyvySnC20EHPPe0gdu8Xp6ZCiXOfdEe1ZORw5cUteD/TLc66tfKv8qu8NLIfbiWoa+6s70XnKvxqg==
@@ -2422,12 +2422,12 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@state-less/react-client@^2.0.6":
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/@state-less/react-client/-/react-client-2.0.6.tgz#bb88589b1d49ee80042972460110277ddee58466"
-  integrity sha512-GPnvbIIdhsmkHl1mivEJmqzEsEL4bByKRJVuViRin/1RzkOCSvBVCpzgATD1q2JnriPCLmjgjXQGmlQatqz4fw==
+"@state-less/react-client@^2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@state-less/react-client/-/react-client-2.0.7.tgz#8ba9937416e4c4f8a41df62a728fbb77bb82a571"
+  integrity sha512-Uedq13EufmDuYeOtsG9btZRrRiHVwzbtb6wsSkbgjd0pYN9EDe50nowMATxF1G2pCJvAW3hgOJS3k5DX5or9dg==
   dependencies:
-    "@apollo/client" "^3.7.10"
+    "@apollo/client" "^3.8.10"
     "@babel/plugin-transform-react-jsx" "^7.21.0"
     "@babel/preset-react" "^7.18.6"
     "@testing-library/jest-dom" "^5.16.5"
