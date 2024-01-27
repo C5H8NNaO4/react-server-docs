@@ -85,7 +85,8 @@ export const Markdown = ({
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'start',
+        alignContent: 'center',
       }}
     >
       <ReactMarkdown
