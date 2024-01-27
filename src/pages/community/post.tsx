@@ -95,7 +95,11 @@ const Post = ({ id }) => {
               {edit && !component?.props?.deleted && (
                 <TextField
                   color={
-                    component?.props?.body === body ? 'success' : 'primary'
+                    bodyLoading
+                      ? 'warning'
+                      : component?.props?.body === body
+                      ? 'success'
+                      : 'primary'
                   }
                   multiline
                   fullWidth
@@ -183,7 +187,13 @@ const Answer = ({ answer }) => {
           <CardContent sx={{ flex: 1 }}>
             {edit && !component?.props?.deleted && (
               <TextField
-                color={component?.props?.body === body ? 'success' : 'primary'}
+                color={
+                  loading
+                    ? 'warning'
+                    : component?.props?.body === body
+                    ? 'success'
+                    : 'primary'
+                }
                 multiline
                 fullWidth
                 label={'Body' + (component?.props?.body !== body ? '...' : '')}
