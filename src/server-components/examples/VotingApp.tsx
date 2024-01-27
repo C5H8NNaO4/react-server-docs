@@ -52,8 +52,7 @@ export const UpDownButtons = ({
   const [component, { loading, error }] = useComponent(id, {
     data,
   });
-  const { score, upvotes, downvotes, voted, policies } =
-    data?.props || component?.props || {};
+  const { score, upvotes, downvotes, voted, policies } = component?.props || {};
   const randomUp = useMemo(() => Math.random(), []);
   const randomDown = useMemo(() => Math.random(), []);
   const sum = useMemo(() => {
