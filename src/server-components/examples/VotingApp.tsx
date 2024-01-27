@@ -73,7 +73,7 @@ export const UpDownButtons = ({
         r: randomDown,
       })
     );
-  }, []);
+  }, [upvotes, downvotes, score, wilson, random]);
 
   return (
     <Box
