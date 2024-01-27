@@ -21,6 +21,7 @@ export const ChatApp = () => {
     props: {
       num: items,
     },
+    preventUnload: true,
     //data: component?.children?.[0],
   });
   const { messages = [], sendMessage } = room?.props || {};
@@ -66,7 +67,7 @@ export const ChatApp = () => {
                 {messages.map((message) => {
                   return (
                     <Card>
-                      <CardContent sx={{ py: '0px !important' }}>
+                      <CardContent>
                         <Markdown disablePadding>{message?.message}</Markdown>
                       </CardContent>
                       <CardActions>

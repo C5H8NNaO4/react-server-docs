@@ -1,24 +1,14 @@
-import { Paper, Container, CardActions, Link, Grid } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import { Paper, Grid } from '@mui/material';
 
-import { Alert, Button, Box } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 
-import { useServerState } from '@state-less/react-client';
-import client, { localClient } from '../lib/client';
-import { useContext } from 'react';
-import { stateContext } from '../provider/StateProvider';
-import { Link as RouterLink } from 'react-router-dom';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Markdown } from '../components/Markdown';
 import styles from './index.module.css';
 import { NavigationButton2D } from '../components/NavigationButton';
-import { navigation } from '../global';
-import { getGHPath, getRawPath } from '../components/CollabEditButton';
+import { getRawPath } from '../components/CollabEditButton';
 import { Poll } from '../server-components/examples/Polls';
 import { Comments } from '../server-components/examples/Comments';
 import { HelloWorldExample2 } from '../server-components/examples';
-import { ChatApp } from '../server-components/examples/ChatApp';
-import { createPortal } from 'react-dom';
 import { DefaultMeta, Meta } from '../components/Meta';
 
 export const IndexPage = () => {
@@ -46,7 +36,7 @@ export const IndexPage = () => {
               src="/favicon.svg"
               alt="React Server"
               style={{ width: 256, height: 256 }}
-              loading='lazy'
+              loading="lazy"
             />
 
             <Markdown
