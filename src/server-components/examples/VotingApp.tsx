@@ -65,7 +65,7 @@ export const UpDownButtons = ({
       >
         <KeyboardArrowUpIcon />
       </IconButton>
-      {loading ? <CircularProgress /> : sum}
+      {loading ? <CircularProgress size={'14px'} /> : sum}
       <IconButton
         color={voted === -1 ? 'error' : 'default'}
         onClick={() => component?.props.downvote()}
