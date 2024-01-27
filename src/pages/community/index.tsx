@@ -19,6 +19,7 @@ import { useComponent } from '@state-less/react-client';
 import { calc } from '../../server-components/examples/VotingApp';
 import { Link as RouterLink } from 'react-router-dom';
 import { useMemo, useState } from 'react';
+import { PAGE_SIZE_POSTS } from '../../lib/const';
 const PAGE_SRC = 'src/pages/States.md';
 
 export const CommunityPage = () => {
@@ -147,7 +148,7 @@ const Posts = () => {
   const [component, { error, loading }] = useComponent('community-forum', {
     props: {
       page: page,
-      pageSize: 25,
+      pageSize: PAGE_SIZE_POSTS,
       compound: false,
     },
   });
@@ -158,7 +159,7 @@ const Posts = () => {
         return <Post {...post} />;
       })}
       <Pagination
-        count={component?.props?.totalCount || 0}
+        count={Math.ceil(component?.props?.totalCount / PAGE_SIZE_POSTS) || 0}
         page={page}
         onChange={(_, p) => setPage(p)}
       />
