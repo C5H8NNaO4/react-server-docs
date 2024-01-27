@@ -34,6 +34,7 @@ import {
   CommunityComments,
 } from '../../server-components/examples/Comments';
 import { useSyncedState } from '../../lib/hooks';
+import { ViewCounter } from '../../server-components/examples/ViewCounter';
 
 export const PostsPage = (props) => {
   const params = useParams();
@@ -67,8 +68,16 @@ const Post = ({ id }) => {
     );
   return (
     <>
-      <FlexBox sx={{ alignItems: 'center', height: 'min-content' }}>
+      <FlexBox
+        sx={{ alignItems: 'center', height: 'min-content', flexWrap: "wrap" }}
+      >
         <CardHeader title={component?.props?.title}></CardHeader>
+        {component?.props.viewCounter && (
+          <ViewCounter
+            componentKey={component?.props.viewCounter?.component}
+            data={component?.props.viewCounter}
+          />
+        )}
         <NewPostButton />
       </FlexBox>
       <Card sx={{ mb: 1 }} color="info">
@@ -156,7 +165,7 @@ const Post = ({ id }) => {
           )}
         </CardActions>
       </Card>
-      {component?.children.slice(1)?.map((answer) => {
+      {component?.children.slice(2)?.map((answer) => {
         return <Answer answer={answer} />;
       })}
     </>

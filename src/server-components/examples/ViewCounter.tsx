@@ -10,8 +10,16 @@ import {
   ListItemIcon,
 } from '@mui/material';
 
-export const ViewCounter = () => {
-  const [component, { error, loading }] = useComponent('view-counter', {});
+export type ViewCounterProps = {
+  componentKey: 'string';
+  data?: any;
+};
+export const ViewCounter = ({ componentKey, data }: ViewCounterProps) => {
+  console.log('ViewCounter', componentKey, data?.key);
+  const [component, { error, loading }] = useComponent(componentKey, {
+    skip: false,
+    data,
+  });
 
   return (
     <Tooltip title="Views" placement="left">
