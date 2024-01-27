@@ -103,6 +103,17 @@ const Post = ({ id }) => {
               Delete
             </Button>
           )}
+          {!component?.props?.approved &&
+            component?.props?.canDelete &&
+            !component?.props?.deleted && (
+              <Button
+                disabled={component?.props?.deleted}
+                color="success"
+                onClick={() => component.props.approve()}
+              >
+                Approve
+              </Button>
+            )}
           {component?.props?.canDelete && (
             <Button
               disabled={component?.props?.deleted}

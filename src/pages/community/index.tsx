@@ -48,9 +48,12 @@ export const CommunityPage = () => {
   );
 };
 
-const Post = (props) => {
+const Post = (post) => {
   const [votes, { error, loading }] = useComponent(
-    props.children[0]?.component
+    post.children[0]?.component,
+    {
+      data: post.children[0],
+    }
   );
   const { score, upvotes, downvotes } = votes?.props || {};
   const wilson = true,
@@ -77,10 +80,24 @@ const Post = (props) => {
     [upvotes, downvotes, score, wilson, random]
   );
 
-  const nAnswers = props.children.length - 1;
+  const nAnswers = post.children.length - 1;
   return (
-    <Card>
+    <Card
+      sx={{
+        opacity: post.props.deleted ? 0.9 : 1,
+      }}
+    >
       <FlexBox>
+        <Box
+          sx={{
+            width: '2px',
+            backgroundColor: post.props.deleted
+              ? 'error.main'
+              : post.props.approved
+              ? 'success.main'
+              : 'warning.main',
+          }}
+        ></Box>
         <FlexBox sx={{ flexDirection: 'column', gap: 1 }}>
           <CardContent
             sx={{ ml: 8, display: 'flex', flexDirection: 'column', gap: 1 }}
@@ -98,15 +115,15 @@ const Post = (props) => {
         <Box>
           <CardHeader
             title={
-              <Link to={`/community/${props.component}`} component={RouterLink}>
-                {props.props.title}
+              <Link to={`/community/${post.component}`} component={RouterLink}>
+                {post.props.title}
               </Link>
             }
             sx={{ pb: 0 }}
           />
           <CardContent sx={{ py: 0 }}>
-            <Markdown>{props.props.body}</Markdown>
-            {props.props.tags?.map((tag) => (
+            <Markdown>{post.props.body}</Markdown>
+            {post.props.tags?.map((tag) => (
               <Chip label={tag} />
             ))}
           </CardContent>
