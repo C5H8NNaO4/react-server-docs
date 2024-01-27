@@ -153,19 +153,26 @@ export const VotingApp = ({
   const [component, { loading, error }] = useComponent(id, {});
   const { score, upvotes, downvotes, voted, policies } = component?.props || {};
 
-  const sum =
-    calc(upvotes, {
-      lb: score?.upvote[0],
-      ub: score?.upvote[1],
-      wilson,
-      random,
-    }) -
-    calc(downvotes, {
-      lb: score?.downvote[0],
-      ub: score?.downvote[1],
-      wilson,
-      random,
-    });
+  const randomUp = useMemo(() => Math.random(), []);
+  const randomDown = useMemo(() => Math.random(), []);
+  const sum = useMemo(
+    () =>
+      calc(upvotes, {
+        lb: score?.upvote[0],
+        ub: score?.upvote[1],
+        wilson,
+        random,
+        r: randomUp,
+      }) -
+      calc(downvotes, {
+        lb: score?.downvote[0],
+        ub: score?.downvote[1],
+        wilson,
+        random,
+        r: randomDown,
+      }),
+    [upvotes, downvotes, score, wilson, random]
+  );
   if (loading) return <div>Loading...</div>;
 
   return (

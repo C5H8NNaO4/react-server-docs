@@ -22,6 +22,7 @@ import {
   calc,
 } from '../../server-components/examples/VotingApp';
 import { Link as RouterLink } from 'react-router-dom';
+import { useMemo } from 'react';
 const PAGE_SRC = 'src/pages/States.md';
 
 export const CommunityPage = () => {
@@ -54,19 +55,27 @@ const Post = (props) => {
   const { score, upvotes, downvotes } = votes?.props || {};
   const wilson = true,
     random = true;
-  const sum =
-    calc(upvotes, {
-      lb: score?.upvote[0],
-      ub: score?.upvote[1],
-      wilson,
-      random,
-    }) -
-    calc(downvotes, {
-      lb: score?.downvote[0],
-      ub: score?.downvote[1],
-      wilson,
-      random,
-    });
+
+  const randomUp = useMemo(() => Math.random(), []);
+  const randomDown = useMemo(() => Math.random(), []);
+  const sum = useMemo(
+    () =>
+      calc(upvotes, {
+        lb: score?.upvote[0],
+        ub: score?.upvote[1],
+        wilson,
+        random,
+        r: randomUp,
+      }) -
+      calc(downvotes, {
+        lb: score?.downvote[0],
+        ub: score?.downvote[1],
+        wilson,
+        random,
+        r: randomDown,
+      }),
+    [upvotes, downvotes, score, wilson, random]
+  );
 
   const nAnswers = props.children.length - 1;
   return (
