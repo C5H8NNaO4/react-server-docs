@@ -16,11 +16,11 @@ import { useMemo } from 'react';
 
 export const calc = (
   votes = 0,
-  { lb = 0, ub = 0, random = false, wilson = true }
+  { lb = 0, ub = 0, random = false, wilson = true, r }
 ) => {
   const diff = ub - lb;
   const lbv = Math.round(lb * votes);
-  const rand = Math.round(Math.random() * diff * votes);
+  const rand = Math.round(r * diff * votes);
   return (wilson ? lbv : votes) + (random ? rand : 0);
 };
 
@@ -36,7 +36,8 @@ export const UpDownButtons = ({
 }) => {
   const [component, { loading, error }] = useComponent(id, {});
   const { score, upvotes, downvotes, voted, policies } = component?.props || {};
-
+  const randomUp = useMemo(() => Math.random(), []);
+  const randomDown = useMemo(() => Math.random(), []);
   const sum = useMemo(
     () =>
       calc(upvotes, {
@@ -44,12 +45,14 @@ export const UpDownButtons = ({
         ub: score?.upvote[1],
         wilson,
         random,
+        r: randomUp,
       }) -
       calc(downvotes, {
         lb: score?.downvote[0],
         ub: score?.downvote[1],
         wilson,
         random,
+        r: randomDown,
       }),
     [upvotes, downvotes, score, wilson, random]
   );
@@ -93,7 +96,8 @@ export const UpButton = ({
 }) => {
   const [component, { loading, error }] = useComponent(id, {});
   const { score, upvotes, downvotes, voted, policies } = component?.props || {};
-
+  const randomUp = useMemo(() => Math.random(), []);
+  const randomDown = useMemo(() => Math.random(), []);
   const sum = useMemo(
     () =>
       calc(upvotes, {
@@ -101,12 +105,14 @@ export const UpButton = ({
         ub: score?.upvote[1],
         wilson,
         random,
+        r: randomUp,
       }) -
       calc(downvotes, {
         lb: score?.downvote[0],
         ub: score?.downvote[1],
         wilson,
         random,
+        r: randomDown,
       }),
     [upvotes, downvotes, score, wilson, random]
   );
