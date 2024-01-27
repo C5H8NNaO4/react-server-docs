@@ -95,12 +95,20 @@ const Post = ({ id }) => {
         </FlexBox>
         <CardActions>
           {component?.props?.canDelete && (
-            <Button color="error" onClick={() => component.props.del()}>
+            <Button
+              disabled={component?.props?.deleted}
+              color="error"
+              onClick={() => component.props.del()}
+            >
               Delete
             </Button>
           )}
           {component?.props?.canDelete && (
-            <Button key={editTitle} onClick={() => setEdit(!edit)}>
+            <Button
+              disabled={component?.props?.deleted}
+              key={editTitle}
+              onClick={() => setEdit(!edit)}
+            >
               {editTitle}
             </Button>
           )}
@@ -156,10 +164,17 @@ const Answer = ({ answer }) => {
             borderColor: 'secondary.main',
           }}
         >
-          <Button color="error" onClick={() => component?.props?.del(!edit)}>
+          <Button
+            disabled={component?.props?.deleted}
+            color="error"
+            onClick={() => component?.props?.del(!edit)}
+          >
             Delete
           </Button>
-          <Button onClick={() => setEdit(!edit)}>
+          <Button
+            disabled={component?.props?.deleted}
+            onClick={() => setEdit(!edit)}
+          >
             {!edit ? 'Edit' : 'Ok'}
           </Button>
         </CardActions>
