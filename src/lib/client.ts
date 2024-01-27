@@ -32,17 +32,7 @@ const stateless = split(
 // Create the Apollo Client instance
 const client = new ApolloClient({
   link: stateless,
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          renderComponent: {
-            keyArgs: ['key', 'props'],
-          },
-        },
-      },
-    },
-  }),
+  cache: new InMemoryCache(),
 });
 
 // Create an HTTP link
