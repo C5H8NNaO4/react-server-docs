@@ -17,7 +17,7 @@ import {
   ListItemIcon,
 } from '@mui/material';
 import { authContext, useComponent } from '@state-less/react-client';
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import GoogleIcon from '@mui/icons-material/Google';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { UpButton, UpDownButtons, VotingApp } from './VotingApp';
@@ -40,6 +40,7 @@ export const CommunityComments = ({
   const { children } = component || {};
 
   const [showComment, setShowComment] = useState(false);
+  const wilson = useMemo(() => features?.props?.wilson, [loading]);
   // return <>{JSON.stringify(component)}</>;
   return (
     <>
@@ -58,7 +59,7 @@ export const CommunityComments = ({
               <CommunityComment
                 comment={child}
                 canDelete={canDelete}
-                wilson={features?.props?.wilson}
+                wilson={wilson}
               />
             </ListItem>
           );
