@@ -71,7 +71,6 @@ const Post = ({ id }) => {
           <Alert severity="info">This post needs approval from an admin.</Alert>
         )}
         <FlexBox>
-          {JSON.stringify(component?.children[0])}
           <UpDownButtons
             data={component?.children[0]}
             id={component?.children[0]?.component}
