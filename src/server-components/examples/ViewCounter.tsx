@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 export type ViewCounterProps = {
-  componentKey: 'string';
+  componentKey: string;
   data?: any;
 };
 export const ViewCounter = ({ componentKey, data }: ViewCounterProps) => {

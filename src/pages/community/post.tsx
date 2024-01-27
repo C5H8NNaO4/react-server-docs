@@ -69,15 +69,10 @@ const Post = ({ id }) => {
   return (
     <>
       <FlexBox
-        sx={{ alignItems: 'center', height: 'min-content', flexWrap: "wrap" }}
+        sx={{ alignItems: 'center', height: 'min-content', flexWrap: 'wrap' }}
       >
         <CardHeader title={component?.props?.title}></CardHeader>
-        {component?.props.viewCounter && (
-          <ViewCounter
-            componentKey={component?.props.viewCounter?.component}
-            data={component?.props.viewCounter}
-          />
-        )}
+
         <NewPostButton />
       </FlexBox>
       <Card sx={{ mb: 1 }} color="info">
@@ -165,6 +160,12 @@ const Post = ({ id }) => {
           )}
         </CardActions>
       </Card>
+      {component?.props.viewCounter && (
+        <ViewCounter
+          componentKey={component?.props.viewCounter?.component}
+          data={component?.props.viewCounter}
+        />
+      )}
       {component?.children.slice(2)?.map((answer) => {
         return <Answer answer={answer} />;
       })}
