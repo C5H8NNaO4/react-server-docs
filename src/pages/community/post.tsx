@@ -87,7 +87,11 @@ const Post = ({ id }) => {
             />
           )}
           <Box sx={{ display: 'flex', width: '100%' }}>
-            <CardContent sx={{ flex: 1 }}>
+            <CardContent
+              sx={{
+                flex: 1,
+              }}
+            >
               {edit && (
                 <TextField
                   color={
@@ -107,6 +111,13 @@ const Post = ({ id }) => {
             </CardContent>
           </Box>
         </FlexBox>
+        {component.props.tags?.length > 0 && (
+          <CardContent sx={{ display: 'flex', gap: 1 }}>
+            {component.props.tags?.map((tag) => (
+              <Chip color="secondary" label={tag} />
+            ))}
+          </CardContent>
+        )}
         <CardActions>
           {component?.props?.canDelete && (
             <Button

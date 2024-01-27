@@ -116,12 +116,25 @@ const Post = (post) => {
             }
             sx={{ pb: 0 }}
           />
-          <CardContent sx={{ py: 0 }}>
+          <CardContent
+            sx={{
+              pt: 0,
+              pb: '0rem !important',
+              maxHeight: '5rem',
+              mb: 2,
+
+              overflow: 'hidden',
+            }}
+          >
             <Markdown>{post.props.body}</Markdown>
-            {post.props.tags?.map((tag) => (
-              <Chip label={tag} />
-            ))}
           </CardContent>
+          {post.props.tags?.length > 0 && (
+            <CardContent sx={{ display: 'flex', gap: 1 }}>
+              {post.props.tags?.map((tag) => (
+                <Chip color="secondary" label={tag} />
+              ))}
+            </CardContent>
+          )}
         </Box>
       </FlexBox>
     </Card>
