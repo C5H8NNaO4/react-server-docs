@@ -71,11 +71,13 @@ const Post = ({ id }) => {
           <Alert severity="info">This post needs approval from an admin.</Alert>
         )}
         <FlexBox>
-          <UpDownButtons
-            data={component?.children[0]}
-            id={component?.children[0]?.component}
-            wilson={false}
-          />
+          {component?.children[0] && (
+            <UpDownButtons
+              data={component?.children[0]}
+              id={component?.children[0]?.component}
+              wilson={false}
+            />
+          )}
           <Box sx={{ display: 'flex', width: '100%' }}>
             <CardContent sx={{ flex: 1 }}>
               {edit && (

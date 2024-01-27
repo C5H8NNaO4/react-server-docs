@@ -46,17 +46,18 @@ export const UpDownButtons = ({
   random?: boolean;
   wilson?: boolean;
   hideVotes?: boolean;
-  data: VotingServerProps;
+  data: { props: VotingServerProps };
   id?: string;
 }) => {
   const [component, { loading, error }] = useComponent(id, {
     data,
   });
-  const { score, upvotes, downvotes, voted, policies } = component?.props || {};
+  const { score, upvotes, downvotes, voted, policies } =
+    data?.props || component?.props || {};
   const randomUp = useMemo(() => Math.random(), []);
   const randomDown = useMemo(() => Math.random(), []);
-  const sum = useMemo(
-    () =>
+  const sum = useMemo(() => {
+    return (
       calc(upvotes, {
         lb: score?.upvote[0],
         ub: score?.upvote[1],
@@ -70,9 +71,9 @@ export const UpDownButtons = ({
         wilson,
         random,
         r: randomDown,
-      }),
-    [upvotes, downvotes, score, wilson, random]
-  );
+      })
+    );
+  }, []);
 
   return (
     <Box
@@ -89,7 +90,7 @@ export const UpDownButtons = ({
       >
         <KeyboardArrowUpIcon />
       </IconButton>
-      {loading && !data ? <CircularProgress size={'14px'} /> : sum}
+      {loading ? <CircularProgress size="1rem"></CircularProgress> : sum}
       <IconButton
         color={voted === -1 ? 'error' : 'default'}
         onClick={() => component?.props.downvote()}
