@@ -104,7 +104,7 @@ const Post = ({ id }) => {
                   }
                   rows={7}
                   value={body}
-                  onChange={(e) => setBody(e.target.value)}
+                  onChange={(e) => !loading && setBody(e.target.value)}
                 ></TextField>
               )}
               {!edit && <Markdown>{component?.props?.body}</Markdown>}
@@ -187,7 +187,7 @@ const Answer = ({ answer }) => {
                 label={'Body' + (component?.props?.body !== body ? '...' : '')}
                 rows={7}
                 value={body}
-                onChange={(e) => setBody(e.target.value)}
+                onChange={(e) => !loading && setBody(e.target.value)}
               ></TextField>
             )}
             {!edit && <Markdown>{component?.props?.body}</Markdown>}

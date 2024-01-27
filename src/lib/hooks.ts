@@ -11,13 +11,13 @@ export const useSyncedState = (defValue, updateFn, successFn?) => {
     timeout.current = setTimeout(async () => {
       setLoading(true);
       await updateFn(value);
-      setLoading(false);
       successFn?.(value);
     }, 1500);
   };
 
   useEffect(() => {
     setLocalValue(defValue);
+    setLoading(false);
   }, [defValue]);
 
   return [localValue, setValue, { loading }];
