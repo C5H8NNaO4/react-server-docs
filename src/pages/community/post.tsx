@@ -72,6 +72,7 @@ const Post = ({ id }) => {
         )}
         <FlexBox>
           <UpDownButtons
+            data={component?.children[0]}
             id={component?.children[0]?.component}
             wilson={false}
           />
@@ -147,7 +148,11 @@ const Answer = ({ answer }) => {
   return (
     <Card sx={{ mb: 1 }} color="info">
       <FlexBox>
-        <UpDownButtons id={answer?.children[0]?.component} wilson={false} />
+        <UpDownButtons
+          id={answer?.children[0]?.component}
+          data={answer?.children[0]}
+          wilson={false}
+        />
         <Box sx={{ width: '100%' }}>
           {component?.props?.deleted && (
             <Alert severity="error">This post has been deleted.</Alert>

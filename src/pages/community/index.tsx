@@ -12,15 +12,10 @@ import {
 } from '@mui/material';
 
 import { Markdown } from '../../components/Markdown';
-import { getRawPath } from '../../components/CollabEditButton';
 import { Navigation } from '../../components/NavigationButton';
 import { FlexBox } from '../../components/FlexBox';
 import { useComponent } from '@state-less/react-client';
-import {
-  UpDownButtons,
-  VotingApp,
-  calc,
-} from '../../server-components/examples/VotingApp';
+import { calc } from '../../server-components/examples/VotingApp';
 import { Link as RouterLink } from 'react-router-dom';
 import { useMemo } from 'react';
 const PAGE_SRC = 'src/pages/States.md';

@@ -24,17 +24,34 @@ export const calc = (
   return (wilson ? lbv : votes) + (random ? rand : 0);
 };
 
+type VotingServerProps = {
+  upvotes: number;
+  downvotes: number;
+  voted: number;
+  policies: string[];
+  score: {
+    upvote: [number, number];
+    downvote: [number, number];
+  };
+  upvote: () => void;
+  downvote: () => void;
+};
+
 export const UpDownButtons = ({
   random,
   wilson,
+  data,
   id = 'votings',
 }: {
   random?: boolean;
   wilson?: boolean;
   hideVotes?: boolean;
+  data: VotingServerProps;
   id?: string;
 }) => {
-  const [component, { loading, error }] = useComponent(id, {});
+  const [component, { loading, error }] = useComponent(id, {
+    data,
+  });
   const { score, upvotes, downvotes, voted, policies } = component?.props || {};
   const randomUp = useMemo(() => Math.random(), []);
   const randomDown = useMemo(() => Math.random(), []);
