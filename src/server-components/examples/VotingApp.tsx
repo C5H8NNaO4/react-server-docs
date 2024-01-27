@@ -12,6 +12,7 @@ import { useComponent } from '@state-less/react-client';
 
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useMemo } from 'react';
 
 export const calc = (
   votes = 0,
@@ -36,19 +37,22 @@ export const UpDownButtons = ({
   const [component, { loading, error }] = useComponent(id, {});
   const { score, upvotes, downvotes, voted, policies } = component?.props || {};
 
-  const sum =
-    calc(upvotes, {
-      lb: score?.upvote[0],
-      ub: score?.upvote[1],
-      wilson,
-      random,
-    }) -
-    calc(downvotes, {
-      lb: score?.downvote[0],
-      ub: score?.downvote[1],
-      wilson,
-      random,
-    });
+  const sum = useMemo(
+    () =>
+      calc(upvotes, {
+        lb: score?.upvote[0],
+        ub: score?.upvote[1],
+        wilson,
+        random,
+      }) -
+      calc(downvotes, {
+        lb: score?.downvote[0],
+        ub: score?.downvote[1],
+        wilson,
+        random,
+      }),
+    [upvotes, downvotes, score, wilson, random]
+  );
 
   return (
     <Box
@@ -90,19 +94,22 @@ export const UpButton = ({
   const [component, { loading, error }] = useComponent(id, {});
   const { score, upvotes, downvotes, voted, policies } = component?.props || {};
 
-  const sum =
-    calc(upvotes, {
-      lb: score?.upvote[0],
-      ub: score?.upvote[1],
-      wilson,
-      random,
-    }) -
-    calc(downvotes, {
-      lb: score?.downvote[0],
-      ub: score?.downvote[1],
-      wilson,
-      random,
-    });
+  const sum = useMemo(
+    () =>
+      calc(upvotes, {
+        lb: score?.upvote[0],
+        ub: score?.upvote[1],
+        wilson,
+        random,
+      }) -
+      calc(downvotes, {
+        lb: score?.downvote[0],
+        ub: score?.downvote[1],
+        wilson,
+        random,
+      }),
+    [upvotes, downvotes, score, wilson, random]
+  );
 
   return (
     <Box
