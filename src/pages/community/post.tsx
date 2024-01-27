@@ -67,6 +67,9 @@ const Post = ({ id }) => {
         {component?.props?.deleted && (
           <Alert severity="error">This post has been deleted.</Alert>
         )}
+        {!component?.props?.canDelete && !component?.props?.approved && (
+          <Alert severity="info">This post needs approval from an admin.</Alert>
+        )}
         <FlexBox>
           <UpDownButtons
             id={component?.children[0]?.component}
