@@ -133,7 +133,7 @@ const Post = (post) => {
           {post.props.tags?.length > 0 && (
             <CardContent sx={{ display: 'flex', gap: 1 }}>
               {post.props.tags?.map((tag) => (
-                <Chip color="secondary" label={tag} />
+                <Chip color="info" label={tag} />
               ))}
             </CardContent>
           )}
