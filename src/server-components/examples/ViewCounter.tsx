@@ -9,7 +9,6 @@ import {
   ListItemText,
   ListItemIcon,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
 
 export type ViewCounterProps = {
   componentKey: string;
@@ -18,7 +17,7 @@ export type ViewCounterProps = {
 };
 export const ViewCounter = ({ componentKey, data, skip }: ViewCounterProps) => {
   console.log('ViewCounter', componentKey, data?.key);
-  const [component, { error, loading }] = useComponent(componentKey, {
+  const [component, { loading }] = useComponent(componentKey, {
     skip,
     data,
   });
