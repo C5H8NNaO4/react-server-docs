@@ -77,7 +77,7 @@ const Post = (post) => {
     [upvotes, downvotes, score, wilson, random]
   );
 
-  const nAnswers = post.children.length - 1;
+  const nAnswers = post.children.length - 2;
   return (
     <Card
       sx={{
