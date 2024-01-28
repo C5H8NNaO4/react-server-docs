@@ -26,7 +26,7 @@ import {
   calc,
 } from '../../server-components/examples/VotingApp';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NewPost } from './newPost';
 import { NewPostButton } from '.';
 import {
@@ -50,8 +50,14 @@ export const PostsPage = (props) => {
 };
 
 const Post = ({ id }) => {
-  const [forum] = useComponent('community-forum');
+  const [skip, setSkip] = useState(false);
   const [component, { error, loading, refetch }] = useComponent(id);
+
+  useEffect(() => {
+    /* Skip recreated ViewCounter component as long as the post is in the cache*/
+    if (component?.props) setSkip(true);
+  }, [component?.props]);
+
   const [edit, setEdit] = useState(false);
   const [body, setBody, { loading: bodyLoading }] = useSyncedState(
     component?.props?.body,
@@ -121,9 +127,9 @@ const Post = ({ id }) => {
             </CardContent>
           </Box>
         </FlexBox>
-        {component.props.tags?.length > 0 && (
+        {component?.props.tags?.length > 0 && (
           <CardContent sx={{ display: 'flex', gap: 1 }}>
-            {component.props.tags?.map((tag) => (
+            {component?.props.tags?.map((tag) => (
               <Chip color="secondary" label={tag} />
             ))}
           </CardContent>
@@ -164,6 +170,7 @@ const Post = ({ id }) => {
         <ViewCounter
           componentKey={component?.props.viewCounter?.component}
           data={component?.props.viewCounter}
+          skip={skip}
         />
       )}
       {component?.children.slice(2)?.map((answer) => {
