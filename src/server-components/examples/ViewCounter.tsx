@@ -23,7 +23,9 @@ export const ViewCounter = ({ componentKey, data }: ViewCounterProps) => {
 
   return (
     <Tooltip title="Views" placement="left">
-      <Box sx={{ display: 'flex', justifyContent: 'start' }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'start', width: 'min-content' }}
+      >
         <ListItem dense>
           <ListItemIcon>
             <VisibilityIcon />
