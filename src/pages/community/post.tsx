@@ -1,9 +1,7 @@
 import {
-  Paper,
   Container,
   TextField,
   Button,
-  Typography,
   Box,
   Card,
   CardHeader,
@@ -11,28 +9,18 @@ import {
   Chip,
   CardActions,
   Alert,
-  CardActionArea,
   LinearProgress,
 } from '@mui/material';
 
 import { Markdown } from '../../components/Markdown';
-import { getRawPath } from '../../components/CollabEditButton';
-import { Navigation } from '../../components/NavigationButton';
 import { FlexBox } from '../../components/FlexBox';
 import { useComponent } from '@state-less/react-client';
-import {
-  UpDownButtons,
-  VotingApp,
-  calc,
-} from '../../server-components/examples/VotingApp';
+import { UpDownButtons } from '../../server-components/examples/VotingApp';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { NewPost } from './newPost';
 import { NewPostButton } from '.';
-import {
-  Comments,
-  CommunityComments,
-} from '../../server-components/examples/Comments';
+import { CommunityComments } from '../../server-components/examples/Comments';
 import { useSyncedState } from '../../lib/hooks';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
 
@@ -167,11 +155,7 @@ const Post = ({ id }) => {
         </CardActions>
       </Card>
       {component?.props.viewCounter && (
-        <ViewCounter
-          componentKey={component?.props.viewCounter?.component}
-          data={component?.props.viewCounter}
-          skip={skip}
-        />
+        <ViewCounter componentKey={component?.props.viewCounter?.component} />
       )}
       {component?.children.slice(2)?.map((answer) => {
         return <Answer answer={answer} />;
