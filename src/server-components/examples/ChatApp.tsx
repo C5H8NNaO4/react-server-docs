@@ -22,6 +22,7 @@ export const ChatApp = () => {
       num: items,
     },
     preventUnload: true,
+    sendUnmount: true,
     //data: component?.children?.[0],
   });
   const { messages = [], sendMessage } = room?.props || {};
