@@ -82,11 +82,19 @@ pre {
 }
 .markdown > p {
   max-width: 70ch;
+
   /* text-overflow: ellipsis; */
   overflow: hidden;
   word-break: break-word;
   /* white-space: nowrap; */
   text-align: left;
+}
+
+.markdown.disablePadding > p {
+  margin: 0px;
+}
+
+.markdown.center > p {
   margin-left: auto;
   margin-right: auto;
 }

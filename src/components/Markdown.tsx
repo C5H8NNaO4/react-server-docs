@@ -29,6 +29,7 @@ type MarkdownProps = {
   optimisticHeight?: string;
   small?: boolean;
   preview?: boolean;
+  center?: boolean;
 };
 
 mermaid.initialize({
@@ -52,6 +53,7 @@ export const Markdown = ({
   optimisticHeight = '0px',
   small = false,
   preview = false,
+  center = true,
 }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(children || '');
   const { state, dispatch } = useContext(stateContext);
@@ -85,7 +87,10 @@ export const Markdown = ({
 
   return (
     <div
-      className="markdown"
+      className={clsx('markdown', {
+        center,
+        disablePadding,
+      })}
       style={{
         minHeight: optimisticHeight,
         width: '100%',

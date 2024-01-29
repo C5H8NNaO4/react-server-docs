@@ -121,8 +121,8 @@ const Post = ({ id }) => {
                     bodyLoading
                       ? 'warning'
                       : component?.props?.body === body
-                        ? 'success'
-                        : 'primary'
+                      ? 'success'
+                      : 'primary'
                   }
                   multiline
                   fullWidth
@@ -135,7 +135,7 @@ const Post = ({ id }) => {
                 ></TextField>
               )}
               {(!edit || component?.props?.deleted) && (
-                <Markdown>{component?.props?.body}</Markdown>
+                <Markdown center={false}>{component?.props?.body}</Markdown>
               )}
             </CardContent>
           </Box>
@@ -221,8 +221,8 @@ const Answer = ({ answer }) => {
                   loading
                     ? 'warning'
                     : component?.props?.body === body
-                      ? 'success'
-                      : 'primary'
+                    ? 'success'
+                    : 'primary'
                 }
                 multiline
                 fullWidth
@@ -233,7 +233,7 @@ const Answer = ({ answer }) => {
               ></TextField>
             )}
             {(!edit || component?.props?.deleted) && (
-              <Markdown>{component?.props?.body}</Markdown>
+              <Markdown center={false}>{component?.props?.body}</Markdown>
             )}
           </CardContent>
         </Box>
