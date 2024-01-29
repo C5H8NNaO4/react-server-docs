@@ -78,7 +78,7 @@ export const Markdown = ({
         .replace(/\s+/g, '-'); // Replace spaces with hyphens
 
       if (preview)
-        return createElement('p', { id: anchor || undefined }, children);
+        return createElement('b', { id: anchor || undefined }, children);
       return createElement(`h${level}`, { id: anchor || undefined }, children);
     }
     if (preview) return createElement('b', {}, children);
