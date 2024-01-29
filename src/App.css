@@ -99,7 +99,9 @@ pre {
   margin-left: auto;
   margin-right: auto;
 }
-
+.markdown.center > ul {
+  width: max-content;
+}
 .markdown-small p {
   margin: 0;
   font-size: 0.8rem;
