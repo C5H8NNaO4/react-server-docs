@@ -55,18 +55,19 @@ export const CommunityPage = () => {
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
         <Header />
         <CardContent>
-          {createPortal(
-            loading ? (
-              <LinearProgress color="secondary" variant={'indeterminate'} />
-            ) : (
-              <LinearProgress
-                color="secondary"
-                value={100}
-                variant="determinate"
-              />
-            ),
-            document.getElementById('progress')!
-          )}
+          {document.getElementById('progress') &&
+            createPortal(
+              loading ? (
+                <LinearProgress color="secondary" variant={'indeterminate'} />
+              ) : (
+                <LinearProgress
+                  color="secondary"
+                  value={100}
+                  variant="determinate"
+                />
+              ),
+              document.getElementById('progress')!
+            )}
           <Posts page={page} setPage={setPage} component={component} />
         </CardContent>
         <CardActions>
