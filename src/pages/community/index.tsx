@@ -24,6 +24,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { PAGE_SIZE_POSTS } from '../../lib/const';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
 import { FORUM_KEY } from '../../lib/config';
+import { createPortal } from 'react-dom';
 const PAGE_SRC = 'src/pages/States.md';
 
 export const CommunityPage = () => {
@@ -54,10 +55,17 @@ export const CommunityPage = () => {
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
         <Header />
         <CardContent>
-          {loading ? (
-            <LinearProgress variant={'indeterminate'} />
-          ) : (
-            <LinearProgress value={100} variant="determinate" />
+          {createPortal(
+            loading ? (
+              <LinearProgress color="secondary" variant={'indeterminate'} />
+            ) : (
+              <LinearProgress
+                color="secondary"
+                value={100}
+                variant="determinate"
+              />
+            ),
+            document.getElementById('progress')!
           )}
           <Posts page={page} setPage={setPage} component={component} />
         </CardContent>
