@@ -10,6 +10,7 @@ import {
   Chip,
   Link,
   Pagination,
+  CardActions,
   Grid,
 } from '@mui/material';
 
@@ -25,6 +26,14 @@ import { FORUM_KEY } from '../../lib/config';
 const PAGE_SRC = 'src/pages/States.md';
 
 export const CommunityPage = () => {
+  const [page, setPage] = useState(1);
+  const [component, { error, loading }] = useComponent(FORUM_KEY, {
+    props: {
+      page,
+      pageSize: PAGE_SIZE_POSTS,
+      compound: false,
+    },
+  });
   return (
     <Container maxWidth="lg" disableGutters>
       <Card
@@ -38,7 +47,18 @@ export const CommunityPage = () => {
       >
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
         <Header />
-        <Posts />
+        <CardContent>
+          <Posts page={page} setPage={setPage} component={component} />
+        </CardContent>
+        <CardActions>
+          <Pagination
+            count={
+              Math.ceil(component?.props?.totalCount / PAGE_SIZE_POSTS) || 0
+            }
+            page={page}
+            onChange={(_, p) => setPage(p)}
+          />
+        </CardActions>
       </Card>
     </Container>
   );
@@ -153,26 +173,12 @@ const Post = (post) => {
   );
 };
 
-const Posts = () => {
-  const [page, setPage] = useState(1);
-  const [component, { error, loading }] = useComponent(FORUM_KEY, {
-    props: {
-      page: page,
-      pageSize: PAGE_SIZE_POSTS,
-      compound: false,
-    },
-  });
-
+const Posts = ({ page, setPage, component }) => {
   return (
     <FlexBox sx={{ flexDirection: 'column', gap: 1 }}>
       {component?.children?.map((post) => {
         return <Post {...post} />;
       })}
-      <Pagination
-        count={Math.ceil(component?.props?.totalCount / PAGE_SIZE_POSTS) || 0}
-        page={page}
-        onChange={(_, p) => setPage(p)}
-      />
     </FlexBox>
   );
 };
