@@ -32,8 +32,8 @@ export const Tags = ({ onChange }) => {
       if (tags.length >= 5) return;
       if (tags.includes(tag)) return;
       setTag('');
-      setTags([...tags, tag]);
-      onChange([...tags, tag]);
+      setTags([...tags, tag.toLowerCase()]);
+      onChange([...tags, tag.toLowerCase()]);
     }
   };
   return (
@@ -41,6 +41,9 @@ export const Tags = ({ onChange }) => {
       <TextField
         color={tags.includes(tag) ? 'error' : 'secondary'}
         InputProps={{
+          inputProps: {
+            pattern: '[a-z]',
+          },
           startAdornment: (
             <InputAdornment position="start">
               <Box sx={{ display: 'flex', flexWrap: 'nowrap', gap: 1 }}>
