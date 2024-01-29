@@ -105,7 +105,8 @@ pre {
   margin-right: auto;
 }
 .markdown.center > ul {
-  width: max-content;
+  width: fit-content;
+  max-width: max-content;
 }
 .markdown-small p {
   margin: 0;
