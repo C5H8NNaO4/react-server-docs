@@ -35,7 +35,7 @@ export const CommunityPage = () => {
     },
   });
   useEffect(() => {
-    window.scrollTo({ top: 0 });
+    document.getElementById('root-container')?.scrollTo({ top: 0 });
   }, [page]);
   return (
     <Container maxWidth="lg" disableGutters>

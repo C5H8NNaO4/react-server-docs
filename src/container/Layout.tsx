@@ -140,6 +140,7 @@ export const Layout = () => {
         bg={_animated > 0}
       >
         <Box
+          id="root-container"
           key={pathname}
           sx={{
             maxHeight: '100vh',
