@@ -74,12 +74,12 @@ pre {
   flex-direction: column;
 }
 
-.markdown div > * {
+.markdown > * {
   width: 100%;
   text-align: center;
 }
 
-.markdown div > p {
+.markdown > p {
   max-width: 70ch;
   /* text-overflow: ellipsis; */
   overflow: hidden;
