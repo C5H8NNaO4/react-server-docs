@@ -28,6 +28,7 @@ type MarkdownProps = {
   disablePadding?: boolean;
   optimisticHeight?: string;
   small?: boolean;
+  preview?: boolean;
 };
 
 mermaid.initialize({
@@ -50,6 +51,7 @@ export const Markdown = ({
   disablePadding,
   optimisticHeight = '0px',
   small = false,
+  preview = false,
 }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(children || '');
   const { state, dispatch } = useContext(stateContext);
@@ -73,6 +75,8 @@ export const Markdown = ({
         .replace(/[^\w\s]/g, '') // Remove special characters
         .replace(/\s+/g, '-'); // Replace spaces with hyphens
 
+      if (preview)
+        return createElement('p', { id: anchor || undefined }, children);
       return createElement(`h${level}`, { id: anchor || undefined }, children);
     }
     return createElement(`h${level}`, {}, children);
