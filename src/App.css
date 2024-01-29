@@ -75,7 +75,12 @@ pre {
 }
 
 div > p {
-  margin: 0px;
+  margin: 0;
+  max-width: 70ch;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-word;
+  white-space: nowrap;
 }
 
 .markdown-small p {
