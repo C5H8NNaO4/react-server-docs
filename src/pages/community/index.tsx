@@ -19,7 +19,7 @@ import { FlexBox } from '../../components/FlexBox';
 import { useComponent } from '@state-less/react-client';
 import { calc } from '../../server-components/examples/VotingApp';
 import { Link as RouterLink } from 'react-router-dom';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PAGE_SIZE_POSTS } from '../../lib/const';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
 import { FORUM_KEY } from '../../lib/config';
@@ -34,6 +34,9 @@ export const CommunityPage = () => {
       compound: false,
     },
   });
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [page]);
   return (
     <Container maxWidth="lg" disableGutters>
       <Card
