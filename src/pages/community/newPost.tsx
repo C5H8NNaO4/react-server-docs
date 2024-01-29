@@ -74,7 +74,7 @@ export const NewPost = () => {
   const [tags, setTags] = useState([]);
   const navigate = useNavigate();
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" disableGutters>
       <Card>
         <CardHeader title={'Create a new Post'}></CardHeader>
         <CardContent sx={{ pb: 0 }}>
