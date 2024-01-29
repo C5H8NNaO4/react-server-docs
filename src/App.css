@@ -94,6 +94,7 @@ pre {
   margin: 0px;
 }
 
+.markdown.center > ul,
 .markdown.center > p {
   margin-left: auto;
   margin-right: auto;
