@@ -106,6 +106,7 @@ export const NewPost = () => {
           />
         </CardContent>
         <CardContent>
+          <Typography variant="h6">Tags</Typography>
           <Tags onChange={setTags} />
         </CardContent>
         <CardActionArea>
