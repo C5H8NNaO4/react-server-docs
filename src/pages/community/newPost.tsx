@@ -72,73 +72,66 @@ export const NewPost = () => {
   const navigate = useNavigate();
   return (
     <Container maxWidth="lg">
-      <Paper sx={{ padding: 4, m: 4 }}>
-        <h1>Create a new Post</h1>
-        <Card>
-          <CardContent sx={{ pb: 0 }}>
-            <Typography variant="h5">Title</Typography>
-            <Typography>
-              Be specific and imagine you’re talking to another person.
-            </Typography>
-          </CardContent>
-          <CardHeader
-            sx={{ pt: 0 }}
-            title={
-              <TextField
-                fullWidth
-                color="secondary"
-                id="outlined-multiline-flexible"
-                label="Title"
-                multiline
-                maxRows={4}
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            }
-          ></CardHeader>
-          <CardContent sx={{ pb: 0 }}>
-            <Typography variant="h5">Body</Typography>
-            <Typography>
-              Include all the information someone would need to understand the
-              topic.
-            </Typography>
-            <TextField
-              fullWidth
-              multiline
-              rows={7}
+      <Card>
+        <CardHeader title={'Create a new Post'}></CardHeader>
+        <CardContent sx={{ pb: 0 }}>
+          <Typography variant="h5">Title</Typography>
+          <Typography>
+            Be specific and imagine you’re talking to another person.
+          </Typography>
+          <TextField
+            fullWidth
+            color="secondary"
+            id="outlined-multiline-flexible"
+            label="Title"
+            multiline
+            maxRows={4}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </CardContent>
+        <CardContent sx={{ pb: 0 }}>
+          <Typography variant="h5">Body</Typography>
+          <Typography>
+            Include all the information someone would need to understand the
+            topic.
+          </Typography>
+          <TextField
+            fullWidth
+            multiline
+            rows={7}
+            color="secondary"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+          />
+        </CardContent>
+        <CardContent>
+          <Tags onChange={setTags} />
+        </CardContent>
+        <CardActionArea>
+          <CardActions>
+            <Button
+              variant="contained"
               color="secondary"
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-            />
-          </CardContent>
-          <CardContent>
-            <Tags onChange={setTags} />
-          </CardContent>
-          <CardActionArea>
-            <CardActions>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={async () => {
-                  const post = await component?.props?.createPost({
-                    title,
-                    body,
-                    tags,
-                  });
+              onClick={async () => {
+                const post = await component?.props?.createPost({
+                  title,
+                  body,
+                  tags,
+                });
 
-                  console.log('POST', post);
+                console.log('POST', post);
 
-                  setTimeout(() => {
-                    navigate(`/community/post-${post.id}`);
-                  }, 250);
-                }}
-              >
-                Post
-              </Button>
-            </CardActions>
-          </CardActionArea>
-        </Card>
-      </Paper>
+                setTimeout(() => {
+                  navigate(`/community/post-${post.id}`);
+                }, 250);
+              }}
+            >
+              Post
+            </Button>
+          </CardActions>
+        </CardActionArea>
+      </Card>
     </Container>
   );
 };
