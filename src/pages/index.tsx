@@ -29,24 +29,24 @@ export const IndexPage = () => {
               },
             }}
           >
-            <Box
-              className={styles.imageContainer}
-              sx={{ display: 'flex', justifyContent: 'space-between', gap: 4 }}
-            >
-              <img
-                src="/favicon.svg"
-                alt="React Server"
-                style={{ width: 256, height: 256 }}
-                loading="lazy"
-              />
-
-              <Markdown
-                src={getRawPath('src/pages/index/introduction.md')}
-                optimisticHeight="278px"
-              >
-                Loading...
-              </Markdown>
-            </Box>
+            <Grid container className={styles.imageContainer} spacing={4}>
+              <Grid item>
+                <img
+                  src="/favicon.svg"
+                  alt="React Server"
+                  style={{ width: 256, height: 256 }}
+                  loading="lazy"
+                />
+              </Grid>
+              <Grid item>
+                <Markdown
+                  src={getRawPath('src/pages/index/introduction.md')}
+                  optimisticHeight="278px"
+                >
+                  Loading...
+                </Markdown>
+              </Grid>
+            </Grid>
             <Markdown
               src={getRawPath('src/pages/index.md')}
               optimisticHeight="1235px"
