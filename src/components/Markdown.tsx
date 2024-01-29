@@ -85,6 +85,7 @@ export const Markdown = ({
 
   return (
     <div
+      className="markdown"
       style={{
         minHeight: optimisticHeight,
         width: '100%',
