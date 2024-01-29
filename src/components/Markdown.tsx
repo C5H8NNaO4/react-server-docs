@@ -79,6 +79,7 @@ export const Markdown = ({
         return createElement('p', { id: anchor || undefined }, children);
       return createElement(`h${level}`, { id: anchor || undefined }, children);
     }
+    if (preview) return createElement('p', {}, children);
     return createElement(`h${level}`, {}, children);
   };
 

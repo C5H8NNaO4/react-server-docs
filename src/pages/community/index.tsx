@@ -139,7 +139,7 @@ const Post = (post) => {
                 overflow: 'hidden',
               }}
             >
-              <Markdown>{post.props.body}</Markdown>
+              <Markdown preview>{post.props.body}</Markdown>
             </CardContent>
             {post.props.tags?.length > 0 && (
               <CardContent sx={{ display: 'flex', gap: 1 }}>
