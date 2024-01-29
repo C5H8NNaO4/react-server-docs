@@ -76,9 +76,10 @@ pre {
 
 .markdown > * {
   width: 100%;
+}
+.markdown > :is(h1, h2, h3, h4, h5, h6) {
   text-align: center;
 }
-
 .markdown > p {
   max-width: 70ch;
   /* text-overflow: ellipsis; */
