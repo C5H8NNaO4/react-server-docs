@@ -153,7 +153,9 @@ export const Layout = () => {
           {
             <header>
               <ButtonAppBar />
-              <Box id="progress" sx={{ mt: 8 }}></Box>
+              <Box sx={{ mt: 8 }}>
+                <div id="progress"></div>
+              </Box>
               {/* <LinearProgress
                 color="secondary"
                 variant="determinate"
