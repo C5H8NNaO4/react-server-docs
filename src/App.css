@@ -91,7 +91,6 @@ pre {
 
 .markdown > ul > li {
   max-width: 70ch;
-  overflow: hidden;
   word-break: break-word;
   text-align: left;
 }
