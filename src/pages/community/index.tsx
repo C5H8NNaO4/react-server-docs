@@ -12,6 +12,7 @@ import {
   Pagination,
   CardActions,
   Grid,
+  LinearProgress,
 } from '@mui/material';
 
 import { Markdown } from '../../components/Markdown';
@@ -53,6 +54,11 @@ export const CommunityPage = () => {
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
         <Header />
         <CardContent>
+          {loading ? (
+            <LinearProgress variant={'indeterminate'} />
+          ) : (
+            <LinearProgress value={100} variant="determinate" />
+          )}
           <Posts page={page} setPage={setPage} component={component} />
         </CardContent>
         <CardActions>
