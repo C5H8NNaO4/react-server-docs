@@ -27,21 +27,19 @@ const PAGE_SRC = 'src/pages/States.md';
 export const CommunityPage = () => {
   return (
     <Container maxWidth="lg" disableGutters>
-      <Paper
+      <Card
         sx={{
-          mt: 1,
-          marginBottom: 1,
-          padding: {
-            xs: 1,
-            sm: 4,
-            md: 8,
+          px: {
+            xs: 0,
+            sm: 2,
+            md: 4,
           },
         }}
       >
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
         <Header />
         <Posts />
-      </Paper>
+      </Card>
     </Container>
   );
 };
@@ -92,8 +90,8 @@ const Post = (post) => {
             backgroundColor: post.props.deleted
               ? 'error.main'
               : post.props.approved
-                ? 'success.main'
-                : 'warning.main',
+              ? 'success.main'
+              : 'warning.main',
           }}
         ></Box>
         <Grid item>
@@ -180,17 +178,16 @@ const Posts = () => {
 };
 const Header = () => {
   return (
-    <FlexBox
+    <CardHeader
+      title={'All questions'}
       sx={{
         alignItems: 'center',
         flexWrap: 'wrap-reverse',
         justifyContent: 'center',
         alignContent: 'center',
       }}
-    >
-      <Typography variant="h2">Top Questions</Typography>
-      <NewPostButton />
-    </FlexBox>
+      action={<NewPostButton />}
+    ></CardHeader>
   );
 };
 
