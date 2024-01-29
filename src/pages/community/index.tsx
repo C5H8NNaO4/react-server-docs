@@ -157,7 +157,9 @@ const Post = (post) => {
                 overflow: 'hidden',
               }}
             >
-              <Markdown preview disablePadding>{post.props.body}</Markdown>
+              <Markdown preview disablePadding center={false}>
+                {post.props.body}
+              </Markdown>
             </CardContent>
             {post.props.tags?.length > 0 && (
               <CardContent sx={{ display: 'flex', gap: 1 }}>
