@@ -131,7 +131,7 @@ const Post = ({ id }) => {
                   }
                   rows={7}
                   value={body}
-                  onChange={(e) => !loading && setBody(e.target.value)}
+                  onChange={(e) => !bodyLoading && setBody(e.target.value)}
                 ></TextField>
               )}
               {(!edit || component?.props?.deleted) && (
