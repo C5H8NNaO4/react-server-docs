@@ -243,7 +243,7 @@ const Reactions = ({ data }) => {
       <ReactionPopper
         id={`reactions-${component?.key}`}
         anchor={anchor ? iconButtonRef.current : null}
-        onClose={() => setAnchor(null)}
+        onClose={() => setAnchor(false)}
         react={component?.props?.react}
       />
     </>
