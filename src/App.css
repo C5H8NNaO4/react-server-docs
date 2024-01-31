@@ -121,3 +121,7 @@ pre {
   margin: 0;
   font-size: 0.8rem;
 }
+
+.MuiCardHeader-action {
+  margin: 0px !important;
+}
