@@ -215,12 +215,12 @@ const Header = ({ pageSize }) => {
     <CardHeader
       title={
         <FlexBox>
-          <Typography>All Questions</Typography>
-          <Select value={pageSize}>
-            <MenuItem value={5}></MenuItem>
-            <MenuItem value={15}></MenuItem>
-            <MenuItem value={25}></MenuItem>
-            <MenuItem value={50}></MenuItem>
+          <Typography variant="h4">All Questions</Typography>
+          <Select value={pageSize} sx={{ ml: 'auto' }}>
+            <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={15}>15</MenuItem>
+            <MenuItem value={25}>25</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
           </Select>
         </FlexBox>
       }
