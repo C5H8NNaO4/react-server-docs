@@ -13,11 +13,13 @@ import {
   CardActions,
   Grid,
   LinearProgress,
+  MenuItem,
+  Select,
 } from '@mui/material';
 
 import { Markdown } from '../../components/Markdown';
 import { FlexBox } from '../../components/FlexBox';
-import { useComponent } from '@state-less/react-client';
+import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { calc } from '../../server-components/examples/VotingApp';
 import { Link as RouterLink } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
@@ -29,10 +31,14 @@ const PAGE_SRC = 'src/pages/States.md';
 
 export const CommunityPage = () => {
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useLocalStorage(
+    'forum-page-size',
+    PAGE_SIZE_POSTS
+  );
   const [component, { error, loading }] = useComponent(FORUM_KEY, {
     props: {
       page,
-      pageSize: PAGE_SIZE_POSTS,
+      pageSize,
       compound: false,
     },
   });
@@ -53,7 +59,7 @@ export const CommunityPage = () => {
         }}
       >
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
-        <Header />
+        <Header pageSize={pageSize} />
         <CardContent>
           {document.getElementById('progress') &&
             createPortal(
@@ -204,10 +210,20 @@ const Posts = ({ page, setPage, component }) => {
     </FlexBox>
   );
 };
-const Header = () => {
+const Header = ({ pageSize }) => {
   return (
     <CardHeader
-      title={'All questions'}
+      title={
+        <FlexBox>
+          <Typography>All Questions</Typography>
+          <Select value={pageSize}>
+            <MenuItem value={5}></MenuItem>
+            <MenuItem value={15}></MenuItem>
+            <MenuItem value={25}></MenuItem>
+            <MenuItem value={50}></MenuItem>
+          </Select>
+        </FlexBox>
+      }
       sx={{
         alignItems: 'center',
         flexWrap: 'wrap-reverse',
