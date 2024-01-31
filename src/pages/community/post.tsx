@@ -11,6 +11,9 @@ import {
   Alert,
   LinearProgress,
   IconButton,
+  Popper,
+  Popover,
+  ClickAwayListener,
 } from '@mui/material';
 
 import { Markdown } from '../../components/Markdown';
@@ -18,13 +21,22 @@ import { FlexBox } from '../../components/FlexBox';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { UpDownButtons } from '../../server-components/examples/VotingApp';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NewPost } from './newPost';
 import { NewPostButton } from '.';
 import { CommunityComments } from '../../server-components/examples/Comments';
 import { useSyncedState } from '../../lib/hooks';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
 import Visibility from '@mui/icons-material/Visibility';
+import Favorite from '@mui/icons-material/Favorite';
+import { AddCircleOutline } from '@mui/icons-material';
+
+const Icons = {
+  love: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>❤️</Box>,
+  laugh: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>😂</Box>,
+  'thumbs-up': () => <Box sx={{ fontSize: 18, ml: 0.5 }}>👍</Box>,
+  'thumbs-down': () => <Box sx={{ fontSize: 18, ml: 0.5 }}>👎</Box>,
+};
 
 export const PostsPage = (props) => {
   const params = useParams();
@@ -140,6 +152,7 @@ const Post = ({ id }) => {
             </CardContent>
           </Box>
         </FlexBox>
+
         {component?.props.tags?.length > 0 && (
           <CardContent sx={{ display: 'flex', gap: 1 }}>
             {component?.props.tags?.map((tag) => (
@@ -193,6 +206,82 @@ const Post = ({ id }) => {
   );
 };
 
+const Reactions = ({ data }) => {
+  const [component, { error, refetch }] = useComponent(data?.component, {
+    data,
+  });
+  const { voted, reactions } = component?.props || {};
+  const reactionKeys = Object.keys(component?.props?.reactions || {});
+  const [anchor, setAnchor] = useState(false);
+  const iconButtonRef = useRef(null);
+  return (
+    <>
+      {reactionKeys
+        .filter((key) => reactions[key] > 0 || voted === key)
+        .map((reaction) => {
+          const Icon = Icons[reaction];
+          return (
+            <Chip
+              icon={<Icon />}
+              color={voted === reaction ? 'success' : undefined}
+              disabled={voted !== null && voted !== reaction}
+              onClick={() => component?.props?.react(reaction)}
+              label={reactions[reaction] || '0'}
+            />
+          );
+        })}
+
+      {!voted && (
+        <IconButton
+          ref={iconButtonRef}
+          color={Boolean(anchor) ? 'success' : 'default'}
+          onClick={(e) => setAnchor(!anchor)}
+        >
+          {<AddCircleOutline />}
+        </IconButton>
+      )}
+      <ReactionPopper
+        id={`reactions-${component?.key}`}
+        anchor={anchor ? iconButtonRef.current : null}
+        onClose={() => setAnchor(null)}
+        react={component?.props?.react}
+      />
+    </>
+  );
+};
+
+const availableReactions = ['love', 'laugh', 'thumbs-up', 'thumbs-down'];
+const ReactionPopper = ({ anchor, id, onClose, react }) => {
+  return (
+    <Popover
+      id={id}
+      open={Boolean(anchor)}
+      anchorEl={anchor}
+      sx={{ zIndex: 1000000000 }}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+    >
+      <ClickAwayListener onClickAway={onClose}>
+        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
+          {availableReactions.map((reaction) => {
+            const Icon = Icons[reaction];
+            return (
+              <IconButton onClick={() => react(reaction)}>
+                {<Icon />}
+              </IconButton>
+            );
+          })}
+        </Box>
+      </ClickAwayListener>
+    </Popover>
+  );
+};
 const Answer = ({ answer }) => {
   const [component, { error, refetch }] = useComponent(answer?.component, {
     data: answer,
@@ -261,13 +350,19 @@ const Answer = ({ answer }) => {
           >
             {!edit ? 'Edit' : 'Ok'}
           </Button>
+          <Reactions data={component?.children?.[2]} />
         </CardActions>
       )}
-
+      {!component?.props?.canDelete && (
+        <CardActions>
+          <Reactions data={component?.children?.[2]} />
+        </CardActions>
+      )}
       <CommunityComments id={answer?.children[1]?.component} />
     </Card>
   );
 };
+
 const ComposeAnswer = ({ id }) => {
   const [component, { error, loading }] = useComponent(id);
   const [body, setBody] = useState('');
