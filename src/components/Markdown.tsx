@@ -90,6 +90,7 @@ export const Markdown = ({
       className={clsx('markdown', {
         center,
         disablePadding,
+        preview,
       })}
       style={{
         minHeight: optimisticHeight,

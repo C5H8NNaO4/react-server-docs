@@ -59,7 +59,7 @@ export const CommunityPage = () => {
         }}
       >
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
-        <Header pageSize={pageSize} />
+        <Header pageSize={pageSize} setPageSize={setPageSize} />
         <CardContent>
           {document.getElementById('progress') &&
             createPortal(
@@ -210,13 +210,18 @@ const Posts = ({ page, setPage, component }) => {
     </FlexBox>
   );
 };
-const Header = ({ pageSize }) => {
+const Header = ({ pageSize, setPageSize }) => {
   return (
     <CardHeader
       title={
         <FlexBox>
           <Typography variant="h4">All Questions</Typography>
-          <Select value={pageSize} sx={{ ml: 'auto' }}>
+          <Select
+            size="small"
+            value={pageSize}
+            onChange={(e) => setPageSize(e.target.value)}
+            sx={{ ml: 'auto' }}
+          >
             <MenuItem value={5}>5</MenuItem>
             <MenuItem value={15}>15</MenuItem>
             <MenuItem value={25}>25</MenuItem>
