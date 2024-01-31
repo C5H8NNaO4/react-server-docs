@@ -214,13 +214,13 @@ const Header = ({ pageSize, setPageSize }) => {
   return (
     <CardHeader
       title={
-        <FlexBox>
-          <Typography variant="h4">All Questions</Typography>
+        <FlexBox sx={{ alignItems: 'center' }}>
+          <Typography variant="h5">All Questions</Typography>
           <Select
             size="small"
             value={pageSize}
             onChange={(e) => setPageSize(e.target.value)}
-            sx={{ ml: 'auto' }}
+            sx={{ ml: 'auto', mr: 4 }}
           >
             <MenuItem value={5}>5</MenuItem>
             <MenuItem value={15}>15</MenuItem>
