@@ -220,7 +220,7 @@ const Header = ({ pageSize, setPageSize }) => {
             size="small"
             value={pageSize}
             onChange={(e) => setPageSize(e.target.value)}
-            sx={{ ml: 'auto', mr: 4 }}
+            sx={{ ml: 'auto', mr: 2 }}
           >
             <MenuItem value={5}>5</MenuItem>
             <MenuItem value={15}>15</MenuItem>
