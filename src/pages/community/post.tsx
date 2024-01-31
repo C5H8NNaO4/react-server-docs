@@ -252,7 +252,7 @@ const Reactions = ({ data }) => {
 
 const availableReactions = ['love', 'laugh', 'thumbs-up', 'thumbs-down'];
 const ReactionPopper = ({ anchor, id, onClose, react }) => {
-  return (
+  return !anchor ? null : (
     <Popover
       id={id}
       open={Boolean(anchor)}
