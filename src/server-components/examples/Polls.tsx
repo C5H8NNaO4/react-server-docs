@@ -49,7 +49,11 @@ export const Poll = ({
                 primary={
                   <FlexBox sx={{ gap: 1, alignItems: 'center' }}>
                     <Chip
-                      color={max == value ? 'success' : undefined}
+                      color={
+                        max === component?.props?.votes[i]
+                          ? 'success'
+                          : undefined
+                      }
                       size="small"
                       label={<b>{component?.props?.votes[i]}</b>}
                     ></Chip>
