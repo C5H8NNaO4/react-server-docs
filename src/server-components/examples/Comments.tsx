@@ -15,6 +15,7 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemIcon,
+  Paper,
 } from '@mui/material';
 import { authContext, useComponent } from '@state-less/react-client';
 import { useContext, useMemo, useState } from 'react';
@@ -123,8 +124,7 @@ export const Comments = ({
   const [visible, setVisible] = useState(false);
   // return <>{JSON.stringify(component)}</>;
   return (
-    <Card>
-      {title && <CardHeader title={title} />}
+    <Box>
       {loading ||
         (featuresLoading && <Alert severity="info">Loading...</Alert>)}
       {error && <Alert severity="error">{error.message}</Alert>}
@@ -175,7 +175,7 @@ export const Comments = ({
           </span>
         </Tooltip>
       </CardActions>
-    </Card>
+    </Box>
   );
 };
 
