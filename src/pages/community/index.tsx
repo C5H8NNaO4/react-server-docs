@@ -125,21 +125,33 @@ const Post = (post) => {
   const nAnswers = post.children.filter((c) => c?.props?.body)?.length;
   return (
     <Card
+      square
       sx={{
         opacity: post.props.deleted ? 0.9 : 1,
       }}
     >
       <Grid container>
-        <Box
-          sx={{
-            width: '2px',
-            backgroundColor: post.props.deleted
-              ? 'error.main'
-              : post.props.approved
-              ? 'success.main'
-              : 'warning.main',
-          }}
-        ></Box>
+        {post?.props?.canDelete && (
+          <Box
+            sx={{
+              width: '2px',
+              backgroundColor: post.props.deleted
+                ? 'error.main'
+                : post.props.approved
+                ? 'success.main'
+                : 'warning.main',
+            }}
+          ></Box>
+        )}
+        {post?.props?.sticky && (
+          <Box
+            sx={{
+              width: '0px',
+              borderLeft: '4px dashed',
+              borderColor: 'warning.main',
+            }}
+          ></Box>
+        )}
         <Grid item>
           <FlexBox sx={{ flexDirection: 'column', gap: 1 }}>
             <CardContent
@@ -202,11 +214,21 @@ const Post = (post) => {
 };
 
 const Posts = ({ page, setPage, component }) => {
+  const sticky = component?.children?.filter((post) => post.props.sticky) || [];
+  const nonSticky =
+    component?.children?.filter((post) => !post.props.sticky) || [];
   return (
-    <FlexBox sx={{ flexDirection: 'column', gap: 1 }}>
-      {component?.children?.map((post) => {
-        return <Post {...post} />;
-      })}
+    <FlexBox sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+        {sticky.map((post) => {
+          return <Post {...post} />;
+        })}
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+        {nonSticky.map((post) => {
+          return <Post {...post} />;
+        })}
+      </Box>
     </FlexBox>
   );
 };

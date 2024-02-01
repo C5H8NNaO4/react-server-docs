@@ -29,7 +29,12 @@ import { useSyncedState } from '../../lib/hooks';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
 import Visibility from '@mui/icons-material/Visibility';
 import Favorite from '@mui/icons-material/Favorite';
-import { AddCircleOutline } from '@mui/icons-material';
+import {
+  AddCircleOutline,
+  Pin,
+  PushPin,
+  PushPinOutlined,
+} from '@mui/icons-material';
 
 const Icons = {
   love: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>❤️</Box>,
@@ -181,6 +186,16 @@ const Post = ({ id }) => {
                 Approve
               </Button>
             )}
+          {component?.props?.canDelete && !component?.props?.deleted && (
+            <Button
+              disabled={component?.props?.deleted}
+              color={component?.props?.sticky ? 'success' : undefined}
+              onClick={() => component.props.toggleSticky()}
+            >
+              {!component?.props?.sticky ? <PushPinOutlined /> : <PushPin />}
+              Sticky
+            </Button>
+          )}
           {component?.props?.canDelete && (
             <Button
               disabled={component?.props?.deleted}
@@ -230,7 +245,7 @@ const Reactions = ({ data }) => {
             />
           );
         })}
-
+      {JSON.stringify(voted)}
       {!voted && (
         <IconButton
           ref={iconButtonRef}
@@ -350,6 +365,7 @@ const Answer = ({ answer }) => {
           >
             {!edit ? 'Edit' : 'Ok'}
           </Button>
+
           <Reactions data={component?.children?.[2]} />
         </CardActions>
       )}
