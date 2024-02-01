@@ -68,7 +68,7 @@ export const Poll = ({
                     component?.props?.voted > -1 &&
                     component?.props?.voted !== i
                   }
-                  color={component.props.voted === i ? 'warning' : 'default'}
+                  color={component.props.voted === i ? 'error' : 'default'}
                 >
                   <HeartIcon />
                 </IconButton>
