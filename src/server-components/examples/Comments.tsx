@@ -202,7 +202,7 @@ const Comment = ({ comment, canDelete, wilson }) => {
           data={component?.children[0]}
           wilson={wilson}
         />
-        <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
+        <CardContent sx={{ display: 'flex', flexDirection: 'column', py: 0 }}>
           <Markdown>{props?.message}</Markdown>
         </CardContent>
       </Box>
