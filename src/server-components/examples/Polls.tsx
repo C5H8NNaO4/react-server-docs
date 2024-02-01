@@ -7,10 +7,12 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  Chip,
 } from '@mui/material';
 import { useComponent } from '@state-less/react-client';
 import HeartIcon from '@mui/icons-material/Favorite';
 import { ReactNode } from 'react';
+import { FlexBox } from '../../components/FlexBox';
 
 export const Poll = ({
   id = 'poll',
@@ -44,10 +46,10 @@ export const Poll = ({
               <ListItemText
                 sx={{ zIndex: 0 }}
                 primary={
-                  <span>
-                    <b>{component?.props?.votes[i]}</b>
-                    &nbsp;-&nbsp;{value}
-                  </span>
+                  <FlexBox sx={{ gap: 1 }}>
+                    <Chip label={<b>{component?.props?.votes[i]}</b>}></Chip>
+                    <Box>{value}</Box>
+                  </FlexBox>
                 }
               />
               <ListItemSecondaryAction>
