@@ -46,8 +46,11 @@ export const Poll = ({
               <ListItemText
                 sx={{ zIndex: 0 }}
                 primary={
-                  <FlexBox sx={{ gap: 1 }}>
-                    <Chip label={<b>{component?.props?.votes[i]}</b>}></Chip>
+                  <FlexBox sx={{ gap: 1, alignItems: 'center' }}>
+                    <Chip
+                      size="small"
+                      label={<b>{component?.props?.votes[i]}</b>}
+                    ></Chip>
                     <Box>{value}</Box>
                   </FlexBox>
                 }
