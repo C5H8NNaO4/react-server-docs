@@ -122,7 +122,9 @@ const Post = (post) => {
     [upvotes, downvotes, score, wilson, random]
   );
 
-  const nAnswers = post.children.filter((c) => c?.props?.body)?.length;
+  const nAnswers = post.children.filter(
+    (c) => c?.props?.body && !c?.props?.deleted
+  )?.length;
   return (
     <Card
       square
