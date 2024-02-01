@@ -120,6 +120,7 @@ export const Comments = ({
   const canComment = component?.props?.permissions.comment;
   const canDelete = component?.props?.permissions.delete;
   const { children } = component || {};
+  const [visible, setVisible] = useState(false);
   // return <>{JSON.stringify(component)}</>;
   return (
     <Card>
@@ -141,15 +142,17 @@ export const Comments = ({
         );
       })}
 
-      <CardContent>
-        <TextField
-          multiline
-          rows={3}
-          onChange={(e) => setComment(e.target.value)}
-          fullWidth
-          value={comment}
-        />
-      </CardContent>
+      {visible && (
+        <CardContent>
+          <TextField
+            multiline
+            rows={3}
+            onChange={(e) => setComment(e.target.value)}
+            fullWidth
+            value={comment}
+          />
+        </CardContent>
+      )}
       <CardActions>
         <Tooltip
           title={canComment ? '' : 'You need to be logged in to comment.'}
@@ -157,12 +160,17 @@ export const Comments = ({
           <span>
             <Button
               onClick={() => {
-                component?.props?.comment(comment);
-                setComment('');
+                if (!visible) {
+                  setVisible(true);
+                } else {
+                  component?.props?.comment(comment);
+                  setComment('');
+                  setVisible(false);
+                }
               }}
               disabled={!canComment}
             >
-              Add
+              {visible ? 'Post' : 'Add Comment'}
             </Button>
           </span>
         </Tooltip>
