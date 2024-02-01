@@ -132,15 +132,17 @@ export const Comments = ({
         <Alert severity="info">You need to be logged in to comment.</Alert>
       )}
 
-      {(component?.children || []).map((child, index) => {
-        return (
-          <Comment
-            comment={child}
-            canDelete={canDelete}
-            wilson={features?.props?.wilson}
-          />
-        );
-      })}
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        {(component?.children || []).map((child, index) => {
+          return (
+            <Comment
+              comment={child}
+              canDelete={canDelete}
+              wilson={features?.props?.wilson}
+            />
+          );
+        })}
+      </Box>
 
       {visible && (
         <CardContent>
@@ -210,7 +212,7 @@ const Comment = ({ comment, canDelete, wilson }) => {
             pt: 0,
           }}
         >
-          <Markdown disablePadding>{props?.message}</Markdown>
+          <Markdown>{props?.message}</Markdown>
         </CardContent>
       </Box>
       <CardActions>
