@@ -195,15 +195,22 @@ const Comment = ({ comment, canDelete, wilson }) => {
   const Icon = StrategyIcons[props?.identity?.strategy];
 
   return (
-    <Card sx={{ m: 1 }}>
+    <Card>
       <Box sx={{ display: 'flex', ml: 1, mt: 1 }}>
         <UpDownButtons
           id={component?.children[0].key}
           data={component?.children[0]}
           wilson={wilson}
         />
-        <CardContent sx={{ display: 'flex', flexDirection: 'column', py: 0 }}>
-          <Markdown>{props?.message}</Markdown>
+        <CardContent
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            pb: '0px !important',
+            pt: 0,
+          }}
+        >
+          <Markdown disablePadding>{props?.message}</Markdown>
         </CardContent>
       </Box>
       <CardActions>
