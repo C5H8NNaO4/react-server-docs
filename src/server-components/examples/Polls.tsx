@@ -43,8 +43,12 @@ export const Poll = ({
               />
               <ListItemText
                 sx={{ zIndex: 0 }}
-                primary={value}
-                secondary={component?.props?.votes[i]}
+                primary={
+                  <span>
+                    <b>{component?.props?.votes[i]}</b>
+                    {value}
+                  </span>
+                }
               />
               <ListItemSecondaryAction>
                 <IconButton
