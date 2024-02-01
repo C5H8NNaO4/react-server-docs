@@ -46,7 +46,7 @@ export const Poll = ({
                 primary={
                   <span>
                     <b>{component?.props?.votes[i]}</b>
-                    {value}
+                    &nbsp;-&nbsp;{value}
                   </span>
                 }
               />
