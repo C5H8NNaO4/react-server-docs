@@ -86,11 +86,13 @@ export const UpDownButtons = ({
         color={voted === 1 ? 'success' : 'default'}
         onClick={() => component?.props.upvote()}
         disabled={voted === -1 && policies.includes('single-vote')}
+        sx={{ pb: 0 }}
       >
         <KeyboardArrowUpIcon />
       </IconButton>
       {loading ? <CircularProgress size="1rem"></CircularProgress> : sum}
       <IconButton
+        sx={{ pt: 0 }}
         color={voted === -1 ? 'error' : 'default'}
         onClick={() => component?.props.downvote()}
         disabled={voted === 1 && policies.includes('single-vote')}
