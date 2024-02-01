@@ -23,7 +23,7 @@ export const Poll = ({
 }) => {
   const [component, { error, loading }] = useComponent(id, {});
   const sum = component?.props?.votes.reduce((a, b) => a + b, 0);
-  const max = component?.props?.votes?.reduce((a, b) => Math.max(a, b));
+  const max = component?.props?.votes?.reduce((a, b) => Math.max(a, b), 0);
   return (
     <Card>
       {loading && <Alert severity="info">Loading...</Alert>}
@@ -49,7 +49,7 @@ export const Poll = ({
                 primary={
                   <FlexBox sx={{ gap: 1, alignItems: 'center' }}>
                     <Chip
-                      color={max === value ? 'success' : undefined}
+                      color={max == value ? 'success' : undefined}
                       size="small"
                       label={<b>{component?.props?.votes[i]}</b>}
                     ></Chip>
