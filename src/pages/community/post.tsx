@@ -245,7 +245,7 @@ const Reactions = ({ data }) => {
             />
           );
         })}
-      {JSON.stringify(voted)}
+
       {!voted && (
         <IconButton
           ref={iconButtonRef}
