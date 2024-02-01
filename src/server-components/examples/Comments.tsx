@@ -124,7 +124,7 @@ export const Comments = ({
   const [visible, setVisible] = useState(false);
   // return <>{JSON.stringify(component)}</>;
   return (
-    <Box>
+    <Paper square>
       {loading ||
         (featuresLoading && <Alert severity="info">Loading...</Alert>)}
       {error && <Alert severity="error">{error.message}</Alert>}
@@ -175,7 +175,7 @@ export const Comments = ({
           </span>
         </Tooltip>
       </CardActions>
-    </Box>
+    </Paper>
   );
 };
 
