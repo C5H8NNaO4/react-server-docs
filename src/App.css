@@ -55,6 +55,15 @@ h2 {
   margin-top: 8px;
   margin-bottom: 8px;
 }
+
+h1,
+h2,
+h3,
+h4,
+p,
+li {
+  color: #333333;
+}
 /* Apply monospace Roboto font to pre code elements */
 pre code {
   font-family: 'Roboto Mono', monospace;
