@@ -22,34 +22,34 @@ body {
   width: 100%;
 }
 
-h1 {
+.markdown.landing h1 {
   font-size: 5em;
 }
 
-h2 {
+.markdown.landing h2 {
   font-size: 4em;
 }
 
-h3 {
+.markdown.landing h3 {
   font-size: 3em;
 }
 
-h4 {
+.markdown.landing h4 {
   font-size: 2em;
 }
-p {
+.markdown.landing p {
   font-size: 1.3em;
 }
 
-li div span {
+.markdown.landing li div span {
   font-size: 1.5rem !important;
 }
 
-li div li div span {
+.markdown.landing li div li div span {
   font-size: 1.2rem !important;
 }
 
-#react-server {
+.markdown.landing #react-server {
   font-size: 7em;
 }
 

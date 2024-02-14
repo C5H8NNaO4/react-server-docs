@@ -36,6 +36,7 @@ type MarkdownProps = {
   small?: boolean;
   preview?: boolean;
   center?: boolean;
+  landing?: boolean;
 };
 
 mermaid.initialize({
@@ -60,6 +61,7 @@ export const Markdown = ({
   small = false,
   preview = false,
   center = true,
+  landing = false,
 }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(children || '');
   const { state, dispatch } = useContext(stateContext);
@@ -97,6 +99,7 @@ export const Markdown = ({
         center,
         disablePadding,
         preview,
+        landing,
       })}
       style={{
         minHeight: optimisticHeight,

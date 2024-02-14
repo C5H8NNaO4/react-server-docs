@@ -42,6 +42,7 @@ export const IndexPage = () => {
                 <Markdown
                   src={getRawPath('src/pages/index/introduction.md')}
                   optimisticHeight="278px"
+                  landing
                 >
                   Loading...
                 </Markdown>
@@ -50,6 +51,7 @@ export const IndexPage = () => {
             <Markdown
               src={getRawPath('src/pages/index.md')}
               optimisticHeight="1235px"
+              landing
             >
               Loading...
             </Markdown>
