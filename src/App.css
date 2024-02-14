@@ -40,6 +40,15 @@ h4 {
 p {
   font-size: 1.3em;
 }
+
+li div span {
+  font-size: 1.5rem !important;
+}
+
+li div li div span {
+  font-size: 1.2rem !important;
+}
+
 #react-server {
   font-size: 7em;
 }
