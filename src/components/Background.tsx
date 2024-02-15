@@ -33,7 +33,7 @@ type VantaBackgroudProps = {
   enabled?: boolean;
   light: any;
   dark: any;
-  bg?: boolean;
+  bg?: number;
 };
 
 export const VantaBackground: FunctionComponent<
@@ -115,8 +115,7 @@ export const VantaBackground: FunctionComponent<
   return (
     <div
       id="bg"
-      className={clsx(theme.palette.mode, 'fh', {
-        bg,
+      className={clsx(theme.palette.mode, 'fh', `bg${bg}`, {
         animated: enabled,
       })}
       style={{ overflow: 'hidden' }}

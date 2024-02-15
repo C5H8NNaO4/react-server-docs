@@ -15,9 +15,7 @@ import { Actions, stateContext } from '../provider/StateProvider';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { authContext } from '@state-less/react-client';
-import {
-  GoogleLoginButton,
-} from './LoggedInGoogleButton';
+import { GoogleLoginButton } from './LoggedInGoogleButton';
 import { ConnectionCounter } from '../server-components/examples/ConnectionCounter';
 import { navigation } from '../routes';
 
@@ -44,7 +42,11 @@ export default function ButtonAppBar() {
         </IconButton>
         {!lessThanSmall && (
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <img src="/favicon.svg" style={{ width: 24, height: 24 }} loading='lazy'/>
+            <img
+              src="/favicon.svg"
+              style={{ width: 24, height: 24 }}
+              loading="lazy"
+            />
             <Link component={RouterLink} to="/" sx={{ color: 'white' }}>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 {navigation.find((nav) => nav[0] === pathname)?.[3] ||
@@ -107,17 +109,19 @@ export default function ButtonAppBar() {
             <ConnectionCounter />
             <IconButton
               color={
-                state.animatedBackground == 2
-                  ? 'secondary'
-                  : state.animatedBackground == 1
+                state.animatedBackground == 1
                   ? 'info'
+                  : state.animatedBackground == 2
+                  ? 'warning'
+                  : state.animatedBackground === 3
+                  ? 'success'
                   : 'default'
               }
               onClick={() => {
                 dispatch({ type: Actions.TOGGLE_ANIMATED_BACKGROUND });
                 localStorage.setItem(
                   'animatedBackgroundUser',
-                  (((Number(state.animatedBackground) || 0) + 1) % 3).toString()
+                  (((Number(state.animatedBackground) || 0) + 1) % 4).toString()
                 );
               }}
             >

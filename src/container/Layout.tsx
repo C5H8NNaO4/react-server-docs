@@ -135,7 +135,6 @@ export const Layout = () => {
   }, [features?.props?.animated]);
 
   useEffect(() => {
-    console.log('INCLUDES ', _animated, search);
     if (_animated === 0 && search.includes('bg=1')) {
       dispatch({
         type: Actions.SET_BG,
@@ -166,7 +165,7 @@ export const Layout = () => {
       light={SunnyBlueClouds}
       dark={DarkWaves}
       enabled={_animated === 2}
-      bg={_animated > 0}
+      bg={_animated}
     >
       <Box
         key={pathname}

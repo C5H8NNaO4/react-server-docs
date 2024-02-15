@@ -69,7 +69,7 @@ const reducer = (state: State, action: Action) => {
     case Actions.TOGGLE_ANIMATED_BACKGROUND:
       return {
         ...state,
-        animatedBackground: (~~state.animatedBackground + 1) % 3,
+        animatedBackground: (~~state.animatedBackground + 1) % 4,
       };
     case Actions.SHOW_MESSAGE:
       return {
