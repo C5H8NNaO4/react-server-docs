@@ -39,6 +39,7 @@ const initialState: State = {
 export enum Actions {
   TOGGLE_MENU,
   SET_BG,
+  CHOOSE_BG,
   TOGGLE_ANIMATED_BACKGROUND,
   SHOW_MESSAGE,
   HIDE_MESSAGE,
@@ -72,6 +73,11 @@ const reducer = (state: State, action: Action) => {
       return {
         ...state,
         animatedBackground: (~~state.animatedBackground + 1) % 4,
+      };
+    case Actions.CHOOSE_BG:
+      return {
+        ...state,
+        animatedBackground: action.value,
       };
     case Actions.SHOW_MESSAGE:
       return {

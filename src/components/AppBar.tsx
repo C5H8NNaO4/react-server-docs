@@ -18,6 +18,7 @@ import { authContext } from '@state-less/react-client';
 import { GoogleLoginButton } from './LoggedInGoogleButton';
 import { ConnectionCounter } from '../server-components/examples/ConnectionCounter';
 import { navigation } from '../routes';
+import { BackgroundButton } from './BackgroundButton';
 
 export default function ButtonAppBar() {
   const { state, dispatch } = React.useContext(stateContext);
@@ -107,26 +108,7 @@ export default function ButtonAppBar() {
         {!lessThanSmall && (
           <Box sx={{ display: 'flex' }}>
             <ConnectionCounter />
-            <IconButton
-              color={
-                state.animatedBackground == 1
-                  ? 'info'
-                  : state.animatedBackground == 2
-                  ? 'warning'
-                  : state.animatedBackground === 3
-                  ? 'success'
-                  : 'default'
-              }
-              onClick={() => {
-                dispatch({ type: Actions.TOGGLE_ANIMATED_BACKGROUND });
-                localStorage.setItem(
-                  'animatedBackgroundUser',
-                  (((Number(state.animatedBackground) || 0) + 1) % 4).toString()
-                );
-              }}
-            >
-              <AutoFixHighIcon />
-            </IconButton>
+            <BackgroundButton />
             <GoogleLoginButton />
           </Box>
         )}

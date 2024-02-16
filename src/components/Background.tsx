@@ -34,6 +34,7 @@ type VantaBackgroudProps = {
   light: any;
   dark: any;
   bg?: number;
+  el?: string;
 };
 
 export const VantaBackground: FunctionComponent<
@@ -44,13 +45,14 @@ export const VantaBackground: FunctionComponent<
   light = SunnyBlueClouds,
   dark = DarkFog,
   bg,
+  el = '#bg',
 }) => {
   const instance = useRef<any>();
   const theme = useTheme();
   const { type, ...rest } = theme.palette.mode === 'light' ? light : dark;
 
   const sharedProps = {
-    el: '#bg',
+    el: el,
     mouseControls: false,
     touchControls: false,
     gyroControls: false,
@@ -68,6 +70,10 @@ export const VantaBackground: FunctionComponent<
 
   const render = useMemo(
     () => () => {
+      if (!document.querySelector(el)) return;
+
+      console.log('RENDERING VANTA', el, enabled);
+
       const fn = window.VANTA[type] || window.VANTA.CLOUDS;
       if (enabled && !instance.current) {
         instance.current = fn({
@@ -83,7 +89,6 @@ export const VantaBackground: FunctionComponent<
   );
 
   useEffect(() => {
-    console.log('VANTA', window.VANTA, enabled, instance.current);
     if (!window.VANTA) return;
 
     render();
@@ -114,11 +119,16 @@ export const VantaBackground: FunctionComponent<
 
   return (
     <div
-      id="bg"
+      id={el.replace('#', '')}
       className={clsx(theme.palette.mode, 'fh', `bg${bg}`, {
         animated: enabled,
       })}
-      style={{ overflow: 'hidden' }}
+      style={{
+        overflow: 'hidden',
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+      }}
     >
       {children}
     </div>
@@ -132,6 +142,8 @@ export const SunnyBlueClouds = {
   sunColor: 0xdc7412,
   sunlightColor: 0xe17833,
   speed: 1,
+  width: '100%',
+  height: '100%',
 };
 
 export const SunsetDarkClouds = {

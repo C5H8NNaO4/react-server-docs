@@ -96,13 +96,38 @@ code {
   font-family: 'Roboto Mono', monospace;
 }
 
-#bg.bg1 {
+.bg1 {
   background: url('/bg-3.webp');
   background-size: cover;
 }
 
-#bg.bg3 {
+.bg3 {
   background: url('/bg.webp');
+  background-size: cover;
+}
+
+.bg4 {
+  background: url('/bg-1.webp');
+  background-size: cover;
+}
+
+.bg5 {
+  background: url('/bg-2.webp');
+  background-size: cover;
+}
+
+.bg6 {
+  background: url('/bg-4.webp');
+  background-size: cover;
+}
+
+.bg7 {
+  background: url('/bg-5.webp');
+  background-size: cover;
+}
+
+.bg8 {
+  background: url('/bg-6.webp');
   background-size: cover;
 }
 
@@ -116,7 +141,12 @@ pre {
 }
 .light.bg1 .MuiPaper-root:not(.opaque),
 .light.bg2 .MuiPaper-root:not(.opaque),
-.light.bg3 .MuiPaper-root:not(.opaque) {
+.light.bg3 .MuiPaper-root:not(.opaque),
+.light.bg4 .MuiPaper-root:not(.opaque),
+.light.bg5 .MuiPaper-root:not(.opaque),
+.light.bg6 .MuiPaper-root:not(.opaque),
+.light.bg7 .MuiPaper-root:not(.opaque),
+.light.bg8 .MuiPaper-root:not(.opaque) {
   /* background-color: #1E1F27AA !important; */
   background-color: #ffffff33;
   backdrop-filter: blur(6px);
@@ -124,6 +154,11 @@ pre {
 
 #bg {
   z-index: 0;
+}
+
+.vanta-canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .recharts-tooltip-wrapper:focus {
