@@ -17,14 +17,14 @@ type HistoryAction = {
   reverse: () => void;
 };
 
+const params = new URLSearchParams(window?.location?.search);
+const bg = Number(params.get('bg')) % 4;
+
 const initialState: State = {
   menuOpen: false,
   animatedBackground: localStorage.getItem('animatedBackgroundUser')
     ? Number(localStorage.getItem('animatedBackgroundUser'))
-    : Number(localStorage.getItem('animatedBackground')) ||
-      window.location?.search?.includes('bg=1')
-    ? 1
-    : 0,
+    : Number(localStorage.getItem('animatedBackground')) || bg,
   messages: [] as any[],
   alerts: {
     info: [],
