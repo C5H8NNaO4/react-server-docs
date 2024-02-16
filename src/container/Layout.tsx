@@ -134,18 +134,11 @@ export const Layout = () => {
     }
   }, [features?.props?.animated]);
 
-  useEffect(() => {
-    if (_animated === 0 && search.includes('bg=1')) {
-      dispatch({
-        type: Actions.SET_BG,
-      });
-    }
-  }, [search, pathname, _animated]);
-
   const [cookieConsent, setCookieConsent] = useLocalStorage<boolean | null>(
     'cookie-consent',
     null
   );
+
   useEffect(() => {
     if (cookieConsent && 'gtag' in window) {
       gtag('event', 'load', { event_category: 'page' });
