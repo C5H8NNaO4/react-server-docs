@@ -22,7 +22,9 @@ const initialState: State = {
   animatedBackground: localStorage.getItem('animatedBackgroundUser')
     ? Number(localStorage.getItem('animatedBackgroundUser'))
     : Number(localStorage.getItem('animatedBackground')) ||
-      window.location?.search?.includes('bg=1'),
+      window.location?.search?.includes('bg=1')
+    ? 1
+    : 0,
   messages: [] as any[],
   alerts: {
     info: [],
