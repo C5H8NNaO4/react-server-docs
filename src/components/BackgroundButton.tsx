@@ -8,8 +8,8 @@ import {
   Paper,
   Popover,
 } from '@mui/material';
-import AutoFixHigh from '@mui/icons-material/AutoFixHigh';
 import { SunnyBlueClouds, VantaBackground } from './Background';
+import Wallpaper from '@mui/icons-material/Wallpaper';
 
 export const BackgroundButton = () => {
   const { state } = useContext(stateContext);
@@ -34,7 +34,7 @@ export const BackgroundButton = () => {
           }
         }}
       >
-        <AutoFixHigh />
+        <Wallpaper />
       </IconButton>
       <BackgroundMenu anchor={anchor} setAnchor={setAnchor} />
     </>
