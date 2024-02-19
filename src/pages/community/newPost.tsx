@@ -17,6 +17,7 @@ import { useRef, useState } from 'react';
 import { FlexBox } from '../../components/FlexBox';
 import { useComponent } from '@state-less/react-client';
 import { useNavigate } from 'react-router';
+import { FORUM_KEY } from '../../lib/config';
 
 export const Tags = ({ onChange }) => {
   const [tags, setTags] = useState<Array<string>>([]);
@@ -70,7 +71,7 @@ export const Tags = ({ onChange }) => {
 export const NewPost = () => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [component, { error, loading }] = useComponent('community-forum');
+  const [component, { error, loading }] = useComponent(FORUM_KEY);
   const [tags, setTags] = useState([]);
   const navigate = useNavigate();
   return (
@@ -124,10 +125,8 @@ export const NewPost = () => {
                   tags,
                 });
 
-                console.log('POST', post);
-
                 setTimeout(() => {
-                  navigate(`/community/post-${post.id}`);
+                  navigate(`/post-${post.id}`);
                 }, 250);
               }}
             >
