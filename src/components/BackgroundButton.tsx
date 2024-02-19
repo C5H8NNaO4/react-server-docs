@@ -17,15 +17,7 @@ export const BackgroundButton = () => {
   return (
     <>
       <IconButton
-        color={
-          state.animatedBackground == 1
-            ? 'info'
-            : state.animatedBackground == 2
-            ? 'warning'
-            : state.animatedBackground === 3
-            ? 'success'
-            : 'default'
-        }
+        color={state.animatedBackground > 0 ? 'info' : 'inherit'}
         onClick={(e) => {
           if (anchor) {
             setAnchor(null);
