@@ -12,12 +12,15 @@ import { Layout } from './container/Layout';
 import ScrollToTop from './components/ScrollToTop';
 import { AuthProvider, useLocalStorage } from '@state-less/react-client';
 import { Helmet } from 'react-helmet';
-import { USE_PROD_CLIENT } from './lib/config';
+import { SL_DOMAIN, USE_PROD_CLIENT } from './lib/config';
 
 function App() {
   const [cookieConsent] = useLocalStorage('cookie-consent', null);
   return (
     <div className="App">
+      <Helmet>
+        <link rel="canonical" href={`https://${SL_DOMAIN}`} />
+      </Helmet>
       {cookieConsent === true && (
         <Helmet>
           <script src="https://www.googletagmanager.com/gtag/js?id=G-C3F4656WLD"></script>
