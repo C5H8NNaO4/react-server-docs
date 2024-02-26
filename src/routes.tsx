@@ -30,6 +30,20 @@ import InstallDesktopIcon from '@mui/icons-material/InstallDesktop';
 import StorageIcon from '@mui/icons-material/Storage';
 import AppsIcon from '@mui/icons-material/Apps';
 import ForumIcon from '@mui/icons-material/Forum';
+import ChecklistIcon from '@mui/icons-material/Checklist';
+import PhishingIcon from '@mui/icons-material/Phishing';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import StoreIcon from '@mui/icons-material/Store';
+import AdjustIcon from '@mui/icons-material/Adjust';
+import LockIcon from '@mui/icons-material/Lock';
+import CodeIcon from '@mui/icons-material/Code';
+import FlashOnIcon from '@mui/icons-material/FlashOn';
+import CommentIcon from '@mui/icons-material/Comment';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import LiveHelpIcon from '@mui/icons-material/LiveHelp';
+import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
+import ExtensionIcon from '@mui/icons-material/Extension';
+import GroupsIcon from '@mui/icons-material/Groups';
 import { CommunityPage } from './pages/community';
 import { PostsPage } from './pages/community/post';
 import { SL_DOMAIN } from './lib/config';
@@ -51,14 +65,6 @@ const docsNavigation: any[] = [
     null,
     ({ color }) => <InstallDesktopIcon color={color} />,
   ],
-
-  [
-    '/states',
-    'States',
-    'src/pages/States.md',
-    null,
-    ({ color }) => <StorageIcon color={color} />,
-  ],
   [
     '/components',
     'Components',
@@ -79,17 +85,52 @@ const docsNavigation: any[] = [
       />
     ),
   ],
-  ['/react-server/hooks', 'Hooks', 'src/pages/react-server/hooks.md'],
-  ['/stores', 'Stores', 'src/pages/Stores.md'],
-  ['/server', 'Server', 'src/playground/Server.md'],
-  ['/authentication', 'Authentication', 'src/pages/Authentication.md'],
-  ['/SSR', 'SSR', 'src/examples/SSR.md'],
-  ['/lists', 'Lists', 'src/pages/lists.md', 'Lists'],
-  ['/lists/analytics', 'Analytics', 'src/pages/lists.md', 'Analytics'],
-  ['/lists/about', 'About Lists', 'src/lists/about.md', 'Lists'],
-  ['/examples', 'Examples', 'src/examples'],
-  ['/examples/comments', 'Comments', 'src/examples/comments.md'],
-  ['/examples/votings', 'Voting', 'src/examples/voting.md'],
+  [
+    '/react-server/states',
+    'States',
+    'src/pages/States.md',
+    null,
+    ({ color }) => <AdjustIcon color={color} />,
+  ],
+  [
+    '/react-server/hooks',
+    'Hooks',
+    'src/pages/react-server/hooks.md',
+    null,
+    PhishingIcon,
+  ],
+  [
+    'https://github.com/state-less/clean-starter/',
+    'Starter',
+    null,
+    null,
+    GitHubIcon,
+  ],
+  ['/stores', 'Stores', 'src/pages/Stores.md', null, StoreIcon],
+  ['/server', 'Server', 'src/playground/Server.md', null, StorageIcon],
+  [
+    '/authentication',
+    'Authentication',
+    'src/pages/Authentication.md',
+    null,
+    LockIcon,
+  ],
+  ['/SSR', 'SSR', 'src/examples/SSR.md', null, FlashOnIcon],
+  ['/examples', 'Examples', 'src/examples', null, CodeIcon],
+  [
+    '/examples/comments',
+    'Comments',
+    'src/examples/comments.md',
+    null,
+    CommentIcon,
+  ],
+  [
+    '/examples/votings',
+    'Voting',
+    'src/examples/voting.md',
+    null,
+    KeyboardArrowUpIcon,
+  ],
   // ['/examples/chat', 'Chat', 'src/examples/chat.md'],
   // ['/examples/cms', 'CMS (Navigation)', 'src/examples/cms'],
   // ['/examples/cms/pages', 'CMS (Pages)', 'src/examples/cms/pages.md'],
@@ -98,16 +139,35 @@ const docsNavigation: any[] = [
   //   'CMS (Rendering)',
   //   'src/examples/cms/rendering.md',
   // ],
-  ['/additional-topics', 'Additional Topics', 'src/pages/Additional.md'],
-  ['/faq', 'FAQ'],
-  ['/changes', 'Changes', 'src/pages/changelog.md'],
-  ['/collaborating', 'Collaborate', 'src/pages/Collaborating.md'],
+  [
+    '/additional-topics',
+    'Additional Topics',
+    'src/pages/Additional.md',
+    null,
+    ExtensionIcon,
+  ],
+  ['/faq', 'FAQ', null, null, LiveHelpIcon],
+  ['/changes', 'Changes', 'src/pages/changelog.md', null, ChangeHistoryIcon],
+  [
+    '/collaborating',
+    'Collaborate',
+    'src/pages/Collaborating.md',
+    null,
+    GroupsIcon,
+  ],
   [
     'https://blogs.state-less.cloud/',
     'Community',
     null,
     null,
     ({ color }) => <ForumIcon color={color} />,
+  ],
+  [
+    'https://lists.state-less.cloud',
+    'Lists',
+    null,
+    null,
+    ({ color }) => <ChecklistIcon color={color} />,
   ],
   [
     'https://javascript.forum/',
@@ -195,10 +255,11 @@ const docsRoutes = [
       return <GithubPage src="src/examples/SSR.md" />;
     }}
   />,
-  <Route path="/states" Component={StatesPage} />,
   <Route path="/components" Component={ComponentsPage} />,
   <Route path="/react-server" Component={ReactServerPage} />,
+  <Route path="/react-server/states" Component={StatesPage} />,
   <Route path="/react-server/hooks" Component={ReactServerHooksPage} />,
+
   <Route path="/stores" Component={StoresPage} />,
   <Route path="/server" Component={ServerPage} />,
   <Route path="/authentication" Component={AuthPage} />,

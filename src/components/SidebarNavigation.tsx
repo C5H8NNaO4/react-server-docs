@@ -33,6 +33,7 @@ export const SidebarNavigation = () => {
                       ? 0
                       : (e[0].match(/\//g)?.length || 0 - 2) * 2),
                 }}
+                dense={!e[0].includes('://')}
               >
                 {e[1]}
               </LinkItem>
@@ -51,7 +52,7 @@ type LinkItemProps = {
   Icon: ComponentType<IconButtonProps>;
 };
 
-const LinkItem = ({ to, children, sx, Icon }: LinkItemProps) => {
+const LinkItem = ({ to, children, sx, Icon, dense }: LinkItemProps) => {
   const { pathname } = useLocation();
   return (
     <ListItem
@@ -68,7 +69,7 @@ const LinkItem = ({ to, children, sx, Icon }: LinkItemProps) => {
           <Icon color={to === pathname ? 'secondary' : 'primary'} />
         </ListItemIcon>
       )}
-      <ListItemText primary={children} secondary={to} />
+      <ListItemText primary={children} secondary={dense ? undefined : to} />
     </ListItem>
   );
 };
