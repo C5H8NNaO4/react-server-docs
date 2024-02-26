@@ -11,29 +11,35 @@ import {
   Alert,
   LinearProgress,
   IconButton,
-  Popover,
-  ClickAwayListener,
 } from '@mui/material';
-
-import { Markdown } from '../../components/Markdown';
-import { FlexBox } from '../../components/FlexBox';
-import { useComponent, useLocalStorage } from '@state-less/react-client';
-import { UpDownButtons } from '../../server-components/examples/VotingApp';
+import {
+  authContext,
+  useComponent,
+  useLocalStorage,
+} from '@state-less/react-client';
 import { useParams } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
-import { NewPost } from './newPost';
-import { NewPostButton } from '.';
+import { useEffect, useState, useRef, useContext } from 'react';
+import Visibility from '@mui/icons-material/Visibility';
+
 import { CommunityComments } from '../../server-components/examples/Comments';
 import { useSyncedState } from '../../lib/hooks';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
-import Visibility from '@mui/icons-material/Visibility';
+import { UpDownButtons } from '../../server-components/examples/VotingApp';
+import { FlexBox } from '../../components/FlexBox';
 import {
   AnswerActions,
   ContentEditor,
+  OwnerChip,
   PostActions,
 } from '../../server-components/ContentEditor';
+import { Actions, stateContext } from '../../provider/StateProvider';
 
-export const PostsPage = (props) => {
+import { NewPost } from './newPost';
+
+import { NewPostButton } from '.';
+import { GoogleLoginButton } from '../../components/LoggedInGoogleButton';
+
+export const PostsPage = () => {
   const params = useParams();
   if (params.post === 'new') {
     return <NewPost />;
@@ -49,13 +55,14 @@ export const PostsPage = (props) => {
 
 const DRAFT = true;
 const Post = ({ id }) => {
-  const [skip, setSkip] = useState(false);
-  const [component, { error, loading, refetch }] = useComponent(id);
+  const { dispatch } = useContext(stateContext);
+  const [_, setSkip] = useState(false);
+  const [component, { error, loading }] = useComponent(id);
 
   useEffect(() => {
     /* Skip recreated ViewCounter component as long as the post is in the cache*/
-    if (component?.props) setSkip(true);
-  }, [component?.props]);
+    if (component?.props) setSkip?.(true);
+  }, [component?.props, setSkip]);
 
   const [edit, setEdit] = useState(0);
   const [showDeleted, setShowDeleted] = useLocalStorage(
@@ -70,6 +77,27 @@ const Post = ({ id }) => {
     }
   );
 
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!ref?.current) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          dispatch({ type: Actions.SET_LAST_BC, value: true });
+        } else if (entries[0]?.boundingClientRect?.y > 0) {
+          dispatch({ type: Actions.SET_LAST_BC, value: false });
+        }
+      },
+      {
+        root: document.body,
+        rootMargin: '0px 0px -100%',
+        threshold: 0.0,
+      }
+    );
+    obs.observe(ref?.current);
+  }, [ref?.current]);
+
   const [body, setBody] = useState(bodyServer);
   useEffect(() => {
     setBody(bodyServer);
@@ -83,7 +111,7 @@ const Post = ({ id }) => {
       </>
     );
   return (
-    <>
+    <div ref={ref}>
       <FlexBox
         sx={{
           alignItems: 'center',
@@ -116,7 +144,15 @@ const Post = ({ id }) => {
         {!component?.props?.canDelete && !component?.props?.approved && (
           <Alert severity="info">This post needs approval from an admin.</Alert>
         )}
-        <FlexBox>
+        <FlexBox
+          sx={{
+            maxWidth: '100%',
+            flexDirection: {
+              xs: 'column',
+              sm: 'row',
+            },
+          }}
+        >
           {component?.children[0] && (
             <UpDownButtons
               data={component?.children[0]}
@@ -172,12 +208,12 @@ const Post = ({ id }) => {
         ?.map((answer) => {
           return <Answer answer={answer} />;
         })}
-    </>
+    </div>
   );
 };
 
 const Answer = ({ answer }) => {
-  const [component, { error, refetch }] = useComponent(answer?.component, {
+  const [component] = useComponent(answer?.component, {
     data: answer,
   });
   const [edit, setEdit] = useState(0);
@@ -222,7 +258,14 @@ const Answer = ({ answer }) => {
       <AnswerActions
         component={component}
         edit={edit}
-        setEdit={setEdit}
+        setEdit={async (e) => {
+          if (!e) {
+            await setBodyServer(body);
+            setEdit(0);
+          } else {
+            setEdit(2);
+          }
+        }}
         draft={DRAFT}
       />
       <CommunityComments id={answer?.children[1]?.component} />
@@ -231,7 +274,8 @@ const Answer = ({ answer }) => {
 };
 
 const ComposeAnswer = ({ id }) => {
-  const [component, { error, loading }] = useComponent(id);
+  const { session } = useContext(authContext);
+  const [component] = useComponent(id);
   const [body, setBody] = useState('');
   return (
     <Card sx={{ p: 2 }}>
@@ -255,6 +299,13 @@ const ComposeAnswer = ({ id }) => {
         >
           Post Answer
         </Button>
+        {session?.id && (
+          <OwnerChip
+            sx={{ marginLeft: 1 }}
+            owner={session?.strategies[session?.strategy]?.decoded}
+          />
+        )}
+        {!session?.id && <GoogleLoginButton />}
       </CardActions>
     </Card>
   );

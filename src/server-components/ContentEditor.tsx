@@ -4,53 +4,73 @@ import {
   CardContent,
   Grid,
   TextField,
+  Chip,
+  Avatar,
+  Box,
 } from '@mui/material';
-import { Markdown } from '../components/Markdown';
-import { useRef, useState } from 'react';
-import { Reactions } from './Reactions';
-import { PushPin, PushPinOutlined } from '@mui/icons-material';
+import { useRef } from 'react';
+import { PushPin, PushPinOutlined, Person } from '@mui/icons-material';
 
-export const PostActions = ({ component, edit, setEdit, draft }) => {
+import { Markdown } from '../components/Markdown';
+
+import { Reactions } from './Reactions';
+
+export const PostActions = ({ component, edit, setEdit, draft: _ }) => {
   const editTitle = edit === 2 ? 'Save' : edit === 1 ? 'Ok' : 'Edit';
 
   return (
-    <CardActions>
-      {component?.props?.canDelete && (
-        <Button
-          disabled={component?.props?.deleted}
-          color="error"
-          onClick={() => component.props.del()}
-        >
-          Delete
-        </Button>
-      )}
-      {!component?.props?.approved &&
-        component?.props?.canDelete &&
-        !component?.props?.deleted && (
+    <CardActions
+      sx={{
+        display: 'flex',
+        flexDirection: {
+          xs: 'column-reverse',
+          sm: 'row',
+        },
+        flexWrap: 'wrap',
+        width: '100%',
+      }}
+    >
+      <Box>
+        {component?.props?.canDelete && (
           <Button
             disabled={component?.props?.deleted}
-            color="success"
-            onClick={() => component.props.approve()}
+            color="error"
+            onClick={() => component.props.del()}
           >
-            Approve
+            Delete
           </Button>
         )}
-      {component?.props?.canDelete && !component?.props?.deleted && (
-        <Button
-          disabled={component?.props?.deleted}
-          color={component?.props?.sticky ? 'success' : undefined}
-          onClick={() => component.props.toggleSticky()}
-        >
-          {!component?.props?.sticky ? <PushPinOutlined /> : <PushPin />}
-          Sticky
-        </Button>
-      )}
-      <SaveButton
-        component={component}
-        edit={edit}
-        title={editTitle}
-        setEdit={setEdit}
-      />
+        {!component?.props?.approved &&
+          component?.props?.canDelete &&
+          !component?.props?.deleted && (
+            <Button
+              disabled={component?.props?.deleted}
+              color="success"
+              onClick={() => component.props.approve()}
+            >
+              Approve
+            </Button>
+          )}
+        {component?.props?.canDelete && !component?.props?.deleted && (
+          <Button
+            disabled={component?.props?.deleted}
+            color={component?.props?.sticky ? 'success' : undefined}
+            onClick={() => component.props.toggleSticky()}
+          >
+            {!component?.props?.sticky ? <PushPinOutlined /> : <PushPin />}
+            Sticky
+          </Button>
+        )}
+        {component?.props?.canDelete && !component?.props?.deleted && (
+          <SaveButton
+            component={component}
+            edit={edit}
+            title={editTitle}
+            setEdit={setEdit}
+          />
+        )}
+      </Box>
+      <OwnerChip owner={component?.props?.owner} />
     </CardActions>
   );
 };
@@ -82,6 +102,8 @@ export const AnswerActions = ({ component, edit, setEdit, draft }) => {
             borderBottomWidth: '1px',
             borderStyle: 'dashed',
             borderColor: 'secondary.main',
+            display: 'flex',
+            width: '100%',
           }}
         >
           <Button
@@ -99,14 +121,27 @@ export const AnswerActions = ({ component, edit, setEdit, draft }) => {
           />
 
           <Reactions data={component?.children?.[2]} />
+          <OwnerChip owner={component?.props?.owner} />
         </CardActions>
       )}
       {!component?.props?.canDelete && (
-        <CardActions>
+        <CardActions sx={{ display: 'flex' }}>
           <Reactions data={component?.children?.[2]} />
+          <OwnerChip owner={component?.props?.owner} />
         </CardActions>
       )}
     </>
+  );
+};
+
+export const OwnerChip = ({ owner, sx = {} }) => {
+  const { name = 'Anonymous', picture } = owner;
+  return (
+    <Chip
+      avatar={<Avatar src={picture} />}
+      sx={{ marginLeft: 'auto !important', mr: 3, ...sx }}
+      label={name}
+    />
   );
 };
 export const ContentEditor = ({
@@ -114,16 +149,16 @@ export const ContentEditor = ({
   body,
   setBody,
   edit,
-  setEdit,
   loading,
-  draft,
+  draft: _,
+  setEdit: __,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
-      <Grid container>
+      <Grid container sx={{ maxWidth: '100%' }}>
         {edit && (
           <Grid item xs={12} md={7}>
             <CardContent sx={{ flex: 1 }}>
@@ -134,12 +169,16 @@ export const ContentEditor = ({
                     onScroll: () => {
                       const scrollPrc =
                         (1 /
-                          (inputRef?.current?.getBoundingClientRect()?.height ||
-                            0)) *
+                          ((inputRef?.current?.scrollHeight || 0) -
+                            (inputRef?.current?.getBoundingClientRect()
+                              ?.height || 0))) *
                         (inputRef?.current?.scrollTop || 0);
+
                       const contentTop =
-                        (contentRef?.current?.getBoundingClientRect()?.height ||
-                          0) * scrollPrc;
+                        ((contentRef?.current?.scrollHeight || 0) -
+                          (contentRef?.current?.getBoundingClientRect()
+                            ?.height || 0)) *
+                        scrollPrc;
 
                       contentRef?.current?.scrollTo({
                         top: contentTop,
@@ -174,7 +213,7 @@ export const ContentEditor = ({
             sx={{
               flex: 1,
               maxHeight: edit ? (window.innerHeight - 120) / 1.5 : 'unset',
-              overflowY: 'scroll',
+              overflowY: edit ? 'scroll' : 'unset',
             }}
           >
             {<Markdown center={false}>{body}</Markdown>}

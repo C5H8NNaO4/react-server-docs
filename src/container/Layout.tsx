@@ -1,12 +1,4 @@
 import { Routes } from 'react-router';
-import ButtonAppBar from '../components/AppBar';
-import {
-  DarkWaves,
-  SunnyBlueClouds,
-  VantaBackground,
-} from '../components/Background';
-import { Actions, stateContext } from '../provider/StateProvider';
-import { routes } from '../routes';
 import { useContext, useEffect, useRef, useState } from 'react';
 import {
   Paper,
@@ -23,31 +15,38 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
-  LinearProgress,
   Tooltip,
 } from '@mui/material';
-import styles from './Layout.module.css';
 import { Link as RouterLink } from 'react-router-dom';
-
 import GitHubIcon from '@mui/icons-material/GitHub';
 import EmailIcon from '@mui/icons-material/Email';
-import PhoneIcon from '@mui/icons-material/Phone';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import GroupsIcon from '@mui/icons-material/Group';
 import { useLocation } from 'react-router-dom';
-import { SidebarNavigation } from '../components/SidebarNavigation';
 import ChatIcon from '@mui/icons-material/Chat';
 import Snackbar from '@mui/material/Snackbar';
 import HeartIcon from '@mui/icons-material/Favorite';
-import {
-  authContext,
-  useComponent,
-  useLocalStorage,
-} from '@state-less/react-client';
-import { ViewCounter } from '../server-components/examples/ViewCounter';
+import { useComponent, useLocalStorage } from '@state-less/react-client';
 
-declare let gtag: Function;
+import { SidebarNavigation } from '../components/SidebarNavigation';
+import { routes } from '../routes';
+import { Actions, stateContext } from '../provider/StateProvider';
+import {
+  DarkWaves,
+  SunnyBlueClouds,
+  VantaBackground,
+} from '../components/Background';
+import ButtonAppBar from '../components/AppBar';
+import { ViewCounter } from '../server-components/examples/ViewCounter';
+import { CONTACT_MAIL, GITHUB_CONTRIBUTE } from '../lib/const';
+
+import styles from './Layout.module.css';
+declare let gtag: (
+  _: string,
+  __: string,
+  ___: { event_category: string }
+) => void;
 
 const messages = [
   'Building Layout',
@@ -60,7 +59,7 @@ export const PrankButton = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [move, setMove] = useState(false);
   const [moved, setMoved] = useState(false);
-  const [style, setStyle] = useState({} as any);
+  const [style, setStyle] = useState<Record<string, string>>({});
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -76,7 +75,7 @@ export const PrankButton = ({ children }) => {
         transition: 'transform 1s ease-out',
       });
     }
-  });
+  }, [setStyle, move]);
   return (
     <Tooltip ref={ref} open={open} title="Just kidding!" style={style}>
       <Box
@@ -106,11 +105,11 @@ export const PrankButton = ({ children }) => {
 };
 export const Layout = () => {
   const { state, dispatch } = useContext(stateContext);
-  const [features, { loading: featuresLoading }] = useComponent('features');
-  const { pathname, search } = useLocation();
+  const [features] = useComponent('features');
+  const { pathname } = useLocation();
   // const [_animated, setAnim] = useState(0);
   const _animated = state.animatedBackground || 0;
-
+  const hasGtag = 'gtag' in window;
   const [time, setTime] = useState(0);
 
   useEffect(() => {
@@ -132,7 +131,7 @@ export const Layout = () => {
         type: Actions.TOGGLE_ANIMATED_BACKGROUND,
       });
     }
-  }, [features?.props?.animated]);
+  }, [features?.props?.animated, dispatch, state.animatedBackground]);
 
   const [cookieConsent, setCookieConsent] = useLocalStorage<boolean | null>(
     'cookie-consent',
@@ -151,7 +150,7 @@ export const Layout = () => {
           };
       }, 0);
     }
-  }, [pathname, cookieConsent, 'gtag' in window]);
+  }, [pathname, cookieConsent, hasGtag]);
 
   return (
     <VantaBackground
@@ -161,6 +160,7 @@ export const Layout = () => {
       bg={_animated}
     >
       <Box
+        id="scroll"
         key={pathname}
         sx={{
           maxHeight: '100vh',
@@ -176,12 +176,15 @@ export const Layout = () => {
         {
           <header>
             <ButtonAppBar />
-            {/* <LinearProgress
-              variant="determinate"
-              value={time / 10}
-              sx={{ mt: 8 }}
-            /> */}
-            <Box sx={{ mt: 8 }} />
+
+            <Box
+              sx={{
+                mt: {
+                  xs: 6,
+                  sm: 8,
+                },
+              }}
+            />
             <div
               id="loading-container"
               style={{ display: 'flex', width: '100%' }}
@@ -270,16 +273,20 @@ export const Layout = () => {
                   sm: 1,
                   md: 2,
                 },
-                mt: 16,
                 backgroundColor: 'primary.main',
               }}
             >
               <Typography variant="body2" color="textSecondary" align="center">
-                <Link href="https://state-less.cloud">© 2023 React Server</Link>
+                <Link href="https://state-less.cloud">
+                  © 2023 React Server
+                </Link>
               </Typography>
               <Grid container spacing={1} justifyContent="center">
                 <Grid item xs={12} sm={6} md={4} xl={2}>
-                  <Card sx={{ m: 1, mb: 0 }} elevation={0}>
+                  <Card
+                    sx={{ m: 1, mb: 0, bgcolor: 'secondary.main' }}
+                    elevation={0}
+                  >
                     <CardHeader title="Social"></CardHeader>
                     <CardContent>
                       <div className={styles.impressum}>
@@ -343,25 +350,14 @@ export const Layout = () => {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} xl={2}>
-                  <Card sx={{ m: 1, mb: 0 }} elevation={0}>
+                  <Card
+                    sx={{ m: 1, mb: 0, bgcolor: 'secondary.main' }}
+                    elevation={0}
+                  >
                     <CardHeader title="Contact"></CardHeader>
                     <CardContent>
                       <div className={styles.impressum}>
                         <List disablePadding>
-                          <ListItem dense>
-                            <ListItemIcon>
-                              <PhoneIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Link
-                                component={RouterLink}
-                                to="tel://+4917620350106"
-                              >
-                                +49 176 20350106
-                              </Link>
-                            </ListItemText>
-                          </ListItem>
-
                           <ListItem dense>
                             <ListItemIcon>
                               <EmailIcon />
@@ -369,9 +365,9 @@ export const Layout = () => {
                             <ListItemText>
                               <Link
                                 component={RouterLink}
-                                to="mailto:moritz.roessler@gmail.com"
+                                to={`mailto:${CONTACT_MAIL}`}
                               >
-                                moritz.roessler@gmail.com
+                                {CONTACT_MAIL}
                               </Link>
                             </ListItemText>
                           </ListItem>
@@ -382,9 +378,11 @@ export const Layout = () => {
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} xl={2}>
                   <Card
+                    square
                     sx={{
                       marginTop: 1,
                       boxShadow: { xs: '10px 0px 8px 1px', sm: 'none' },
+                      bgcolor: 'secondary.main',
                     }}
                   >
                     <CardHeader title="More"></CardHeader>
@@ -406,8 +404,11 @@ export const Layout = () => {
                               <GroupsIcon />
                             </ListItemIcon>
                             <ListItemText>
-                              <Link component={RouterLink} to="/collaborating">
-                                Collaborate
+                              <Link
+                                component={RouterLink}
+                                to={GITHUB_CONTRIBUTE}
+                              >
+                                Contribute
                               </Link>
                             </ListItemText>
                           </ListItem>
@@ -424,7 +425,10 @@ export const Layout = () => {
                               </Link>
                             </ListItemText>
                           </ListItem>
-                          <ViewCounter componentKey="lists-views" />
+                          <ViewCounter
+                            textColor="primary.main"
+                            componentKey="js-forum-views"
+                          />
                         </List>
                       </div>
                     </CardContent>

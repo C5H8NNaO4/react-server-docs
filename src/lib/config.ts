@@ -8,3 +8,6 @@ export const GH_CONTENT_BRANCH = import.meta.env.REACT_APP_GH_CONTENT_BRANCH;
 
 export const SL_DOMAIN = import.meta.env.REACT_APP_SL_DOMAIN;
 export const USE_PROD_CLIENT = true;
+
+export const FORUM_RULES_GH =
+  'https://raw.githubusercontent.com/state-less/javascript.forum/main/Rules.md';
