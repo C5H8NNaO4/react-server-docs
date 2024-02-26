@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Navigate, Route } from 'react-router';
+import { Navigate, Route, useParams } from 'react-router';
 import { RedirectFunction } from 'react-router-dom';
 import { StatesPage, IndexPage, ComponentsPage } from './pages';
 import { AuthPage } from './pages/authentication';
@@ -147,10 +147,25 @@ const docsRoutes = [
   <Route
     path="/community/:post"
     Component={() => {
+      const params = useParams();
       useEffect(() => {
-        document.location.href = 'https://blogs.state-less.cloud';
+        if (!params.post) {
+          window.location.href = 'https://blogs.state-less.cloud';
+          window.history.replaceState(
+            null,
+            '',
+            'https://blogs.state-less.cloud'
+          );
+        } else {
+          window.location.href = `https://blogs.state-less.cloud/${params.post}`;
+          window.history.replaceState(
+            null,
+            '',
+            `https://blogs.state-less.cloud/${params.post}`
+          );
+        }
         // window.history.replaceState(null, '', 'https://blogs.state-less.cloud');
-      }, []);
+      }, [params.post]);
       return <Alert severity="success">Redirecting...</Alert>;
     }}
   />,
