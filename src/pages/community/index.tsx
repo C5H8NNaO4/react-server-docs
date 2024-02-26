@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { Link as RouterLink } from 'react-router-dom';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { Markdown } from '../../components/Markdown';
@@ -29,8 +29,12 @@ import { FlexBox } from '../../components/FlexBox';
 import { calc } from '../../server-components/examples/VotingApp';
 import { PAGE_SIZE_POSTS, PAGE_START } from '../../lib/const';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
-import { FORUM_BASE_PATH, FORUM_KEY, FORUM_RULES_GH } from '../../lib/config';
-import { useIsOffScreen } from '../../lib/hooks';
+import {
+  FORUM_BASE_PATH,
+  FORUM_KEY,
+  FORUM_QA_GH,
+  FORUM_RULES_GH,
+} from '../../lib/config';
 
 export const CommunityPage = () => {
   const [page, setPage] = useState(PAGE_START);
@@ -128,12 +132,6 @@ export const CommunityPage = () => {
   );
 };
 
-const qa = `
-- **Can I ask Questions?**   
-Yes, you can ask any questions about JavaScript
-- **Will they be answered?**  
-Yes. As long the traffic is low, I will try to answer questions about JS / React.
-`;
 export const ForumRules = () => {
   const [expanded, setExpanded] = useState(0);
   return (
@@ -168,7 +166,9 @@ export const ForumRules = () => {
           Q & A
         </AccordionSummary>
         <AccordionDetails>
-          <Markdown center={false}>{qa}</Markdown>
+          <Markdown center={false} src={FORUM_QA_GH}>
+            Loading from GitHub
+          </Markdown>
         </AccordionDetails>
       </Accordion>
 

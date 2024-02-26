@@ -11,5 +11,5 @@ export const GH_CONTENT_BRANCH = import.meta.env.REACT_APP_GH_CONTENT_BRANCH;
 export const SL_DOMAIN = import.meta.env.REACT_APP_SL_DOMAIN;
 export const USE_PROD_CLIENT = true;
 
-export const FORUM_RULES_GH =
-  'https://raw.githubusercontent.com/state-less/blogs.state-less.cloud/main/Rules.md';
+export const FORUM_RULES_GH = import.meta.env.REACT_APP_FORUM_RULES_GH;
+export const FORUM_QA_GH = import.meta.env.REACT_APP_FORUM_QA_GH;
