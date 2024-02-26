@@ -1,5 +1,6 @@
-import React from 'react';
-import { Route } from 'react-router';
+import React, { useEffect } from 'react';
+import { Navigate, Route } from 'react-router';
+import { RedirectFunction } from 'react-router-dom';
 import { StatesPage, IndexPage, ComponentsPage } from './pages';
 import { AuthPage } from './pages/authentication';
 import { FunctionsPage } from './pages/examples';
@@ -32,6 +33,7 @@ import ForumIcon from '@mui/icons-material/Forum';
 import { CommunityPage } from './pages/community';
 import { PostsPage } from './pages/community/post';
 import { SL_DOMAIN } from './lib/config';
+import { Alert } from '@mui/material';
 
 const docsNavigation: any[] = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
@@ -131,8 +133,26 @@ const docsRoutes = [
   <Route path="/why" Component={WhyPage} />,
   <Route path="/installation" Component={InstallationPage} />,
   <Route path="/faq" Component={FAQPage} />,
-  <Route path="/community" Component={CommunityPage} />,
-  <Route path="/community/:post" Component={PostsPage} />,
+  <Route
+    path="/community"
+    Component={() => {
+      useEffect(() => {
+        document.location.href = 'https://blogs.state-less.cloud';
+        // window.history.replaceState(null, '', 'https://blogs.state-less.cloud');
+      }, []);
+      return <Alert severity="success">Redirecting...</Alert>;
+    }}
+  />,
+  <Route
+    path="/community/:post"
+    Component={() => {
+      useEffect(() => {
+        document.location.href = 'https://blogs.state-less.cloud';
+        // window.history.replaceState(null, '', 'https://blogs.state-less.cloud');
+      }, []);
+      return <Alert severity="success">Redirecting...</Alert>;
+    }}
+  />,
   <Route path="/changes" Component={ChangeLog} />,
   <Route
     path="/collaborating"
@@ -185,7 +205,10 @@ const docsRoutes = [
   <Route path="/admin" Component={AdminPage} />,
 ];
 
-const blogsRoutes = [<Route path="/" Component={CommunityPage} />];
+const blogsRoutes = [
+  <Route path="/" Component={CommunityPage} />,
+  <Route path="/:post" Component={PostsPage} />,
+];
 
 const routes =
   SL_DOMAIN === 'blogs.state-less.cloud' ? blogsRoutes : docsRoutes;
