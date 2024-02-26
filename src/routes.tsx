@@ -31,8 +31,9 @@ import AppsIcon from '@mui/icons-material/Apps';
 import ForumIcon from '@mui/icons-material/Forum';
 import { CommunityPage } from './pages/community';
 import { PostsPage } from './pages/community/post';
+import { SL_DOMAIN } from './lib/config';
 
-export const navigation: any[] = [
+const docsNavigation: any[] = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
   [
     '/why',
@@ -49,7 +50,7 @@ export const navigation: any[] = [
     ({ color }) => <InstallDesktopIcon color={color} />,
   ],
   [
-    '/community',
+    'https://blogs.state-less.cloud',
     'Community',
     null,
     null,
@@ -107,7 +108,18 @@ export const navigation: any[] = [
   ['/collaborating', 'Collaborate', 'src/pages/Collaborating.md'],
 ];
 
-export const routes = [
+const blogsNavigation: any[] = [
+  ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
+  [
+    'https://state-less.cloud',
+    'Docs',
+    null,
+    null,
+    ({ color }) => <HomeIcon color={color} />,
+  ],
+];
+
+const docsRoutes = [
   <Route path="/" Component={IndexPage} />,
   <Route path="/why" Component={WhyPage} />,
   <Route path="/installation" Component={InstallationPage} />,
@@ -165,3 +177,12 @@ export const routes = [
   <Route path="/examples/votings" Component={VotingPage} />,
   <Route path="/admin" Component={AdminPage} />,
 ];
+
+const blogsRoutes = [<Route path="/" Component={CommunityPage} />];
+
+const routes =
+  SL_DOMAIN === 'blogs.state-less.cloud' ? blogsRoutes : docsRoutes;
+const navigation =
+  SL_DOMAIN === 'blogs.state-less.cloud' ? blogsNavigation : docsNavigation;
+
+export { routes, navigation };
