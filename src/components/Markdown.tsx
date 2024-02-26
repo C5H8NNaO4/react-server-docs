@@ -410,8 +410,8 @@ export const Markdown = ({
     >
       <ReactMarkdown
         className={clsx({ 'markdown-small': small })}
-        rehypePlugins={[rehypeRaw]}
-        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw as any]}
+        remarkPlugins={[remarkGfm as any]}
         components={components}
       >
         {error ? errorMD : loading < 2 ? children : result}
