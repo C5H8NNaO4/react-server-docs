@@ -32,9 +32,7 @@ export const IndexPage = () => {
             <Grid container className={styles.imageContainer} spacing={4}>
               <Grid item>
                 <Favicon
-                  alt="React Server"
-                  style={{ width: 256, height: 256, color: '#333333'}}
-                  loading="lazy"
+                  style={{ width: 256, height: 256, color: '#333333' }}
                 />
               </Grid>
               <Grid item>
