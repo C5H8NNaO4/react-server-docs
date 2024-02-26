@@ -61,7 +61,7 @@ const LinkItem = ({ to, children, sx, Icon, dense }: LinkItemProps) => {
       to={to}
       sx={sx}
       selected={pathname === to}
-      dense
+      dense={!dense}
       disablePadding
     >
       {Icon && (
