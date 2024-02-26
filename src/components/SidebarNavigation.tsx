@@ -29,7 +29,7 @@ export const SidebarNavigation = () => {
                 sx={{
                   ml:
                     1 +
-                    (e[0] === '/'
+                    (e[0] === '/' || e[0].includes('://')
                       ? 0
                       : (e[0].match(/\//g)?.length || 0 - 2) * 2),
                 }}

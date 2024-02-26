@@ -38,6 +38,13 @@ import { Alert } from '@mui/material';
 const docsNavigation: any[] = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
   [
+    'https://blogs.state-less.cloud/',
+    'Community',
+    null,
+    null,
+    ({ color }) => <ForumIcon color={color} />,
+  ],
+  [
     '/why',
     'Why',
     null,
@@ -51,13 +58,7 @@ const docsNavigation: any[] = [
     null,
     ({ color }) => <InstallDesktopIcon color={color} />,
   ],
-  [
-    'https://blogs.state-less.cloud',
-    'Community',
-    null,
-    null,
-    ({ color }) => <ForumIcon color={color} />,
-  ],
+
   [
     '/states',
     'States',
