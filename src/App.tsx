@@ -11,30 +11,33 @@ import { ThemeProvider } from './provider/ThemeProvider';
 import { Layout } from './container/Layout';
 import ScrollToTop from './components/ScrollToTop';
 import { AuthProvider, useLocalStorage } from '@state-less/react-client';
-import { Helmet } from "react-helmet"
+import { Helmet } from 'react-helmet';
+import { USE_PROD_CLIENT } from './lib/config';
 
 function App() {
   const [cookieConsent] = useLocalStorage('cookie-consent', null);
   return (
     <div className="App">
-            {cookieConsent === true && (
+      {cookieConsent === true && (
         <Helmet>
           <script src="https://www.googletagmanager.com/gtag/js?id=G-C3F4656WLD"></script>
 
-          <script
-            id="gtm-script"
-           src='/gtag-1.js'
-            
-          ></script>
+          <script id="gtm-script" src="/gtag-1.js"></script>
           <script
             id="test"
             type="application/javascript"
-            src='/gtag-2.js'
+            src="/gtag-2.js"
           ></script>
         </Helmet>
       )}
       <ApolloProvider
-        client={process.env.NODE_ENV === 'production' ? client : localClient}
+        client={
+          import.meta.env.MODE === 'production'
+            ? client
+            : USE_PROD_CLIENT
+            ? client
+            : localClient
+        }
       >
         <AuthProvider>
           <StateProvider>

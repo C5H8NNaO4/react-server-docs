@@ -5,3 +5,6 @@ export const FORUM_BASE_PATH = import.meta.env.REACT_APP_FORUM_BASE_PATH || '';
 
 export const GH_CONTENT_REPO = 'state-less/react-server-docs-md';
 export const GH_CONTENT_BRANCH = import.meta.env.REACT_APP_GH_CONTENT_BRANCH;
+
+export const SL_DOMAIN = import.meta.env.REACT_APP_SL_DOMAIN;
+export const USE_PROD_CLIENT = true;
