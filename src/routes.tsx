@@ -38,13 +38,6 @@ import { Alert } from '@mui/material';
 const docsNavigation: any[] = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
   [
-    'https://blogs.state-less.cloud/',
-    'Community',
-    null,
-    null,
-    ({ color }) => <ForumIcon color={color} />,
-  ],
-  [
     '/why',
     'Why',
     null,
@@ -109,6 +102,20 @@ const docsNavigation: any[] = [
   ['/faq', 'FAQ'],
   ['/changes', 'Changes', 'src/pages/changelog.md'],
   ['/collaborating', 'Collaborate', 'src/pages/Collaborating.md'],
+  [
+    'https://javascript.forum/',
+    'JavaScript Forum',
+    null,
+    null,
+    ({ color }) => <ForumIcon color={color} />,
+  ],
+  [
+    'https://blogs.state-less.cloud/',
+    'Community',
+    null,
+    null,
+    ({ color }) => <ForumIcon color={color} />,
+  ],
 ];
 
 const blogsNavigation: any[] = [
