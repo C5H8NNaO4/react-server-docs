@@ -6,3 +6,6 @@ export const CONTACT_PHONE_URL = '+4917620350106';
 export const CONTACT_MAIL = 'info@state-less.cloud';
 export const GITHUB_CONTRIBUTE =
   'https://blogs.state-less.cloud/post-05948288-4e76-48f7-ae82-47903bccefa0';
+
+
+export const COPYRIGHT_URL = 'https://react-server.dev'
