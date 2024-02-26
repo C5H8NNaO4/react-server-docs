@@ -222,3 +222,7 @@ pre {
   margin: 0px !important;
   transform: translate(0px, -1px);
 }
+
+.MuiListItemIcon-root {
+  min-width: 2.5rem !important;
+}

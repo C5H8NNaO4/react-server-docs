@@ -77,7 +77,7 @@ const docsNavigation: any[] = [
     null,
     ({ color }) => (
       <img
-        src="/react-server.webp"
+        src="/favicon.svg"
         style={{ width: 24, height: 24 }}
         loading="lazy"
       />
@@ -115,7 +115,14 @@ const blogsNavigation: any[] = [
     'Docs',
     null,
     null,
-    ({ color }) => <HomeIcon color={color} />,
+    ({ color }) => (
+      <img
+        src="/favicon.svg"
+        style={{ width: 24, height: 24 }}
+        loading="lazy"
+      />
+    ),
+    ,
   ],
 ];
 
