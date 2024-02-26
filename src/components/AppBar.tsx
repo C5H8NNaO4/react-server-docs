@@ -19,7 +19,7 @@ import { GoogleLoginButton } from './LoggedInGoogleButton';
 import { ConnectionCounter } from '../server-components/examples/ConnectionCounter';
 import { navigation } from '../routes';
 import { BackgroundButton } from './BackgroundButton';
-
+import Favicon from '../assets/favicon.svg?react';
 export default function ButtonAppBar() {
   const { state, dispatch } = React.useContext(stateContext);
   const { authenticate, session } = React.useContext(authContext);
@@ -43,11 +43,7 @@ export default function ButtonAppBar() {
         </IconButton>
         {!lessThanSmall && (
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <img
-              src="/favicon.svg"
-              style={{ width: 24, height: 24 }}
-              loading="lazy"
-            />
+            <Favicon style={{ width: "24px", height: "24px" }} />
             <Link component={RouterLink} to="/" sx={{ color: 'white' }}>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 {navigation.find((nav) => nav[0] === pathname)?.[3] ||

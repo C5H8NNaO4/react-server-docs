@@ -11,6 +11,7 @@ import { Comments } from '../server-components/examples/Comments';
 import { HelloWorldExample2 } from '../server-components/examples';
 import { DefaultMeta, DomainsMeta, Meta } from '../components/Meta';
 import { SL_DOMAIN } from '../lib/config';
+import Favicon from '../assets/favicon.svg?react';
 
 export const IndexPage = () => {
   return (
@@ -30,10 +31,9 @@ export const IndexPage = () => {
           >
             <Grid container className={styles.imageContainer} spacing={4}>
               <Grid item>
-                <img
-                  src="/favicon.svg"
+                <Favicon
                   alt="React Server"
-                  style={{ width: 256, height: 256 }}
+                  style={{ width: 256, height: 256, color: '#333333'}}
                   loading="lazy"
                 />
               </Grid>
