@@ -1,59 +1,59 @@
-import { createPortal } from 'react-dom';
+import { Helmet } from 'react-helmet';
+import { SL_DOMAIN } from '../lib/config';
 
-export const Meta = ({ Component }) => {
-  return createPortal(<Component />, document.head);
-};
-
-export const DefaultMeta = () => {
+export const DefaultMeta = (props) => {
   return (
-    <>
-      <title>React Server + Vite + React + TS</title>
+    <Helmet>
+      <title>React Server | Lightning-Fast Server Rendering</title>
+      <link rel="canonical" href="https://state-less.cloud" />
       <meta
         name="description"
-        content="React Server is a new framework that allows you to build serverside components using JSX/TSX along with a reactive coding style known from the frontend library React. (components, hooks, effects etc.)"
+        content="Unlock the power of React Server! Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
       />
       <meta
         name="keywords"
-        content="React Server, serverside components, serverside react components, React, GraphQL,full stack, fullstack framework, JS, JavaScript, TypeScript, reactive programming, declarative programming, "
+        content="Moritz Roessler, CV, TypeScript, JavaScript Development, GraphQL Development, React, TSX, Vue, Components, Component Driven, Server-side Components, React Server, MUI, Vite, Modern Web Development, React Server-Side Rendering, Performance Optimization"
       />
-      <link rel="canonical" href="https://lists.state-less.cloud" />
+
       <meta
         property="og:title"
-        content="Lists App - Organize Your Life with Productivity in Mind"
+        content="React Server | Lightning-Fast Server Rendering"
       />
       <meta
         property="og:description"
-        content="React Server is a new framework that allows you to build serverside components using JSX/TSX along with a reactive coding style known from the frontend library React. (components, hooks, effects etc.)"
+        content="Unlock the power of React Server! Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
       />
       <meta
         property="og:image"
-        content="https://state-less.cloud/react-server.webp"
+        content="https://state-less.cloud/preview.png"
       />
-      <meta property="og:url" content="https://state-less.cloud/lists" />
+      <meta property="og:url" content="https://state-less.cloud" />
       <meta property="og:type" content="website" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta
         name="twitter:title"
-        content="Lists App - Organize Your Life with Productivity in Mind"
+        content="React Server - Components, Hooks, Effects, and State"
       />
       <meta
         name="twitter:description"
-        content="React Server is a new framework that allows you to build serverside components using JSX/TSX along with a reactive coding style known from the frontend library React. (components, hooks, effects etc.)"
+        content="Unlock the power of React Server! Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
       />
       <meta
         name="twitter:image"
-        content="https://state-less.cloud/react-server.webp"
+        content="https://state-less.cloud/preview.png"
       />
-    </>
+      {props.children}
+    </Helmet>
   );
 };
 
 export const ListsMeta = () => {
   return (
     <>
-      <meta />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Lists App - Organize Your Life with Productivity in Mind</title>
+      <link rel="canonical" href="https://lists.state-less.cloud" />
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta
         name="description"
         content="Boost your productivity with Lists, the ultimate web app to organize your tasks, track your daily water intake, manage expenses, and achieve your goals efficiently. Stay motivated with our unique gamification feature and earn points as you conquer your to-do list. Sign up now and embark on a journey to a more organized and fulfilling life."
@@ -62,7 +62,6 @@ export const ListsMeta = () => {
         name="keywords"
         content="Lists app, productivity app, task management, water intake tracker, expense tracker, productivity tool, gamification, organization, to-do list"
       />
-      <link rel="canonical" href="https://lists.state-less.cloud" />
       <meta
         property="og:title"
         content="Lists App - Organize Your Life with Productivity in Mind"
@@ -93,3 +92,56 @@ export const ListsMeta = () => {
     </>
   );
 };
+
+export const BlogsMeta = (props) => {
+  return (
+    <Helmet>
+      <title>React Server Community | Lightning-Fast Server Rendering</title>
+      <link rel="canonical" href="https://blogs.state-less.cloud" />
+      <meta
+        name="description"
+        content="Talk about React Server! Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
+      />
+      <meta
+        name="keywords"
+        content="Moritz Roessler, CV, TypeScript, JavaScript Development, GraphQL Development, React, TSX, Vue, Components, Component Driven, Server-side Components, React Server, MUI, Vite, Modern Web Development, React Server-Side Rendering, Performance Optimization"
+      />
+
+      <meta
+        property="og:title"
+        content="React Server Community | Lightning-Fast Server Rendering"
+      />
+      <meta
+        property="og:description"
+        content="Talk about React Server! Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
+      />
+      <meta
+        property="og:image"
+        content="https://state-less.cloud/preview.png"
+      />
+      <meta property="og:url" content="https://state-less.cloud" />
+      <meta property="og:type" content="website" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta
+        name="twitter:title"
+        content="React Server - Components, Hooks, Effects, and State"
+      />
+      <meta
+        name="twitter:description"
+        content="Unlock the power of React Server! Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
+      />
+      <meta
+        name="twitter:image"
+        content="https://state-less.cloud/preview.png"
+      />
+      {props.children}
+    </Helmet>
+  );
+};
+
+export const DomainsMeta = {
+  'blogs.state-less.cloud': BlogsMeta,
+  'state-less.cloud': DefaultMeta,
+};
+
+export const Meta = DomainsMeta[SL_DOMAIN];

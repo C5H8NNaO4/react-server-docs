@@ -9,14 +9,13 @@ import { getRawPath } from '../components/CollabEditButton';
 import { Poll } from '../server-components/examples/Polls';
 import { Comments } from '../server-components/examples/Comments';
 import { HelloWorldExample2 } from '../server-components/examples';
-import { DefaultMeta, Meta } from '../components/Meta';
+import { DefaultMeta, DomainsMeta, Meta } from '../components/Meta';
+import { SL_DOMAIN } from '../lib/config';
 
 export const IndexPage = () => {
   return (
     <Container maxWidth="lg">
       <Grid container spacing={1}>
-        <Meta Component={DefaultMeta} />
-
         <Grid item xs={12} md={12} xl={12}>
           <Paper
             sx={{
