@@ -43,6 +43,7 @@ import { CONTACT_MAIL, GITHUB_CONTRIBUTE } from '../lib/const';
 
 import styles from './Layout.module.css';
 import { Copyright } from '../components/Copyright';
+import { VIEWS_KEY } from '../lib/config';
 declare let gtag: (
   _: string,
   __: string,
@@ -426,7 +427,7 @@ export const Layout = () => {
                           </ListItem>
                           <ViewCounter
                             textColor="primary.main"
-                            componentKey="js-forum-views"
+                            componentKey={VIEWS_KEY}
                           />
                         </List>
                       </div>
