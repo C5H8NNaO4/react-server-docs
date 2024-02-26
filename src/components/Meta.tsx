@@ -5,7 +5,7 @@ export const DefaultMeta = (props) => {
   return (
     <Helmet>
       <title>React Server | Lightning-Fast Server Rendering</title>
-      <link rel="canonical" href="https://state-less.cloud" />
+      <link rel="canonical" href="https://reactserver.dev/" />
       <meta
         name="description"
         content="Unlock the power of React Server! Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
