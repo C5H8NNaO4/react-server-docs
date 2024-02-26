@@ -13,16 +13,15 @@ import ScrollToTop from './components/ScrollToTop';
 import { AuthProvider, useLocalStorage } from '@state-less/react-client';
 import { Helmet } from 'react-helmet';
 import { SL_DOMAIN, USE_PROD_CLIENT } from './lib/config';
+import { BlogsMeta, DomainsMeta, Meta } from './components/Meta';
 
 function App() {
   const [cookieConsent] = useLocalStorage('cookie-consent', null);
   return (
     <div className="App">
-      <Helmet>
-        <link rel="canonical" href={`https://${SL_DOMAIN}`} />
-      </Helmet>
+      {!cookieConsent && <Meta />}
       {cookieConsent === true && (
-        <Helmet>
+        <Meta>
           <script src="https://www.googletagmanager.com/gtag/js?id=G-C3F4656WLD"></script>
 
           <script id="gtm-script" src="/gtag-1.js"></script>
@@ -31,7 +30,7 @@ function App() {
             type="application/javascript"
             src="/gtag-2.js"
           ></script>
-        </Helmet>
+        </Meta>
       )}
       <ApolloProvider
         client={
