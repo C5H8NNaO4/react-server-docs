@@ -50,6 +50,7 @@ type LinkItemProps = {
   children: React.ReactNode;
   sx?: any;
   Icon: ComponentType<IconButtonProps>;
+  dense?: boolean;
 };
 
 const LinkItem = ({ to, children, sx, Icon, dense }: LinkItemProps) => {
