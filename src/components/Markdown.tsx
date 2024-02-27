@@ -262,7 +262,7 @@ export const Markdown = ({
         }
 
         if (language === 'mermaid') {
-          return <Mermaid>{props?.children?.[0]?.props?.children}</Mermaid>;
+          return <Mermaid>{props?.children?.props?.children}</Mermaid>;
         }
 
         const child = Array.isArray(props.children)
