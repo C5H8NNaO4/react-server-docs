@@ -141,7 +141,9 @@ export const BlogsMeta = (props) => {
 
 export const DomainsMeta = {
   'blogs.state-less.cloud': BlogsMeta,
-  'state-less.cloud': DefaultMeta,
+  'reactserver.dev': DefaultMeta,
 };
+
+if (!DomainsMeta[SL_DOMAIN]) console.warn('No meta tags found for domain');
 
 export const Meta = DomainsMeta[SL_DOMAIN];

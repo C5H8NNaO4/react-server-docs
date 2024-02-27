@@ -1,4 +1,5 @@
 import React, { createContext, Dispatch, useReducer } from 'react';
+import { message } from '../lib/static';
 
 type State = {
   menuOpen: boolean;
@@ -28,7 +29,7 @@ const initialState: State = {
     : Number(localStorage.getItem('animatedBackground')) || bg,
   messages: [] as any[],
   alerts: {
-    info: [],
+    info: [message],
     warning: [],
   },
   history: [],

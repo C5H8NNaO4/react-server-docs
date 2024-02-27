@@ -57,6 +57,13 @@ const messages = [
   `Notice: This is a pre-alpha version and a work in progress. Features and documentation may not be fully complete. Please use with caution.`,
 ];
 
+export const useMenuShiftSx = () => {
+  const { state } = useContext(stateContext);
+  return {
+    ml: state.menuOpen ? '256px' : '0px',
+    transition: `margin-left 150ms ${state.menuOpen ? 'ease-in' : 'ease-out'}`,
+  };
+};
 export const PrankButton = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [move, setMove] = useState(false);
@@ -153,7 +160,7 @@ export const Layout = () => {
       }, 0);
     }
   }, [pathname, cookieConsent, hasGtag]);
-
+  const menuShift = useMenuShiftSx();
   return (
     <VantaBackground
       light={SunnyBlueClouds}
@@ -195,21 +202,17 @@ export const Layout = () => {
           </header>
         }
         <main>
-          {!state.fullscreen && state.alerts.info?.length > 0 && (
-            <Alert
-              severity="info"
-              // sx={{ mt: 8 }}
-              action={
-                <Button>
-                  <Link component={RouterLink} to="/changes">
-                    Changes
-                  </Link>
-                </Button>
-              }
-            >
-              {time < 1000 ? messages[1] : messages[3]}
-            </Alert>
-          )}
+          {!state.fullscreen &&
+            state.alerts.info?.length > 0 &&
+            state.alerts.info?.map((msg) => {
+              return (
+                msg && (
+                  <Alert sx={menuShift} severity="info">
+                    {msg}
+                  </Alert>
+                )
+              );
+            })}
           {cookieConsent === null && (
             <Alert
               severity="info"
@@ -264,14 +267,7 @@ export const Layout = () => {
             );
           })}
           <SidebarNavigation />
-          <Box
-            sx={{
-              ml: state.menuOpen ? '256px' : '0px',
-              transition: `margin-left 150ms ${
-                state.menuOpen ? 'ease-in' : 'ease-out'
-              }`,
-            }}
-          >
+          <Box sx={menuShift}>
             <Routes>{routes}</Routes>
           </Box>
         </main>
@@ -285,10 +281,7 @@ export const Layout = () => {
                   sm: 1,
                   md: 2,
                 },
-                ml: state.menuOpen ? '256px' : '0px',
-                transition: `margin-left 150ms ${
-                  state.menuOpen ? 'ease-in' : 'ease-out'
-                }`,
+                ...menuShift,
                 backgroundColor: 'primary.main',
               }}
             >
