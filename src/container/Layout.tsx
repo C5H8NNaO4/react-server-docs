@@ -252,8 +252,8 @@ export const Layout = () => {
                 We use Google Analytics to track page views.
               </Alert>
             )}
+            <MovedDomainWarning domain={SL_DOMAIN} />
           </Box>
-          <MovedDomainWarning domain={SL_DOMAIN} />
           <div id="app-warnings" />
 
           {state.messages.map((message) => {
