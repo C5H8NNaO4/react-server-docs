@@ -44,9 +44,15 @@ import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import GroupsIcon from '@mui/icons-material/Groups';
-import { CommunityPage } from './pages/community';
-import { PostsPage } from './pages/community/post';
-import { SL_DOMAIN } from './lib/config';
+import { ForumPage, PostsPage } from '@state-less/leap-frontend';
+
+import {
+  FORUM_BASE_PATH,
+  FORUM_KEY,
+  FORUM_QA_GH,
+  FORUM_RULES_GH,
+  SL_DOMAIN,
+} from './lib/config';
 import { Alert } from '@mui/material';
 
 const docsNavigation: any[] = [
@@ -290,8 +296,25 @@ const docsRoutes = [
 ];
 
 const blogsRoutes = [
-  <Route path="/" Component={CommunityPage} />,
-  <Route path="/:post" Component={PostsPage} />,
+  <Route
+    path="/"
+    Component={() => {
+      return (
+        <ForumPage
+          basePath={FORUM_BASE_PATH}
+          forumKey={FORUM_KEY}
+          ghSrc={{
+            rules: FORUM_RULES_GH,
+            qa: FORUM_QA_GH,
+          }}
+        />
+      );
+    }}
+  />,
+  <Route
+    path="/:post"
+    Component={() => <PostsPage basePath="/" forumKey={FORUM_KEY} />}
+  />,
 ];
 
 const routes =
