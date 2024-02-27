@@ -420,18 +420,20 @@ export const Markdown = ({
           {md}
         </ReactMarkdown>
       </div>
-      <div
-        className={clsx('markdown', { disablePadding: true, preview: true })}
-      >
-        <ReactMarkdown
-          className={clsx({ 'markdown-small': small })}
-          rehypePlugins={[rehypeRaw]}
-          remarkPlugins={[remarkGfm]}
-          components={components}
+      {src && (
+        <div
+          className={clsx('markdown', { disablePadding: true, preview: true })}
         >
-          {cited}
-        </ReactMarkdown>
-      </div>
+          <ReactMarkdown
+            className={clsx({ 'markdown-small': small })}
+            rehypePlugins={[rehypeRaw]}
+            remarkPlugins={[remarkGfm]}
+            components={components}
+          >
+            {cited}
+          </ReactMarkdown>
+        </div>
+      )}
     </div>
   );
 };
