@@ -165,7 +165,8 @@ export const Layout = () => {
         id="scroll"
         key={pathname}
         sx={{
-          maxHeight: '100vh',
+          marginTop: '64px',
+          maxHeight: 'calc(100vh - 64px)',
           height: '100%',
           overflowY: 'auto',
           overflowX: 'hidden',
@@ -179,14 +180,14 @@ export const Layout = () => {
           <header>
             <ButtonAppBar />
 
-            <Box
+            {/* <Box
               sx={{
                 mt: {
                   xs: 6,
                   sm: 8,
                 },
               }}
-            />
+            /> */}
             <div
               id="loading-container"
               style={{ display: 'flex', width: '100%' }}
@@ -194,7 +195,6 @@ export const Layout = () => {
           </header>
         }
         <main>
-          <SidebarNavigation />
           {!state.fullscreen && state.alerts.info?.length > 0 && (
             <Alert
               severity="info"
@@ -263,7 +263,17 @@ export const Layout = () => {
               />
             );
           })}
-          <Routes>{routes}</Routes>
+          <SidebarNavigation />
+          <Box
+            sx={{
+              ml: state.menuOpen ? '256px' : '0px',
+              transition: `margin-left 150ms ${
+                state.menuOpen ? 'ease-in' : 'ease-out'
+              }`,
+            }}
+          >
+            <Routes>{routes}</Routes>
+          </Box>
         </main>
         {!state.fullscreen && (
           <footer style={{ marginTop: 'auto' }}>
@@ -275,6 +285,10 @@ export const Layout = () => {
                   sm: 1,
                   md: 2,
                 },
+                ml: state.menuOpen ? '256px' : '0px',
+                transition: `margin-left 150ms ${
+                  state.menuOpen ? 'ease-in' : 'ease-out'
+                }`,
                 backgroundColor: 'primary.main',
               }}
             >

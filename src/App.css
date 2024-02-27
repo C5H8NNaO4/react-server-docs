@@ -226,3 +226,27 @@ pre {
 .MuiListItemIcon-root {
   min-width: 2.5rem !important;
 }
+
+/* 
+* Scrollbar styles 
+* @see https://stackoverflow.com/questions/69564686/how-to-style-chrome-scrollbar-to-make-it-look-and-behave-like-firefox
+*/
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ababab;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  border: 0;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}

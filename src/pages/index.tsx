@@ -30,12 +30,16 @@ export const IndexPage = () => {
             }}
           >
             <Grid container className={styles.imageContainer} spacing={4}>
-              <Grid item>
+              <Grid item sx={{ marginLeft: 'auto', marginRight: 'auto' }}>
                 <Favicon
-                  style={{ width: 256, height: 256, color: '#333333' }}
+                  style={{
+                    width: 256,
+                    height: 256,
+                    color: '#333333',
+                  }}
                 />
               </Grid>
-              <Grid item>
+              <Grid item sx={{ marginLeft: 'auto', marginRight: 'auto' }}>
                 <Markdown
                   src={getRawPath('src/pages/index/introduction.md')}
                   optimisticHeight="278px"

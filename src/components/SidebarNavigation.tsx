@@ -3,6 +3,7 @@ import {
   List,
   ListItem,
   ListItemIcon,
+  Box,
   ListItemText,
   IconButtonProps,
 } from '@mui/material';
@@ -16,31 +17,39 @@ export const SidebarNavigation = () => {
   const { state, dispatch } = useContext(stateContext);
   return (
     <Drawer
+      variant="persistent"
       open={state.menuOpen}
       onClose={() => dispatch({ type: Actions.TOGGLE_MENU })}
     >
-      <List sx={{ paddingTop: 8, minWidth: 256 }}>
-        <List disablePadding>
-          {navigation.map((e: any) => {
-            return (
-              <LinkItem
-                Icon={e[4]}
-                to={e[0]}
-                sx={{
-                  ml:
-                    1 +
-                    (e[0] === '/' || e[0].includes('://')
-                      ? 0
-                      : (e[0].match(/\//g)?.length || 0 - 2) * 2),
-                }}
-                dense={!e[0].includes('://')}
-              >
-                {e[1]}
-              </LinkItem>
-            );
-          })}
+      <Box
+        sx={{
+          maxWidth: '30ch',
+          overflowX: 'hidden',
+        }}
+      >
+        <List sx={{ paddingTop: 8, minWidth: 256 }}>
+          <List disablePadding>
+            {navigation.map((e: any) => {
+              return (
+                <LinkItem
+                  Icon={e[4]}
+                  to={e[0]}
+                  sx={{
+                    pl:
+                      1 +
+                      (e[0] === '/' || e[0].includes('://')
+                        ? 0
+                        : (e[0].match(/\//g)?.length || 0 - 2) * 2),
+                  }}
+                  dense={!e[0].includes('://')}
+                >
+                  {e[1]}
+                </LinkItem>
+              );
+            })}
+          </List>
         </List>
-      </List>
+      </Box>
     </Drawer>
   );
 };
