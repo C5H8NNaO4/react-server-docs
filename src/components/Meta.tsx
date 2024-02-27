@@ -146,4 +146,8 @@ export const DomainsMeta = {
 
 if (!DomainsMeta[SL_DOMAIN]) console.warn('No meta tags found for domain');
 
-export const Meta = DomainsMeta[SL_DOMAIN];
+export const Meta =
+  DomainsMeta[SL_DOMAIN] ||
+  (() => {
+    return null;
+  });

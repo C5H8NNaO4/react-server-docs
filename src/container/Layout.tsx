@@ -45,7 +45,8 @@ import { CONTACT_MAIL, GITHUB_CONTRIBUTE } from '../lib/const';
 
 import styles from './Layout.module.css';
 import { Copyright } from '../components/Copyright';
-import { VIEWS_KEY } from '../lib/config';
+import { SL_DOMAIN, VIEWS_KEY } from '../lib/config';
+import { MovedDomainWarning } from '../components/alerts/Moved';
 declare let gtag: (
   _: string,
   __: string,
@@ -216,46 +217,43 @@ export const Layout = () => {
           </header>
         }
         <main>
-          {!state.fullscreen &&
-            state.alerts.info?.length > 0 &&
-            state.alerts.info?.map((msg) => {
-              return (
-                msg && (
-                  <Alert sx={menuShift} severity="info">
-                    {msg}
-                  </Alert>
-                )
-              );
-            })}
-          {cookieConsent === null && (
-            <Alert
-              severity="info"
-              action={
-                <>
-                  <PrankButton>
+          <Box sx={menuShift}>
+            {!state.fullscreen &&
+              state.alerts.info?.length > 0 &&
+              state.alerts.info?.map((msg) => {
+                return msg && <Alert severity="info">{msg}</Alert>;
+              })}
+            {cookieConsent === null && (
+              <Alert
+                severity="info"
+                action={
+                  <>
+                    <PrankButton>
+                      <Button
+                        color="error"
+                        onClick={() => {
+                          setCookieConsent(false);
+                        }}
+                      >
+                        Deny
+                      </Button>
+                    </PrankButton>
                     <Button
-                      color="error"
+                      color="success"
                       onClick={() => {
-                        setCookieConsent(false);
+                        setCookieConsent(true);
                       }}
                     >
-                      Deny
+                      Accept
                     </Button>
-                  </PrankButton>
-                  <Button
-                    color="success"
-                    onClick={() => {
-                      setCookieConsent(true);
-                    }}
-                  >
-                    Accept
-                  </Button>
-                </>
-              }
-            >
-              We use Google Analytics to track page views.
-            </Alert>
-          )}
+                  </>
+                }
+              >
+                We use Google Analytics to track page views.
+              </Alert>
+            )}
+          </Box>
+          <MovedDomainWarning domain={SL_DOMAIN} />
           <div id="app-warnings" />
 
           {state.messages.map((message) => {
