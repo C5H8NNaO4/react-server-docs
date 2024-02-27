@@ -21,9 +21,10 @@ type HistoryAction = {
 
 const params = new URLSearchParams(window?.location?.search);
 const bg = Number(params.get('bg')) % 4;
+const menuOpen = Boolean(params.get('menuOpen'));
 
 const initialState: State = {
-  menuOpen: false,
+  menuOpen,
   animatedBackground: localStorage.getItem('animatedBackgroundUser')
     ? Number(localStorage.getItem('animatedBackgroundUser'))
     : Number(localStorage.getItem('animatedBackground')) || bg,

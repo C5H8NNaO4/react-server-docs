@@ -55,7 +55,40 @@ import {
 } from './lib/config';
 import { Alert } from '@mui/material';
 
-const docsNavigation: any[] = [
+type Navigation = [
+  string,
+  string,
+  string | null,
+  string | null,
+  ({ color }: { color: any }) => any
+][];
+
+const urls = [
+  '/',
+  '/why',
+  '/installation',
+  '/components',
+  '/react-server',
+  '/react-server/states',
+  '/react-server/hooks',
+  'https://github.com/state-less/clean-starter/',
+  '/stores',
+  '/server',
+  '/authentication',
+  '/SSR',
+  '/examples',
+  '/examples/comments',
+  '/examples/votings',
+  '/additional-topics',
+  '/faq',
+  '/changes',
+  '/collaborating',
+  'https://blogs.state-less.cloud/',
+  'https://lists.state-less.cloud',
+  'https://javascript.forum/',
+];
+
+const docsNavigation: Navigation = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
   [
     '/why',
@@ -184,7 +217,7 @@ const docsNavigation: any[] = [
   ],
 ];
 
-const blogsNavigation: any[] = [
+const blogsNavigation: Navigation = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
   [
     'https://state-less.cloud',
@@ -198,7 +231,6 @@ const blogsNavigation: any[] = [
         loading="lazy"
       />
     ),
-    ,
   ],
 ];
 
