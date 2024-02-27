@@ -332,15 +332,13 @@ export const Markdown = ({
           <Table>
             <TableHead>
               <TableRow>
-                {props.children[0].props.children[0].props.children?.map(
-                  (e) => {
-                    return <TableCell>{e}</TableCell>;
-                  }
-                )}
+                {props.children[0].props.children.props.children?.map((e) => {
+                  return <TableCell>{e}</TableCell>;
+                })}
               </TableRow>
             </TableHead>
             <TableBody>
-              {props.children[1].props.children.map((row) => {
+              {[props.children[1].props.children].flat()?.map((row) => {
                 return (
                   <TableRow>
                     {row.props.children.map((e) => {
