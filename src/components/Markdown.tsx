@@ -262,7 +262,7 @@ export const Markdown = ({
         }
 
         if (language === 'mermaid') {
-          return <Mermaid>{props?.children?.[0].props.children}</Mermaid>;
+          return <Mermaid>{props?.children?.[0]?.props?.children}</Mermaid>;
         }
 
         const child = Array.isArray(props.children)
@@ -275,7 +275,7 @@ export const Markdown = ({
               <IconButton
                 sx={{ ml: 'auto', mb: -7, color: 'white' }}
                 onClick={() => {
-                  copy(props?.children?.[0].props.children);
+                  copy(props?.children?.[0]?.props.children);
                   dispatch({
                     type: Actions.SHOW_MESSAGE,
                     value: 'Copied to clipboard',
@@ -286,7 +286,7 @@ export const Markdown = ({
               </IconButton>
             </Box>
             <SyntaxHighlighter language={language} style={a11yDark}>
-              {child.props.children}
+              {child?.props.children}
             </SyntaxHighlighter>
           </>
         );
