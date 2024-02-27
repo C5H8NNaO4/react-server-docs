@@ -16,6 +16,8 @@ import {
   ListItemText,
   Button,
   Tooltip,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -59,10 +61,22 @@ const messages = [
 
 export const useMenuShiftSx = () => {
   const { state } = useContext(stateContext);
-  return {
-    ml: state.menuOpen ? '256px' : '0px',
-    transition: `margin-left 150ms ${state.menuOpen ? 'ease-in' : 'ease-out'}`,
-  };
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  return !isMobile
+    ? {
+        ml: state.menuOpen ? '256px' : '0px',
+        transition: `margin-left 150ms ${
+          state.menuOpen ? 'ease-in' : 'ease-out'
+        }`,
+      }
+    : {
+        transform: `translateX(${state.menuOpen ? '256px' : '0px'})`,
+        transition: `margin-left 150ms ${
+          state.menuOpen ? 'ease-in' : 'ease-out'
+        }`,
+      };
 };
 export const PrankButton = ({ children }) => {
   const [open, setOpen] = useState(false);
