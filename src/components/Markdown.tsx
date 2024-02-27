@@ -43,6 +43,7 @@ type MarkdownProps = {
   cacheKey?: string;
   fetchFn?: (() => Promise<string>) | null;
   errorMD?: string;
+  citeSrc?: string;
 };
 
 export const FetchSOAnswerById = (id, url) => async () => {
@@ -145,6 +146,7 @@ export const Markdown = ({
   errorMD,
   fetchFn: userFetchFn,
   cacheKey = src,
+  citeSrc,
 }: MarkdownProps) => {
   const { dispatch } = useContext(stateContext);
   const { hash } = useLocation();
@@ -420,7 +422,7 @@ export const Markdown = ({
           {md}
         </ReactMarkdown>
       </div>
-      {src && (
+      {src && citeSrc && (
         <div
           className={clsx('markdown', { disablePadding: true, preview: true })}
         >
