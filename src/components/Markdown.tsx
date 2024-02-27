@@ -391,31 +391,47 @@ export const Markdown = ({
     };
   }, [dispatch, headingRenderer]);
 
+  const md = error ? errorMD : loading < 2 ? children : result;
+  const cited = src ? `<sub>\- ${src}</sub>` : md;
   return (
-    <div
-      className={clsx('markdown', {
-        center,
-        disablePadding,
-        preview,
-        landing,
-      })}
-      style={{
-        minHeight: optimisticHeight,
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'start',
-        alignContent: 'center',
-      }}
-    >
-      <ReactMarkdown
-        className={clsx({ 'markdown-small': small })}
-        rehypePlugins={[rehypeRaw]}
-        remarkPlugins={[remarkGfm]}
-        components={components}
+    <div>
+      <div
+        className={clsx('markdown', {
+          center,
+          disablePadding,
+          preview,
+          landing,
+        })}
+        style={{
+          minHeight: optimisticHeight,
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'start',
+          alignContent: 'center',
+        }}
       >
-        {error ? errorMD : loading < 2 ? children : result}
-      </ReactMarkdown>
+        <ReactMarkdown
+          className={clsx({ 'markdown-small': small })}
+          rehypePlugins={[rehypeRaw]}
+          remarkPlugins={[remarkGfm]}
+          components={components}
+        >
+          {md}
+        </ReactMarkdown>
+      </div>
+      <div
+        className={clsx('markdown', { disablePadding: true, preview: true })}
+      >
+        <ReactMarkdown
+          className={clsx({ 'markdown-small': small })}
+          rehypePlugins={[rehypeRaw]}
+          remarkPlugins={[remarkGfm]}
+          components={components}
+        >
+          {cited}
+        </ReactMarkdown>
+      </div>
     </div>
   );
 };
