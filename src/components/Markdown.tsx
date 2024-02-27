@@ -277,7 +277,7 @@ export const Markdown = ({
               <IconButton
                 sx={{ ml: 'auto', mb: -7, color: 'white' }}
                 onClick={() => {
-                  copy(props?.children?.[0]?.props.children);
+                  copy(props?.children?.props.children);
                   dispatch({
                     type: Actions.SHOW_MESSAGE,
                     value: 'Copied to clipboard',
