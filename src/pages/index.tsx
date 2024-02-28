@@ -33,10 +33,7 @@ export const IndexPage = () => {
               spacing={4}
               sx={{ alignItems: 'center' }}
             >
-              <Grid
-                item
-                sx={{ marginLeft: 'auto', marginRight: 'auto', flex: 1 }}
-              >
+              <Grid item sx={{ marginLeft: 'auto', marginRight: 'auto' }}>
                 <Favicon
                   style={{
                     width: 256,
@@ -45,8 +42,13 @@ export const IndexPage = () => {
                   }}
                 />
               </Grid>
-              <Grid item sx={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                <h1>React Server</h1>
+              <Grid
+                item
+                sx={{ marginLeft: 'auto', marginRight: 'auto', flex: 1 }}
+              >
+                <div className="markdown landing center">
+                  <h1 id="react-server">React Server</h1>
+                </div>
               </Grid>
             </Grid>
             <Markdown
