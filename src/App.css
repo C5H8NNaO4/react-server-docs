@@ -240,7 +240,7 @@ pre {
   background: #ababab;
   border-radius: 10px;
   border: 2px solid transparent;
-  background-clip: padding-box; 
+  background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -250,3 +250,7 @@ pre {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/*
+* End scrollbar styles
+*/
