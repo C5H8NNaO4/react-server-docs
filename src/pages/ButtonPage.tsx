@@ -39,9 +39,7 @@ export const ButtonPage = () => {
         <Markdown src={getRawPath('src/pages/index/footer.md')}>
           Loading...
         </Markdown>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Navigation />
-        </Box>
+        <Navigation />
       </Paper>
     </Container>
   );

@@ -28,9 +28,7 @@ export const MorePage = () => {
         >
           Loading...
         </Markdown>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Navigation />
-        </Box>
+        <Navigation />
       </Paper>
     </Container>
   );
