@@ -1,7 +1,6 @@
 import { precacheAndRoute } from 'workbox-precaching';
 import { clientsClaim } from 'workbox-core';
 
-console.log('MANI', self.__WB_MANIFEST);
 self.skipWaiting();
 clientsClaim();
 precacheAndRoute(self.__WB_MANIFEST);
