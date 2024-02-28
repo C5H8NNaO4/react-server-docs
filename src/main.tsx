@@ -22,6 +22,8 @@ if ('serviceWorker' in navigator) {
   register();
 }
 
+window.React = React;
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <App />
 );
