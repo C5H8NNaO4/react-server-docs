@@ -4,7 +4,6 @@ import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 
 import { Markdown } from '../components/Markdown';
-import { HelloWorldExample2 } from '../server-components/examples';
 import { getRawPath } from '../components/CollabEditButton';
 
 export const ButtonPage = () => {

@@ -27,15 +27,12 @@ import ExtensionIcon from '@mui/icons-material/Extension';
 import GroupsIcon from '@mui/icons-material/Groups';
 import InfoIcon from '@mui/icons-material/Info';
 import SmartButtonIcon from '@mui/icons-material/SmartButton';
-
+import IndexPage from './pages/index';
 import { SL_DOMAIN } from './lib/config';
 import { Alert } from '@mui/material';
 
 const docsRoutes = [
-  <Route
-    path="/"
-    Component={React.lazy(() => import('./pages/index') as any)}
-  />,
+  <Route path="/" Component={IndexPage} />,
   <Route
     path="/button"
     Component={React.lazy(() => import('./pages/ButtonPage') as any)}
