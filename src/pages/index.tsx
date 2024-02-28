@@ -13,7 +13,7 @@ import Favicon from '../assets/favicon.svg?react';
 
 export const IndexPage = () => {
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" disableGutters>
       <Grid container spacing={1}>
         <Grid item xs={12} md={12} xl={12}>
           <Paper
@@ -53,24 +53,12 @@ export const IndexPage = () => {
             </Grid>
             <Markdown
               src={getRawPath('src/pages/index.md')}
-              optimisticHeight="6576px"
+              optimisticHeight="1057px"
               landing
             >
               Loading...
             </Markdown>
-            <Alert severity="info">
-              Increase the count by clicking the button below. The count is
-              stored on our server.
-            </Alert>
-            <Box
-              sx={{ display: 'flex', justifyContent: 'center', paddingTop: 1 }}
-            >
-              <HelloWorldExample2 />
-            </Box>
-            ´
-            <Markdown src={getRawPath('src/pages/index/footer.md')}>
-              Loading...
-            </Markdown>
+
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <NavigationButton2D next />
             </Box>

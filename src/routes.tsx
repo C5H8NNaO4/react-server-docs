@@ -25,6 +25,8 @@ import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import GroupsIcon from '@mui/icons-material/Groups';
+import InfoIcon from '@mui/icons-material/Info';
+import SmartButtonIcon from '@mui/icons-material/SmartButton';
 
 import { SL_DOMAIN } from './lib/config';
 import { Alert } from '@mui/material';
@@ -33,6 +35,14 @@ const docsRoutes = [
   <Route
     path="/"
     Component={React.lazy(() => import('./pages/index') as any)}
+  />,
+  <Route
+    path="/button"
+    Component={React.lazy(() => import('./pages/ButtonPage') as any)}
+  />,
+  <Route
+    path="/more"
+    Component={React.lazy(() => import('./pages/MorePage') as any)}
   />,
   <Route path="/why" Component={WhyPage} />,
   <Route
@@ -166,6 +176,8 @@ type Navigation = [
  * */
 const urls = [
   '/',
+  '/button',
+  '/more',
   '/why',
   '/installation',
   '/installation/forum',
@@ -192,13 +204,9 @@ const urls = [
 
 const docsNavigation: Navigation = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
-  [
-    '/why',
-    'Why',
-    null,
-    null,
-    ({ color }) => <QuestionMarkIcon color={color} />,
-  ],
+  ['/button', 'Demo Button', null, null, SmartButtonIcon],
+  ['/more', 'More Info', null, null, InfoIcon],
+  ['/why', 'Why', null, null, QuestionMarkIcon],
   [
     '/installation',
     'Installation',

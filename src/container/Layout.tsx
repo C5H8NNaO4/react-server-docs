@@ -1,5 +1,5 @@
 import { Routes } from 'react-router';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState, Suspense } from 'react';
 import {
   Paper,
   Typography,
@@ -18,6 +18,7 @@ import {
   Tooltip,
   useTheme,
   useMediaQuery,
+  LinearProgress,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -280,7 +281,9 @@ export const Layout = () => {
           })}
           <SidebarNavigation />
           <Box sx={menuShift}>
-            <Routes>{routes}</Routes>
+            <Suspense fallback={<LinearProgress variant="indeterminate" />}>
+              <Routes>{routes}</Routes>
+            </Suspense>
           </Box>
         </main>
         {!state.fullscreen && (
