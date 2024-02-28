@@ -71,6 +71,7 @@ const urls = [
   '/',
   '/why',
   '/installation',
+  '/installation/forum',
   '/components',
   '/react-server',
   '/react-server/states',
@@ -104,6 +105,13 @@ const docsNavigation: Navigation = [
   [
     '/installation',
     'Installation',
+    null,
+    null,
+    ({ color }) => <InstallDesktopIcon color={color} />,
+  ],
+  [
+    '/installation/forum',
+    'Forum',
     null,
     null,
     ({ color }) => <InstallDesktopIcon color={color} />,
@@ -242,6 +250,12 @@ const docsRoutes = [
   <Route path="/" Component={IndexPage} />,
   <Route path="/why" Component={WhyPage} />,
   <Route path="/installation" Component={InstallationPage} />,
+  <Route
+    path="/installation/forum"
+    Component={() => {
+      return <GithubPage src="src/pages/installation/forum.md"  landing/>;
+    }}
+  />,
   <Route path="/faq" Component={FAQPage} />,
   <Route
     path="/community"
