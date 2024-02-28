@@ -13,7 +13,6 @@ import { ServerPage } from './pages/server';
 import { StoresPage } from './pages/stores';
 import { Poll } from './server-components/examples/Polls';
 import { CommentsPage } from './pages/examples/comments';
-import { InstallationPage } from './pages/installation';
 import { VotingPage } from './pages/examples/voting';
 import { AdminPage } from './pages/admin';
 import { ReactServerPage } from './pages/react-server';
@@ -249,11 +248,16 @@ const blogsNavigation: Navigation = [
 const docsRoutes = [
   <Route path="/" Component={IndexPage} />,
   <Route path="/why" Component={WhyPage} />,
-  <Route path="/installation" Component={InstallationPage} />,
+  <Route
+    path="/installation"
+    Component={() => {
+      return <GithubPage src="src/pages/Installation.md" landing />;
+    }}
+  />,
   <Route
     path="/installation/forum"
     Component={() => {
-      return <GithubPage src="src/pages/installation/forum.md"  landing/>;
+      return <GithubPage src="src/pages/installation/forum.md" landing />;
     }}
   />,
   <Route path="/faq" Component={FAQPage} />,
