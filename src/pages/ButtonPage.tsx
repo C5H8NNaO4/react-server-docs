@@ -40,7 +40,7 @@ export const ButtonPage = () => {
           Loading...
         </Markdown>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <NavigationButton2D next />
+          <NavigationButton2D />
         </Box>
       </Paper>
     </Container>
