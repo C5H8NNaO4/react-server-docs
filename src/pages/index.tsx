@@ -51,6 +51,9 @@ export const IndexPage = () => {
                 </div>
               </Grid>
             </Grid>
+            <div className="markdown landing center">
+              <h2>Dynamic, Reactive, Full-Stack Framework</h2>
+            </div>
             <Markdown
               src={getRawPath('src/pages/index.md')}
               optimisticHeight="1057px"
