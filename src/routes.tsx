@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { Navigate, Route, useParams } from 'react-router';
-import { RedirectFunction } from 'react-router-dom';
+import { Route, useParams } from 'react-router';
 import { StatesPage, IndexPage, ComponentsPage } from './pages';
 import { AuthPage } from './pages/authentication';
 import { FunctionsPage } from './pages/examples';
