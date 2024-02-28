@@ -11,7 +11,9 @@ import '@fontsource/roboto/700.css';
 if ('serviceWorker' in navigator) {
   const register = () => {
     navigator.serviceWorker.register(
-      new URL('service-worker.js', import.meta.url),
+      import.meta.env.DEV
+        ? new URL('service-worker.js', import.meta.url)
+        : '/service-worker.js',
       {
         type: import.meta.env.DEV ? 'module' : 'classic',
       }
