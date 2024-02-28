@@ -46,11 +46,7 @@ export const IndexPage = () => {
                 />
               </Grid>
               <Grid item sx={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                <Markdown
-                  // src={getRawPath('src/pages/index/introduction.md')}
-                  optimisticHeight="151px"
-                  landing
-                >{`# React Server`}</Markdown>
+                <h1>React Server</h1>
               </Grid>
             </Grid>
             <Markdown
