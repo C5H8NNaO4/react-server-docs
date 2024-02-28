@@ -7,7 +7,6 @@ import svgr from 'vite-plugin-svgr';
 // https://vitejs.dev/config/
 export default defineConfig({
   envPrefix: 'REACT_APP_',
-  publicDir: '/public',
   plugins: [
     svgr(),
     react(),

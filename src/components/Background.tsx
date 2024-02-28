@@ -10,7 +10,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-
+import Helmet from 'react-helmet';
 enum Vanta {
   CLOUDS,
   WAVES,
@@ -24,6 +24,7 @@ type VANTA = {
 declare global {
   interface Window {
     VANTA: VANTA;
+    THREE: any;
   }
 }
 
@@ -75,6 +76,7 @@ export const VantaBackground: FunctionComponent<
       const fn = window.VANTA[type] || window.VANTA.CLOUDS;
       if (enabled && !instance.current) {
         instance.current = fn({
+          THREE: window.THREE,
           ...sharedProps,
           ...rest,
         });
@@ -87,7 +89,7 @@ export const VantaBackground: FunctionComponent<
   );
 
   useEffect(() => {
-    if (!window.VANTA) return;
+    if (!window.VANTA || !window.THREE) return;
 
     render();
     // eslint-disable-next-line consistent-return
@@ -100,8 +102,10 @@ export const VantaBackground: FunctionComponent<
 
   useEffect(() => {
     document.getElementById('vanta')?.addEventListener('load', render);
+    document.getElementById('three')?.addEventListener('load', render);
     return () => {
       document.getElementById('vanta')?.removeEventListener('load', render);
+      document.getElementById('three')?.removeEventListener('load', render);
     };
   });
 
@@ -129,6 +133,21 @@ export const VantaBackground: FunctionComponent<
       }}
     >
       {children}
+      {enabled && (
+        <>
+          <Helmet>
+            <script
+              id="three"
+              src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"
+            ></script>
+            <script
+              id="vanta"
+              src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.clouds.min.js"
+            ></script>
+          </Helmet>
+          {/* <Render /> */}
+        </>
+      )}
     </div>
   );
 };
