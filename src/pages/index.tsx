@@ -120,3 +120,5 @@ export const IndexPage = () => {
 
 export * from './states';
 export { ComponentsPage } from './components';
+
+export default IndexPage;

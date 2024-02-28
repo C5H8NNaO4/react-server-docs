@@ -26,3 +26,5 @@ export const AdminPage = () => {
     </Container>
   );
 };
+
+export default AdminPage;

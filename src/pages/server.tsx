@@ -37,3 +37,5 @@ export const ServerPage = () => {
     </Container>
   );
 };
+
+export default ServerPage;

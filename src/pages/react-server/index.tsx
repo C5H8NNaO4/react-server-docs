@@ -26,3 +26,5 @@ export const ReactServerPage = () => {
     </Container>
   );
 };
+
+export default ReactServerPage;

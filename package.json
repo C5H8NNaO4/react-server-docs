@@ -18,7 +18,7 @@
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.13",
     "@mui/x-date-pickers": "^6.11.1",
-    "@state-less/leap-frontend": "^0.0.5",
+    "@state-less/leap-frontend": "^0.0.6",
     "@state-less/react-client": "^2.0.12",
     "change-case": "^4.1.2",
     "clsx": "^1.2.1",

@@ -49,3 +49,5 @@ upper amount of the wilson score.
     </Container>
   );
 };
+
+export default VotingsPage;

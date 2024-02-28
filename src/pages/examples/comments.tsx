@@ -40,3 +40,5 @@ export const CommentsPage = () => {
     </Container>
   );
 };
+
+export default CommentsPage;

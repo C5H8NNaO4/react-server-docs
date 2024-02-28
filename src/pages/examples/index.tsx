@@ -62,3 +62,5 @@ export const FunctionsPage = () => {
     </Container>
   );
 };
+
+export default FunctionsPage;

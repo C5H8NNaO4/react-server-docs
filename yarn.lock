@@ -2035,10 +2035,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@state-less/leap-frontend@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@state-less/leap-frontend/-/leap-frontend-0.0.5.tgz#e91dedfee9157b61eb6fc6e8c65e3343fd4503ea"
-  integrity sha512-kUoui8oZH9fIMXSAdaVIBdg6t6YLRBt5byZgJuOjBKPFZZWMNq+uVpJeeKoGWSLhLdWeZR6lAYIB9N+kmjxpsw==
+"@state-less/leap-frontend@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@state-less/leap-frontend/-/leap-frontend-0.0.6.tgz#86ed21a91e83bdb729d9793dd11441def16f4f6b"
+  integrity sha512-/oAIpBbtlz2yTx/iJSZRrEjXWvhCjC25uhDqfzwLT1CJTBWbuVlvuWUOGlWDw6Rwyl5tM/ZQw7B8TOnyxYK98A==
   dependencies:
     "@emotion/react" "^11.10.6"
     "@emotion/styled" "^11.10.6"

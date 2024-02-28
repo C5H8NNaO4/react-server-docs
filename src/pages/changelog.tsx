@@ -198,3 +198,5 @@ const CustomTooltip = (props) => {
     </Paper>
   );
 };
+
+export default ChangeLog;

@@ -20,3 +20,5 @@ export const StoresPage = () => {
     </Container>
   );
 };
+
+export default StoresPage

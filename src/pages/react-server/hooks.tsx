@@ -26,3 +26,5 @@ export const ReactServerHooksPage = () => {
     </Container>
   );
 };
+
+export default ReactServerHooksPage;
