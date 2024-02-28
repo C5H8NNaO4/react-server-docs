@@ -8,5 +8,3 @@ export const GITHUB_CONTRIBUTE =
   'https://blogs.state-less.cloud/post-05948288-4e76-48f7-ae82-47903bccefa0';
 
 export const COPYRIGHT_URL = 'https://react-server.dev';
-
-export const USE_PROD_CLIENT = false;

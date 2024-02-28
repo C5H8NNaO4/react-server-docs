@@ -9,8 +9,6 @@ import { getRawPath } from '../components/CollabEditButton';
 import { Poll } from '../server-components/examples/Polls';
 import { Comments } from '../server-components/examples/Comments';
 import { HelloWorldExample2 } from '../server-components/examples';
-import { DefaultMeta, DomainsMeta, Meta } from '../components/Meta';
-import { SL_DOMAIN } from '../lib/config';
 import Favicon from '../assets/favicon.svg?react';
 
 export const IndexPage = () => {
@@ -29,8 +27,16 @@ export const IndexPage = () => {
               },
             }}
           >
-            <Grid container className={styles.imageContainer} spacing={4}>
-              <Grid item sx={{ marginLeft: 'auto', marginRight: 'auto' }}>
+            <Grid
+              container
+              className={styles.imageContainer}
+              spacing={4}
+              sx={{ alignItems: 'center' }}
+            >
+              <Grid
+                item
+                sx={{ marginLeft: 'auto', marginRight: 'auto', flex: 1 }}
+              >
                 <Favicon
                   style={{
                     width: 256,
@@ -42,7 +48,7 @@ export const IndexPage = () => {
               <Grid item sx={{ marginLeft: 'auto', marginRight: 'auto' }}>
                 <Markdown
                   src={getRawPath('src/pages/index/introduction.md')}
-                  optimisticHeight="278px"
+                  optimisticHeight="151px"
                   landing
                 >
                   Loading...
@@ -51,7 +57,7 @@ export const IndexPage = () => {
             </Grid>
             <Markdown
               src={getRawPath('src/pages/index.md')}
-              optimisticHeight="1235px"
+              optimisticHeight="6576px"
               landing
             >
               Loading...

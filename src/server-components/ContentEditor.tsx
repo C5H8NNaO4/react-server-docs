@@ -138,7 +138,7 @@ export const OwnerChip = ({ owner, sx = {} }) => {
   const { name = 'Anonymous', picture } = owner;
   return (
     <Chip
-      avatar={<Avatar src={picture} />}
+      avatar={<Avatar alt="user picture" src={picture} />}
       sx={{ marginLeft: 'auto !important', mr: 3, ...sx }}
       label={name}
     />
@@ -189,8 +189,8 @@ export const ContentEditor = ({
                     loading
                       ? 'warning'
                       : component?.props?.body === body
-                        ? 'success'
-                        : 'primary'
+                      ? 'success'
+                      : 'primary'
                   }
                   multiline
                   fullWidth

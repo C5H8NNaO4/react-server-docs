@@ -12,3 +12,5 @@ export const SL_DOMAIN = import.meta.env.REACT_APP_SL_DOMAIN;
 
 export const FORUM_RULES_GH = import.meta.env.REACT_APP_FORUM_RULES_GH;
 export const FORUM_QA_GH = import.meta.env.REACT_APP_FORUM_QA_GH;
+
+export const USE_PROD_CLIENT = import.meta.env.MODE === 'production';

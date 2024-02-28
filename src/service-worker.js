@@ -1,3 +1,11 @@
+import { precacheAndRoute } from 'workbox-precaching';
+import { clientsClaim } from 'workbox-core';
+
+console.log('MANI', self.__WB_MANIFEST);
+self.skipWaiting();
+clientsClaim();
+precacheAndRoute(self.__WB_MANIFEST);
+
 let lastNotificationData = {};
 self.addEventListener('push', function (event) {
   if (event.data) {
@@ -35,13 +43,16 @@ self.addEventListener('notificationclick', (event) => {
 
   if (action === 'complete') {
     try {
-        const promise = fetch(`https://graphql.state-less.cloud/todos/${id}/toggle`, {
-        method: 'GET',
-        headers: {
-          Authorization: bearer,
-          'X-Unique-Id': clientId,
-        },
-      });
+      const promise = fetch(
+        `https://graphql.state-less.cloud/todos/${id}/toggle`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: bearer,
+            'X-Unique-Id': clientId,
+          },
+        }
+      );
       event.waitUntil(promise);
     } catch (e) {
       console.log('SW: error completing', e);

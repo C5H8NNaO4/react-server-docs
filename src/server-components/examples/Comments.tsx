@@ -224,7 +224,7 @@ const Comment = ({ comment, canDelete, wilson }) => {
         <Chip
           avatar={
             props?.identity.picture && (
-              <Avatar src={props?.identity.picture}>{<Icon />}</Avatar>
+              <Avatar alt="user picture" src={props?.identity.picture}>{<Icon />}</Avatar>
             )
           }
           label={props?.identity.name}

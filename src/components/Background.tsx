@@ -72,8 +72,6 @@ export const VantaBackground: FunctionComponent<
     () => () => {
       if (!document.querySelector(el)) return;
 
-      console.log('RENDERING VANTA', el, enabled);
-
       const fn = window.VANTA[type] || window.VANTA.CLOUDS;
       if (enabled && !instance.current) {
         instance.current = fn({

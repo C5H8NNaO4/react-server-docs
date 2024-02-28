@@ -55,6 +55,7 @@ export const LoggedInGoogleButton = () => {
         color={state.animatedBackground ? 'info' : 'info'}
       >
         <Avatar
+          alt="user picture"
           src={decoded.picture}
           sx={{ width: 24, height: 24, mr: 1 }}
         ></Avatar>
@@ -99,10 +100,12 @@ export const GoogleLoginButton = () => {
         return (
           <Button
             color={state.animatedBackground ? 'info' : 'info'}
-            style={{backgroundColor: '#001f3f', 
-                    backgroundImage: 'linear-gradient(to bottom, #001f3f, #0F9D58)',
-                    color: '#fff', 
-                    fontSize: '14px'}}
+            style={{
+              backgroundColor: '#001f3f',
+              backgroundImage: 'linear-gradient(to bottom, #001f3f, #0F9D58)',
+              color: '#fff',
+              fontSize: '14px',
+            }}
             {...props}
           >
             <GoogleIcon sx={{ mr: 1 }} />

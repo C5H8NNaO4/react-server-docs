@@ -12,7 +12,6 @@ export const Server = () => {
   const dt = new Date(dur).toUTCString().split(' ').at(-2);
   const days = Math.floor(dur / (1000 * 60 * 60 * 24));
 
-  console.log('Error connecting to server', props, error);
   return (
     <div>
       {loading && <Alert severity="info">Loading...</Alert>}

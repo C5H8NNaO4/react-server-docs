@@ -77,6 +77,7 @@ export const ChatApp = () => {
                           sx={{ ml: 'auto' }}
                           avatar={
                             <Avatar
+                              alt="user picture"
                               sx={{ width: 24, height: 24 }}
                               src={
                                 message?.author?.user?.strategies?.google

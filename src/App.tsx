@@ -11,7 +11,7 @@ import { ThemeProvider } from './provider/ThemeProvider';
 import { Layout } from './container/Layout';
 import ScrollToTop from './components/ScrollToTop';
 import { AuthProvider, useLocalStorage } from '@state-less/react-client';
-import { USE_PROD_CLIENT } from './lib/const';
+import { USE_PROD_CLIENT } from './lib/config';
 import { Meta } from './components/Meta';
 
 function App() {

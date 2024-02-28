@@ -7,20 +7,22 @@ import svgr from 'vite-plugin-svgr';
 // https://vitejs.dev/config/
 export default defineConfig({
   envPrefix: 'REACT_APP_',
+  publicDir: '/public',
   plugins: [
     svgr(),
     react(),
     VitePWA({
+      workbox: {
+        globPatterns: ['**/*.{js,css,html}'],
+      },
+
       srcDir: 'src',
-      filename: 'service-worker2.js',
+      filename: 'service-worker.js',
       strategies: 'injectManifest',
       injectRegister: false,
-      manifest: false,
-      injectManifest: {
-        injectionPoint: null,
-      },
       devOptions: {
         enabled: true,
+        type: 'module',
       },
     }),
     viteCompression(),

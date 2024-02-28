@@ -111,7 +111,7 @@ export const AnalyticsPage = (props) => {
         };
       })
   );
-  console.log('PIE', pieData, months);
+
   const expenseData = Object.keys(categories || {})
     .sort((a, b) => {
       return a.localeCompare(b);
@@ -152,7 +152,6 @@ export const AnalyticsPage = (props) => {
           typeof todo.props.lastModified === 'number'
       )
       .reduce((acc, todo) => {
-        console.log('Startof', todo.props.lastModified);
         const date = startOfDay(
           new Date(todo.props.lastModified || todo.props.createdAt)
         ).getTime();
@@ -174,14 +173,6 @@ export const AnalyticsPage = (props) => {
     (list) => list?.props.settings?.defaultType === 'Todo'
   );
 
-  console.log(
-    'Completed3',
-    Array.from(Array(7)).map((e, i, arr) => {
-      return {
-        date: subDays(new Date(), arr.length - i),
-      };
-    })
-  );
   const lastWeek = Array.from(Array(7))
     .map((e, i, arr) => {
       return {
@@ -220,7 +211,7 @@ export const AnalyticsPage = (props) => {
         ),
       };
     });
-  console.log('Last Week', lists, component?.children, lastWeek);
+
   const [active, setActive] = useState(null);
   const burndownChart = (
     <LineChart data={lastWeek}>
@@ -233,7 +224,6 @@ export const AnalyticsPage = (props) => {
       <XAxis dataKey="date" tickFormatter={DateFormatter('dd.MM')} />
       <Legend
         onClick={(e) => {
-          console.log('Legend Click', e);
           setActive(e.dataKey === active ? null : e.dataKey);
         }}
       />
