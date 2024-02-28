@@ -6,6 +6,7 @@ import Paper from '@mui/material/Paper';
 import { Markdown } from '../components/Markdown';
 import { HelloWorldExample2 } from '../server-components/examples';
 import { getRawPath } from '../components/CollabEditButton';
+import { NavigationButton2D } from '../components/NavigationButton';
 
 export const ButtonPage = () => {
   return (
@@ -38,6 +39,9 @@ export const ButtonPage = () => {
         <Markdown src={getRawPath('src/pages/index/footer.md')}>
           Loading...
         </Markdown>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <NavigationButton2D next />
+        </Box>
       </Paper>
     </Container>
   );
