@@ -5,9 +5,9 @@ import Paper from '@mui/material/Paper';
 
 import { Markdown } from '../components/Markdown';
 import { getRawPath } from '../components/CollabEditButton';
-import { NavigationButton2D } from '../components/NavigationButton';
+import { Navigation } from '../components/NavigationButton';
 
-export const ButtonPage = () => {
+export const MorePage = () => {
   return (
     <Container maxWidth="lg" disableGutters>
       <Paper
@@ -29,11 +29,11 @@ export const ButtonPage = () => {
           Loading...
         </Markdown>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <NavigationButton2D />
+          <Navigation />
         </Box>
       </Paper>
     </Container>
   );
 };
 
-export default ButtonPage;
+export default MorePage;
