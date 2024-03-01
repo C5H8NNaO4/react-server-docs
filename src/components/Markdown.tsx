@@ -9,7 +9,7 @@ import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useContext, useEffect, useMemo, createElement } from 'react';
-import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { IconButton, List, ListItem, ListItemText } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';

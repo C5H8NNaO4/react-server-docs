@@ -3,7 +3,8 @@ import './App.css';
 import client, { localClient } from './lib/client';
 
 import { StateProvider } from './provider/StateProvider';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import './App.css';
 import { ApolloProvider } from '@apollo/client';
@@ -14,7 +15,9 @@ import { AuthProvider, useLocalStorage } from '@state-less/react-client';
 import { USE_PROD_CLIENT } from './lib/config';
 import { Meta } from './components/Meta';
 
-function App() {
+const Router = typeof window === 'undefined' ? StaticRouter : BrowserRouter;
+
+function App({ url }: { url?: string }) {
   const [cookieConsent] = useLocalStorage('cookie-consent', null);
   return (
     <div className="App">
@@ -38,12 +41,14 @@ function App() {
             : USE_PROD_CLIENT
             ? client
             : localClient
+            ? localClient
+            : client
         }
       >
         <AuthProvider>
           <StateProvider>
             <ThemeProvider>
-              <Router>
+              <Router url={url}>
                 <ScrollToTop />
 
                 <Layout />

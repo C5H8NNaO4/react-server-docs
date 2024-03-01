@@ -133,7 +133,7 @@ export const Layout = () => {
   const { pathname } = useLocation();
   // const [_animated, setAnim] = useState(0);
   const _animated = state.animatedBackground || 0;
-  const hasGtag = 'gtag' in window;
+  const hasGtag = typeof window === 'undefined' ? false : 'gtag' in window;
   const [time, setTime] = useState(0);
 
   useEffect(() => {

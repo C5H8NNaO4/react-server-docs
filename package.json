@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node server",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -25,6 +25,7 @@
     "copy-to-clipboard": "^3.3.3",
     "date-fns": "^2.30.0",
     "deepmerge": "^4.3.1",
+    "express": "^4.18.3",
     "fast-levenshtein": "^3.0.0",
     "github-api": "^3.4.0",
     "jotai": "^2.2.2",
@@ -32,6 +33,7 @@
     "prettier": "^2.8.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-dom-server": "^0.0.5",
     "react-google-login": "^5.2.2",
     "react-helmet": "^6.1.0",
     "react-markdown": "9.0.1",
@@ -53,6 +55,7 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",
+    "react-universal": "^0.0.5",
     "typescript": "^4.9.3",
     "vite": "^4.1.0",
     "vite-plugin-compression": "^0.5.1",

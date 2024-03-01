@@ -19,24 +19,33 @@ type HistoryAction = {
   reverse: () => void;
 };
 
-const params = new URLSearchParams(window?.location?.search);
+const _localStorage =
+  typeof localStorage === 'undefined'
+    ? {
+        getItem: (name) => null,
+      }
+    : localStorage;
+    
+const params = new URLSearchParams(
+  typeof window === 'undefined' ? '' : window?.location?.search
+);
 const bg = Number(params.get('bg')) % 4;
 const menuOpen = Boolean(params.get('menuOpen'));
 
 const initialState: State = {
   menuOpen,
-  animatedBackground: localStorage.getItem('animatedBackgroundUser')
-    ? Number(localStorage.getItem('animatedBackgroundUser'))
-    : Number(localStorage.getItem('animatedBackground')) || bg,
+  animatedBackground: _localStorage?.getItem('animatedBackgroundUser')
+    ? Number(_localStorage?.getItem('animatedBackgroundUser'))
+    : Number(_localStorage?.getItem('animatedBackground')) || bg,
   messages: [] as any[],
   alerts: {
     info: [message],
     warning: [],
   },
   history: [],
-  fullscreen: localStorage.getItem('fullscreen') === 'true',
+  fullscreen: _localStorage?.getItem('fullscreen') === 'true',
   search: '',
-  searchDistance: Number(localStorage.getItem('searchDistance') || 2),
+  searchDistance: Number(_localStorage?.getItem('searchDistance') || 2),
   showBC: false,
 };
 

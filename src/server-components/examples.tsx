@@ -1,6 +1,5 @@
 import { useComponent } from '@state-less/react-client';
 import { Alert, Button } from '@mui/material';
-import { localClient } from '../lib/client';
 
 export const HelloWorldExample1 = () => {
   const [component, { loading, error }] = useComponent('hello-world-1', {});

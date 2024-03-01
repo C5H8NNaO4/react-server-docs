@@ -3,7 +3,9 @@ import { SL_DOMAIN } from '../../lib/config';
 import { Markdown } from '../Markdown';
 
 export const MovedDomainWarning = ({ domain }) => {
-  const isOldDomain = window.location.host !== domain;
+  /** TODO: Fix this */
+  const isOldDomain =
+    typeof window === 'undefined' ? false : window.location.host !== domain;
   if (!isOldDomain) return null;
   return (
     <Alert severity="success">

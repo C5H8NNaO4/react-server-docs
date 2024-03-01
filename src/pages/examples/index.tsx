@@ -1,12 +1,6 @@
-import { Paper, Container, Typography } from '@mui/material';
-
-import { useServerState, useComponent } from '@state-less/react-client';
-import client, { localClient } from '../../lib/client';
-import { useContext } from 'react';
-import { stateContext } from '../../provider/StateProvider';
+import { Paper, Container } from '@mui/material';
 
 import { Markdown } from '../../components/Markdown';
-import { Server } from '../../server-components/Server';
 import { getRawPath } from '../../components/CollabEditButton';
 import { Navigation } from '../../components/NavigationButton';
 import {

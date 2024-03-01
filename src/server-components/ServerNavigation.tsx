@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { useComponent } from '@state-less/react-client/dist/index';
 import { useState } from 'react';
-import { localClient } from '../lib/client';
 
 import CloseIcon from '@mui/icons-material/Close';
 
