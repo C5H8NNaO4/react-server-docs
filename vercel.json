@@ -10,7 +10,7 @@
       "use": "@vercel/static"
     }
   ],
-  "outputDirectory": ".",
+  "outputDirectory": "/dist",
   "devCommand": "node api/index",
   "buildCommand": "yarn build:server && yarn build:client"
 }
