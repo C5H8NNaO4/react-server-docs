@@ -22,7 +22,7 @@ async function createServer() {
     __dirname,
     path.join(__dirname, '../dist/client')
   );
-  app.use(path.join(__dirname, '../dist/client'));
+  app.use(express.static(path.join(__dirname, '../dist/client')));
   // if (!IS_PROD) {
   //   vite = await createViteServer({
   //     mode: 'production',
