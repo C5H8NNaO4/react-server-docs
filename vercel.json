@@ -6,7 +6,6 @@
       "use": "@vercel/node"
     }
   ],
-  "outputDirectory": "./dist",
   "devCommand": "node api/index",
   "buildCommand": "yarn build:server && yarn build:client"
 }
