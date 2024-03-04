@@ -6,7 +6,7 @@ import { createServer as createViteServer } from 'vite';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-console.log('ENV', process.env);
+const PORT = process.env.PORT || 5173;
 async function createServer() {
   const app = express();
 
@@ -72,11 +72,11 @@ async function createServer() {
     }
   });
 
-  app.listen(process.env.PORT);
-  console.log('Listening on ', process.env.PORT);
+  app.listen(PORT);
+  console.log('Listening on ', PORT);
 
   return app;
 }
 const app = createServer();
 
-module.exports = app;
+export default app;

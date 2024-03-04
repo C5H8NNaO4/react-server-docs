@@ -44,4 +44,9 @@ export default defineConfig({
   ssr: {
     noExternal,
   },
+  build: {
+    rollupOptions: {
+      external: ['node_modules/jsonwebtoken/index.js'],
+    },
+  },
 });

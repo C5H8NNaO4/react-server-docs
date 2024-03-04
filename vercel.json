@@ -1,9 +1,9 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/api/index.js" }],
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
   "builds": [
     {
       "src": "./api/index.js",
-      "use": "@now/node"
+      "use": "@vercel/node"
     }
   ],
   "devCommand": "node api/index",

@@ -94,8 +94,6 @@ export const useFetch = (
     ? initialValue
     : null;
 
-  console.log('Fetch', resultCache, cacheKey, resultCache?.[cacheKey]);
-
   const atm =
     useFetchAtoms[key] ||
     (useFetchAtoms[key] = atom<FetchState>({

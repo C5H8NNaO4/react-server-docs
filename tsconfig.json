@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
+    "module": "commonjs",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -17,6 +17,6 @@
     "jsx": "react-jsx",
     "noImplicitAny": false
   },
-  "include": ["src", "vite-plugin-svgr/client"],
+  "include": ["src", "vite-plugin-svgr/client", "server.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
