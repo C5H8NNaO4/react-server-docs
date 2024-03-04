@@ -64,8 +64,8 @@ export const ServerPages = () => {
           </Button>
         </CardActions>
       </Card>
-      {component?.children?.map((page) => {
-        return <ServerPage {...page.props} />;
+      {component?.children?.map((page, i) => {
+        return <ServerPage key={i} {...page.props} />;
       })}
     </>
   );

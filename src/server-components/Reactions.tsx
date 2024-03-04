@@ -65,6 +65,7 @@ export const Reactions = ({ data }) => {
           const Icon = ReactionIcons[reaction];
           return (
             <Chip
+              key={reaction}
               icon={<Icon />}
               color={voted === reaction ? 'success' : undefined}
               disabled={voted !== null && voted !== reaction}
@@ -157,6 +158,7 @@ const ReactionPopper = ({ anchor, id, onClose, react }) => {
                 const Icon = ReactionIcons[reaction];
                 return (
                   <IconButton
+                    key={reaction}
                     onClick={() => react(reaction)}
                     sx={{ pl: '4px' }}
                   >

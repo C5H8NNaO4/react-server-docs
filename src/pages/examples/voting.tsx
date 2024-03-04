@@ -50,4 +50,4 @@ upper amount of the wilson score.
   );
 };
 
-export default VotingsPage;
+export default VotingPage;

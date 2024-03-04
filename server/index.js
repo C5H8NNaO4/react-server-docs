@@ -6,13 +6,16 @@ import { createServer as createViteServer } from 'vite';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+console.log('ENV', process.env);
 async function createServer() {
   const app = express();
 
   // Create Vite server in middleware mode and configure the app type as
   // 'custom', disabling Vite's own HTML serving logic so parent server
   // can take control
+  console.log('IMPORT', import.meta);
   const vite = await createViteServer({
+    mode: 'production',
     server: { middlewareMode: true },
     appType: 'custom',
   });
@@ -30,30 +33,35 @@ async function createServer() {
 
     try {
       // 1. Read index.html
-      let template = fs.readFileSync(
-        path.resolve(__dirname, 'index.html'),
-        'utf-8'
-      );
+      // let template = fs.readFileSync(
+      //   path.resolve(__dirname, 'index.html'),
+      //   'utf-8'
+      // );
       // 2. Apply Vite H TML transforms. This injects the Vite HMR client,
       //    and also applies HTML transforms from Vite plugins, e.g. global
       //    preambles from @vitejs/plugin-react
-      template = await vite.transformIndexHtml(url, template);
+      // template = await vite.transformIndexHtml(url, template);
 
       // // 3a. Load the server entry. ssrLoadModule automatically transforms
       // //    ESM source code to be usable in Node.js! There is no bundling
       // //    required, and provides efficient invalidation similar to HMR.
-      const { render } = await vite.ssrLoadModule('/src/entry-server.tsx');
-
+      const imp =
+        process.env.NODE_ENV === 'production'
+          ? await import('../dist/server/entry-server.js')
+          : await vite.ssrLoadModule('/src/entry-server.tsx');
+      console.log('SSR', process.env.NODE_ENV, imp);
       // 4. render the app HTML. This assumes entry-server.js's exported
       //     `render` function calls appropriate framework SSR APIs,
       //    e.g. ReactDOMServer.renderToString()
-      const appHtml = await render(url);
+      const { render } = imp;
+      await render({ pathname: req.originalUrl }, { req, res });
 
       // 5. Inject the app-rendered HTML into the template.
-      const html = template.replace(`<!--ssr-outlet-->`, appHtml);
+      // const html = template.replace(`<!--ssr-outlet-->`, appHtml);
 
       // 6. Send the rendered HTML back.
-      res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+      // res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+      // res.end();
     } catch (e) {
       // If an error is caught, let Vite fix the stack trace so it maps back
       // to your actual source code.
@@ -64,7 +72,11 @@ async function createServer() {
     }
   });
 
-  app.listen(5173);
-  console.log('Listening on ', 5173);
+  app.listen(process.env.PORT);
+  console.log('Listening on ', process.env.PORT);
+
+  return app;
 }
-createServer();
+const app = createServer();
+
+export default app;

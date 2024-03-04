@@ -1,5 +1,5 @@
 import { Routes } from 'react-router';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState, Suspense } from 'react';
 import {
   Paper,
   Typography,
@@ -18,6 +18,7 @@ import {
   Tooltip,
   useTheme,
   useMediaQuery,
+  LinearProgress,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -25,7 +26,6 @@ import EmailIcon from '@mui/icons-material/Email';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import GroupsIcon from '@mui/icons-material/Group';
-import { useLocation } from 'react-router-dom';
 import ChatIcon from '@mui/icons-material/Chat';
 import Snackbar from '@mui/material/Snackbar';
 import HeartIcon from '@mui/icons-material/Favorite';
@@ -44,9 +44,7 @@ import { ViewCounter } from '../server-components/examples/ViewCounter';
 import { CONTACT_MAIL, GITHUB_CONTRIBUTE } from '../lib/const';
 
 import styles from './Layout.module.css';
-import { Copyright } from '../components/Copyright';
-import { SL_DOMAIN, VIEWS_KEY } from '../lib/config';
-import { MovedDomainWarning } from '../components/alerts/Moved';
+import { VIEWS_KEY } from '../lib/config';
 declare let gtag: (
   _: string,
   __: string,
@@ -129,8 +127,10 @@ export const PrankButton = ({ children }) => {
 };
 export const Layout = () => {
   const { state, dispatch } = useContext(stateContext);
-  const [features] = useComponent('features');
-  const { pathname } = useLocation();
+  const [features] = useComponent('features', {
+    suspend: import.meta.env.SSR,
+  });
+  // const { pathname } = useLocation();
   // const [_animated, setAnim] = useState(0);
   const _animated = state.animatedBackground || 0;
   const hasGtag = typeof window === 'undefined' ? false : 'gtag' in window;
@@ -174,7 +174,7 @@ export const Layout = () => {
           };
       }, 0);
     }
-  }, [pathname, cookieConsent, hasGtag]);
+  }, [cookieConsent, hasGtag]);
   const menuShift = useMenuShiftSx();
   return (
     <VantaBackground
@@ -185,7 +185,7 @@ export const Layout = () => {
     >
       <Box
         id="scroll"
-        key={pathname}
+        // key={pathname}
         sx={{
           marginTop: '64px',
           maxHeight: 'calc(100vh - 64px)',
@@ -220,10 +220,16 @@ export const Layout = () => {
           <Box sx={menuShift}>
             {!state.fullscreen &&
               state.alerts.info?.length > 0 &&
-              state.alerts.info?.map((msg) => {
-                return msg && <Alert severity="info">{msg}</Alert>;
+              state.alerts.info?.map((msg, i) => {
+                return (
+                  msg && (
+                    <Alert key={`alert-${i}`} severity="info">
+                      {msg}
+                    </Alert>
+                  )
+                );
               })}
-            {cookieConsent === null && (
+            {/* {cookieConsent === null && (
               <Alert
                 severity="info"
                 action={
@@ -251,14 +257,22 @@ export const Layout = () => {
               >
                 We use Google Analytics to track page views.
               </Alert>
-            )}
-            <MovedDomainWarning domain={SL_DOMAIN} />
+            )} */}
+            {/* <ClientOnly
+              load={() => import('../components/alerts/Moved')}
+              fallback="Loading"
+            >
+              {(MovedDomainWarning) => (
+                <MovedDomainWarning domain={SL_DOMAIN} />
+              )}
+            </ClientOnly> */}
           </Box>
           <div id="app-warnings" />
 
           {state.messages.map((message) => {
             return (
               <Snackbar
+                key={message.message}
                 open={true}
                 autoHideDuration={6000}
                 onClose={() => dispatch({ type: Actions.HIDE_MESSAGE })}
@@ -280,7 +294,9 @@ export const Layout = () => {
           })}
           <SidebarNavigation />
           <Box sx={menuShift}>
-            <Routes>{routes}</Routes>
+            <Suspense fallback={<LinearProgress variant="indeterminate" />}>
+              <Routes>{routes}</Routes>
+            </Suspense>
           </Box>
         </main>
         {!state.fullscreen && (
@@ -298,7 +314,7 @@ export const Layout = () => {
               }}
             >
               <Typography variant="body2" color="textSecondary" align="center">
-                <Copyright backgroundColor="primary" />
+                {/* <Copyright backgroundColor="primary" /> */}
               </Typography>
               <Grid container spacing={1} justifyContent="center">
                 <Grid item xs={12} sm={6} md={4} xl={2}>

@@ -1,5 +1,5 @@
-import { Paper, Grid, Container } from '@mui/material';
-
+import { Paper, Grid, Container, LinearProgress } from '@mui/material';
+import { Suspense, useEffect } from 'react';
 import { Alert, Box } from '@mui/material';
 
 import { Markdown } from '../components/Markdown';
@@ -12,8 +12,11 @@ import { HelloWorldExample2 } from '../server-components/examples';
 import Favicon from '../assets/favicon.svg?react';
 
 export const IndexPage = () => {
+  useEffect(() => {
+    console.log('RENDERING INDEX');
+  }, []);
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" disableGutters>
       <Grid container spacing={1}>
         <Grid item xs={12} md={12} xl={12}>
           <Paper
@@ -51,26 +54,19 @@ export const IndexPage = () => {
                 </div>
               </Grid>
             </Grid>
-            <Markdown
-              src={getRawPath('src/pages/index.md')}
-              optimisticHeight="6576px"
-              landing
-            >
-              Loading...
-            </Markdown>
-            <Alert severity="info">
-              Increase the count by clicking the button below. The count is
-              stored on our server.
-            </Alert>
-            <Box
-              sx={{ display: 'flex', justifyContent: 'center', paddingTop: 1 }}
-            >
-              <HelloWorldExample2 />
-            </Box>
-            ´
-            <Markdown src={getRawPath('src/pages/index/footer.md')}>
-              Loading...
-            </Markdown>
+            <div className="markdown landing center">
+              <h2>Dynamic, Reactive, Full-Stack Framework</h2>
+            </div>
+            <Suspense>
+              <Markdown
+                src={getRawPath('src/pages/index.md')}
+                optimisticHeight="1057px"
+                landing
+                suspend
+              >
+                Loading...
+              </Markdown>
+            </Suspense>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <NavigationButton2D next />
             </Box>
@@ -109,7 +105,9 @@ export const IndexPage = () => {
               />
             </Grid>
             <Grid item xs={12} lg={6}>
-              <Comments title="Comments" />
+              <Suspense fallback={<LinearProgress />}>
+                <Comments title="Comments" />
+              </Suspense>
             </Grid>
           </Grid>
         </Grid>

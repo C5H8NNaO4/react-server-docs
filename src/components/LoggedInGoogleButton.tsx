@@ -6,7 +6,7 @@ import {
   IconButton,
 } from '@mui/material';
 import { authContext } from '@state-less/react-client';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import GoogleIcon from '@mui/icons-material/Google';
 import { GOOGLE_ID } from '../lib/config';
@@ -33,12 +33,11 @@ export const LoggedInGoogleButton = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   if (session.strategy !== 'google') {
     return null;
   }
 
-  const decoded = session.strategies.google.decoded;
+  const decoded = session?.strategies?.google.decoded;
 
   const theme = useTheme();
 
@@ -56,10 +55,10 @@ export const LoggedInGoogleButton = () => {
       >
         <Avatar
           alt="user picture"
-          src={decoded.picture}
+          src={decoded?.picture}
           sx={{ width: 24, height: 24, mr: 1 }}
         ></Avatar>
-        {!lessThanSmall && decoded.name}
+        {!lessThanSmall && decoded?.name}
       </MDButton>
       <Menu
         id="basic-menu"
@@ -76,10 +75,33 @@ export const LoggedInGoogleButton = () => {
   );
 };
 
-export const GoogleLoginButton = () => {
+export const GoogleLoginButton = ({ ssr }) => {
   const { session, authenticate } = useContext(authContext);
   const { state } = useContext(stateContext);
 
+  const [isClient, setIsClient] = useState(!ssr);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return (
+      <Button
+        color={state.animatedBackground ? 'info' : 'info'}
+        style={{
+          backgroundColor: '#001f3f',
+          backgroundImage: 'linear-gradient(to bottom, #001f3f, #0F9D58)',
+          color: '#fff',
+          fontSize: '14px',
+        }}
+        // {...props}
+      >
+        <GoogleIcon sx={{ mr: 1 }} />
+        Login
+      </Button>
+    );
+  }
   return session?.strategy === 'google' ? (
     <LoggedInGoogleButton />
   ) : (
@@ -118,3 +140,5 @@ export const GoogleLoginButton = () => {
     />
   );
 };
+
+export default LoggedInGoogleButton;

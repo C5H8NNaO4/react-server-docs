@@ -15,3 +15,5 @@ export const MovedDomainWarning = ({ domain }) => {
     </Alert>
   );
 };
+
+export default MovedDomainWarning;

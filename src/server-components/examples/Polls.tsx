@@ -11,9 +11,9 @@ import {
 } from '@mui/material';
 import { useComponent } from '@state-less/react-client';
 import HeartIcon from '@mui/icons-material/Favorite';
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 import { FlexBox } from '../../components/FlexBox';
-
+import { getApolloContext } from '@apollo/client';
 export const Poll = ({
   id = 'poll',
   message,
@@ -21,7 +21,10 @@ export const Poll = ({
   id?: string;
   message?: (props: Record<string, any>) => ReactNode;
 }) => {
-  const [component, { error, loading }] = useComponent(id, {});
+  const [component, { error, loading }] = useComponent(id, {
+    suspend: true,
+    ssr: import.meta.env.SSR,
+  });
   const sum = component?.props?.votes.reduce((a, b) => a + b, 0);
   const max = component?.props?.votes?.reduce((a, b) => Math.max(a, b), 0);
   return (
@@ -33,7 +36,7 @@ export const Poll = ({
         {component?.props?.values?.map((value, i) => {
           const percentage = (100 / sum) * component?.props?.votes[i];
           return (
-            <ListItem dense>
+            <ListItem key={value} dense>
               <Box
                 sx={{
                   ml: -2,

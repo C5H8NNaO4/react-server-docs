@@ -1,3 +1,5 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+  "devCommand": "node server/index",
+  "buildCommand": "yarn build:server && yarn build:client"
 }

@@ -13,7 +13,9 @@ export const HelloWorldExample1 = () => {
 };
 
 export const HelloWorldExample2 = () => {
-  const [component, { loading, error }] = useComponent('hello-world-2', {});
+  const [component, { loading, error }] = useComponent('hello-world-2', {
+    suspend: import.meta.env.SSR,
+  });
 
   return (
     <>

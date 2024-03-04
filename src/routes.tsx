@@ -25,31 +25,47 @@ import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import GroupsIcon from '@mui/icons-material/Groups';
-
+import InfoIcon from '@mui/icons-material/Info';
+import SmartButtonIcon from '@mui/icons-material/SmartButton';
+import IndexPage from './pages/index';
 import { SL_DOMAIN } from './lib/config';
 import { Alert } from '@mui/material';
 
 const docsRoutes = [
+  <Route path="/" Component={IndexPage} />,
   <Route
-    path="/"
-    Component={React.lazy(() => import('./pages/index') as any)}
+    path="/button"
+    key="/button"
+    Component={React.lazy(() => import('./pages/ButtonPage') as any)}
   />,
-  <Route path="/why" Component={WhyPage} />,
+  <Route
+    path="/more"
+    key="/more"
+    Component={React.lazy(() => import('./pages/MorePage') as any)}
+  />,
+  <Route path="/why" key="/why" Component={WhyPage} />,
   <Route
     path="/installation"
+    key="/installation"
     Component={() => {
       return <GithubPage src="src/pages/Installation.md" landing />;
     }}
   />,
   <Route
     path="/installation/forum"
+    key="/installation/forum"
     Component={() => {
       return <GithubPage src="src/pages/installation/forum.md" landing />;
     }}
   />,
-  <Route path="/faq" Component={React.lazy(() => import('./pages/faq'))} />,
+  <Route
+    path="/faq"
+    key="/faq"
+    Component={React.lazy(() => import('./pages/faq'))}
+  />,
   <Route
     path="/community"
+    key="/community"
     Component={() => {
       useEffect(() => {
         document.location.href = 'https://blogs.state-less.cloud';
@@ -60,6 +76,7 @@ const docsRoutes = [
   />,
   <Route
     path="/community/:post"
+    key="/community/:post"
     Component={() => {
       const params = useParams();
       useEffect(() => {
@@ -85,55 +102,77 @@ const docsRoutes = [
   />,
   <Route
     path="/changes"
+    key="/changes"
     Component={React.lazy(() => import('./pages/changelog'))}
   />,
   <Route
     path="/collaborating"
+    key="/collaborating"
     Component={() => {
       return <GithubPage src="src/pages/Collaborating.md" />;
     }}
   />,
   <Route
     path="/additional-topics"
+    key="/additional-topics"
     Component={() => {
       return <GithubPage src="src/pages/Additional.md" />;
     }}
   />,
   <Route
     path="/SSR"
+    key="/SSR"
     Component={() => {
       return <GithubPage src="src/examples/SSR.md" />;
     }}
   />,
   <Route
     path="/components"
+    key="/components"
     Component={lazy(() => import('./pages/components'))}
   />,
   <Route
     path="/react-server"
+    key="/react-server"
     Component={lazy(() => import('./pages/react-server'))}
   />,
   <Route
     path="/react-server/states"
+    key="/react-server/states"
     Component={lazy(() => import('./pages/states'))}
   />,
   <Route
     path="/react-server/hooks"
+    key="/react-server/hooks"
     Component={lazy(() => import('./pages/react-server/hooks'))}
   />,
 
-  <Route path="/stores" Component={lazy(() => import('./pages/stores'))} />,
-  <Route path="/server" Component={lazy(() => import('./pages/server'))} />,
+  <Route
+    path="/stores"
+    key="/stores"
+    Component={lazy(() => import('./pages/stores'))}
+  />,
+  <Route
+    path="/server"
+    key="/server"
+    Component={lazy(() => import('./pages/server'))}
+  />,
   <Route
     path="/authentication"
+    key="/authentication"
     Component={lazy(() => import('./pages/authentication'))}
   />,
-  <Route path="/examples" Component={lazy(() => import('./pages/examples'))} />,
+  <Route
+    path="/examples"
+    key="/examples"
+    Component={lazy(() => import('./pages/examples'))}
+  />,
   <Route
     path="/examples/comments"
+    key="/examples/comments"
     Component={lazy(() => import('./pages/examples/comments'))}
   />,
-  <Route path="/examples/chat" Component={ChatPage} />,
+  <Route path="/examples/chat" key="/examples/chat" Component={ChatPage} />,
   // <Route path="/examples/cms" Component={CMSPage} />,
   // <Route path="/examples/cms/pages" Component={PagesPage} />,
   // <Route path="/examples/cms/rendering" Component={NavigationPage} />,
@@ -147,9 +186,14 @@ const docsRoutes = [
   // />,
   <Route
     path="/examples/votings"
+    key="/examples/votings"
     Component={lazy(() => import('./pages/examples/voting'))}
   />,
-  <Route path="/admin" Component={lazy(() => import('./pages/admin'))} />,
+  <Route
+    path="/admin"
+    key="/admin"
+    Component={lazy(() => import('./pages/admin'))}
+  />,
 ];
 
 type Navigation = [
@@ -166,6 +210,8 @@ type Navigation = [
  * */
 const urls = [
   '/',
+  '/button',
+  '/more',
   '/why',
   '/installation',
   '/installation/forum',
@@ -192,13 +238,9 @@ const urls = [
 
 const docsNavigation: Navigation = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
-  [
-    '/why',
-    'Why',
-    null,
-    null,
-    ({ color }) => <QuestionMarkIcon color={color} />,
-  ],
+  ['/button', 'Demo Button', null, null, SmartButtonIcon],
+  ['/more', 'More Info', null, null, InfoIcon],
+  ['/why', 'Why', null, null, QuestionMarkIcon],
   [
     '/installation',
     'Installation',
@@ -344,8 +386,16 @@ const blogsNavigation: Navigation = [
 ];
 
 const blogsRoutes = [
-  <Route path="/" Component={lazy(() => import('./pages/ForumPage'))} />,
-  <Route path="/:post" Component={lazy(() => import('./pages/PostPage'))} />,
+  <Route
+    path="/"
+    key="/"
+    Component={lazy(() => import('./pages/ForumPage'))}
+  />,
+  <Route
+    path="/:post"
+    key="/:post"
+    Component={lazy(() => import('./pages/PostPage'))}
+  />,
 ];
 
 const routes =

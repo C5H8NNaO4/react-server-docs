@@ -32,6 +32,7 @@ export const SidebarNavigation = () => {
             {navigation.map((e: any) => {
               return (
                 <LinkItem
+                  key={e[0]}
                   Icon={e[4]}
                   to={e[0]}
                   sx={{

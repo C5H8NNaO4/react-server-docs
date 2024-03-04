@@ -160,7 +160,7 @@ const Commits = ({ repo }) => {
         const author = commit?.author?.login || commit?.commit?.author?.name;
         const date = commit?.commit?.author?.date;
         return (
-          <ListItem dense>
+          <ListItem key={commit} dense>
             <ListItemText
               primary={commit?.commit?.message}
               secondary={`${new Date(date).toLocaleDateString()} (${author})`}
@@ -187,7 +187,7 @@ const CustomTooltip = (props) => {
     >
       {Object.keys(props.payload[0]?.payload || {}).map((key) => {
         return (
-          <ListItem dense>
+          <ListItem key={key} dense>
             <ListItemText
               primary={props?.payload?.[0]?.payload?.[key]}
               secondary={key}

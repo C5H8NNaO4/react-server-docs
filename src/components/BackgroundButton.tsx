@@ -51,7 +51,7 @@ export const BackgroundMenu = ({ anchor, setAnchor }) => {
           <Grid container sx={{ p: 1 }} spacing={1}>
             {[0, 1, 2, 3, 4, 5, 7, 8].map((e) => {
               return (
-                <Grid item xs={6}>
+                <Grid key={e} item xs={6}>
                   <Box
                     onClick={() => {
                       dispatch({ type: Actions.CHOOSE_BG, value: e });

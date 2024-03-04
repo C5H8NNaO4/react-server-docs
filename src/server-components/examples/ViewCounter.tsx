@@ -109,6 +109,7 @@ export const ViewCounter = ({
   textColor,
 }: ViewCounterProps) => {
   const [component, { loading }] = useComponent(componentKey, {
+    suspend: import.meta.env.SSR,
     skip,
     data,
   });

@@ -56,7 +56,7 @@ export const CommunityComments = ({
       <List dense>
         {(component?.children || []).map((child, index) => {
           return (
-            <ListItem dense>
+            <ListItem key={index} dense>
               <CommunityComment
                 comment={child}
                 canDelete={canDelete}
@@ -113,7 +113,10 @@ export const Comments = ({
   id?: string;
   title?: string;
 }) => {
-  const [component, { error, loading }] = useComponent(id, {});
+  const [component, { error, loading }] = useComponent(id, {
+    suspend: true,
+    ssr: import.meta.env.SSR,
+  });
   const [features, { loading: featuresLoading }] = useComponent('features');
   const [comment, setComment] = useState('');
   const comments = component?.props?.comments || [];
@@ -136,6 +139,7 @@ export const Comments = ({
         {(component?.children || []).map((child, index) => {
           return (
             <Comment
+              key={index}
               comment={child}
               canDelete={canDelete}
               wilson={features?.props?.wilson}
@@ -191,7 +195,8 @@ const Comment = ({ comment, canDelete, wilson }) => {
   });
   const props = component?.props;
   const isOwnComment =
-    props.identity.email === session?.strategies?.[session.strategy]?.email ||
+    props.identity.email ===
+      session?.strategies?.[session?.strategy || '']?.email ||
     (props.identity.strategy === 'anonymous' &&
       props.identity.id === JSON.parse(localStorage.id));
   const Icon = StrategyIcons[props?.identity?.strategy];
@@ -224,7 +229,9 @@ const Comment = ({ comment, canDelete, wilson }) => {
         <Chip
           avatar={
             props?.identity.picture && (
-              <Avatar alt="user picture" src={props?.identity.picture}>{<Icon />}</Avatar>
+              <Avatar alt="user picture" src={props?.identity.picture}>
+                {<Icon />}
+              </Avatar>
             )
           }
           label={props?.identity.name}
@@ -242,7 +249,8 @@ const CommunityComment = ({ comment, canDelete, wilson }) => {
   });
   const props = component?.props;
   const isOwnComment =
-    props.identity.email === session?.strategies?.[session.strategy]?.email ||
+    props.identity.email ===
+      session?.strategies?.[session?.strategy || '']?.email ||
     (props.identity.strategy === 'anonymous' &&
       props.identity.id === JSON.parse(localStorage.id));
   const Icon = StrategyIcons[props?.identity?.strategy];

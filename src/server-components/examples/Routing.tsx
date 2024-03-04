@@ -21,6 +21,7 @@ export const DynamicPageExample = () => {
           {navigation?.props?.entries.map((child) => {
             return (
               <ListItem
+                key={child.title}
                 selected={path === child.path}
                 button
                 onClick={(e) => setPath(child.path)}

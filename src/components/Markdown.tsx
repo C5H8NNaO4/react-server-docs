@@ -21,6 +21,7 @@ import { atom, useAtom, PrimitiveAtom } from 'jotai';
 import { v4 } from 'uuid';
 
 import { Actions, stateContext } from '../provider/StateProvider';
+import { wrapPromise } from '../lib/util/SSR';
 
 const getChildText = (props) => {
   const texts =
@@ -44,6 +45,7 @@ type MarkdownProps = {
   fetchFn?: (() => Promise<string>) | null;
   errorMD?: string;
   citeSrc?: string;
+  suspend?: boolean;
 };
 
 export const FetchSOAnswerById = (id, url) => async () => {
@@ -71,23 +73,36 @@ export type FetchState = {
   loading: number;
   result: string | null;
   error: Error | null;
+  promise: Promise<string | null> | null;
 };
 const useFetchAtoms: Record<string, PrimitiveAtom<FetchState>> = {};
+export const wrappedCache = {};
+export const resultCache =
+  typeof window !== 'undefined' ? window.__MD_STATE__ : null;
 export const useFetch = (
   initialValue: string,
   fetchFn: null | (() => Promise<string>),
-  cacheKey?: string
+  cacheKey: string,
+  { suspend }
 ) => {
   const key = useMemo(() => {
     return cacheKey || v4();
   }, [cacheKey]);
+  const resultValue = resultCache?.[cacheKey]
+    ? resultCache?.[cacheKey]
+    : fetchFn === null
+    ? initialValue
+    : null;
+
+  console.log('Fetch', resultCache, cacheKey, resultCache?.[cacheKey]);
 
   const atm =
     useFetchAtoms[key] ||
     (useFetchAtoms[key] = atom<FetchState>({
-      loading: fetchFn === null ? 2 : 0,
+      loading: fetchFn === null ? 2 : resultCache?.[cacheKey] ? 2 : 0,
       error: null,
-      result: fetchFn === null ? initialValue : null,
+      result: resultValue,
+      promise: null,
     }));
   const [state, setState] = useAtom(atm);
 
@@ -100,14 +115,48 @@ export const useFetch = (
     if (!fetchFn) return;
     if (state?.loading > 0) return;
     setState((state) => ({ ...state, loading: 1 }));
-    fetchFn()
-      .then(async (text) => {
+    const promise = fetchFn();
+
+    promise.then(
+      async (text) => {
         setState((state) => ({ ...state, loading: 2, result: text }));
-      })
-      .catch((e) => {
+      },
+      (e) => {
         setState((state) => ({ ...state, loading: 3, result: null, error: e }));
-      });
+      }
+    );
   }, [fetchFn, setState, state?.loading]);
+
+  if (suspend) {
+    if (!wrappedCache?.[cacheKey] && !resultCache?.[cacheKey]) {
+      const promise = fetchFn?.();
+      if (promise) {
+        wrappedCache[cacheKey] = wrapPromise(promise);
+      }
+    }
+
+    let cache = wrappedCache;
+    if (resultCache) {
+      const result = resultCache[cacheKey];
+      return {
+        result,
+        loading: 3,
+        promise: wrappedCache[cacheKey],
+        error: null,
+      };
+    }
+    try {
+      const result = wrappedCache[cacheKey]?.();
+      return {
+        result,
+        loading: 3,
+        promise: wrappedCache[cacheKey],
+        error: null,
+      };
+    } catch (e) {
+      return { ...state, promise: wrappedCache[cacheKey] };
+    }
+  }
 
   return state;
 };
@@ -147,21 +196,25 @@ export const Markdown = ({
   fetchFn: userFetchFn,
   cacheKey = src,
   citeSrc,
+  suspend,
 }: MarkdownProps) => {
   const { dispatch } = useContext(stateContext);
   const { hash } = useLocation();
   let fetchFn = userFetchFn;
   const fetchSrc = useMemo(() => FetchTextContent(src), [src]);
+
   if (src && !fetchFn) {
     fetchFn = fetchSrc;
   } else if (!src && !fetchFn) {
     fetchFn = null;
   }
 
-  const { loading, result, error } = useFetch(
+  let fetched;
+  const { loading, result, error, promise } = useFetch(
     children,
     fetchFn || null,
-    cacheKey
+    cacheKey || '',
+    { suspend }
   );
 
   useEffect(() => {
@@ -209,10 +262,11 @@ export const Markdown = ({
       ul: (props) => {
         return (
           <List dense disablePadding>
-            {props.children.map((child) => {
+            {props.children.map((child, i) => {
               if (child === '\n') return null;
               return (
                 <ListItem
+                  key={i}
                   dense
                   sx={{
                     py: 0,
@@ -342,7 +396,7 @@ export const Markdown = ({
                 return (
                   <TableRow>
                     {row.props.children.map((e) => {
-                      return <TableCell>{e}</TableCell>;
+                      return <TableCell key={e}>{e}</TableCell>;
                     })}
                   </TableRow>
                 );

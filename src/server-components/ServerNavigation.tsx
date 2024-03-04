@@ -58,7 +58,7 @@ export const ServerNavigation = () => {
       <List>
         {component?.props?.entries.map((entry) => {
           return (
-            <ListItem>
+            <ListItem key={entry.path}>
               <ListItemText primary={entry.title} secondary={entry.path} />
               <ListItemSecondaryAction>
                 <IconButton

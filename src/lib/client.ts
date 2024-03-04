@@ -1,4 +1,9 @@
-import { ApolloClient, InMemoryCache, split, HttpLink } from '@apollo/client';
+import {
+  ApolloClient,
+  InMemoryCache,
+  split,
+  HttpLink,
+} from '@apollo/client/index.js';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { LOCAL_HOST } from './config';
@@ -33,11 +38,20 @@ const stateless = import.meta.env.SSR
       statelessHttp
     );
 
+export const ssrCache = new InMemoryCache();
 // Create the Apollo Client instance
-const client = new ApolloClient({
-  link: stateless,
-  cache: new InMemoryCache(),
-});
+
+export const makeClient = () => {
+  return new ApolloClient({
+    ssrMode: import.meta.env.SSR,
+    link: stateless,
+    cache: import.meta.env.SSR
+      ? new InMemoryCache()
+      : new InMemoryCache().restore(window.__APOLLO_STATE__),
+  });
+};
+
+const client = makeClient();
 
 let localClient: null | ApolloClient<unknown> = null;
 // Create an HTTP link
