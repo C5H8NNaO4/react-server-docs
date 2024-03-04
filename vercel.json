@@ -3,14 +3,14 @@
   "outputDirectory": ".",
   "builds": [
     {
-      "src": "api/index.js",
-      "use": "@vercel/node",
+      "src": "./dist/**/*.*",
+      "use": "@vercel/static",
       "config": { "includeFiles": ["./dist/**/*.*"] }
     },
     {
-      "src": "./dist/**/*.*",
-      "use": "@vercel/static",
-      "config": { "includeFiles": ["dist/**/*"] }
+      "src": "api/index.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["./dist/**/*.*"] }
     }
   ],
   "devCommand": "node api/index",
