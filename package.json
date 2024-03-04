@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "node api/index",
     "start": "node api/index",
-    "build:client": "tsc && vite build --outDir api/dist/client",
-    "build:server": "tsc &&  vite build --outDir api/dist/server --ssr src/entry-server.tsx",
+    "build:client": "tsc && vite build --outDir dist/client",
+    "build:server": "tsc &&  vite build --outDir dist/server --ssr src/entry-server.tsx",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -32,7 +32,6 @@
     "fast-levenshtein": "^3.0.0",
     "github-api": "^3.4.0",
     "jotai": "^2.2.2",
-    "jsonwebtoken": "^9.0.2",
     "mermaid": "^10.1.0",
     "prettier": "^2.8.4",
     "react": "^18.2.0",
