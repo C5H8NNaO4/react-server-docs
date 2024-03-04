@@ -34,7 +34,7 @@ async function createServer() {
   // }
   app.use('*', async (req, res, next) => {
     const url = req.originalUrl;
-
+    console.log('Route called');
     try {
       // 1. Read index.html
       // let template = fs.readFileSync(
@@ -59,7 +59,9 @@ async function createServer() {
       //     `render` function calls appropriate framework SSR APIs,
       //    e.g. ReactDOMServer.renderToString()
       // const { render } = imp;
+      console.log('Calling render');
       await render({ pathname: req.originalUrl }, { req, res });
+      console.log('After calling render');
 
       // 5. Inject the app-rendered HTML into the template.
       // const html = template.replace(`<!--ssr-outlet-->`, appHtml);
