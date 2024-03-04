@@ -16,7 +16,7 @@ async function createServer() {
   // Create Vite server in middleware mode and configure the app type as
   // 'custom', disabling Vite's own HTML serving logic so parent server
   // can take control
-  console.log('PROCESS ENV', process.env.NODE_ENV);
+  app.use(express.static('dist'));
   // if (!IS_PROD) {
   //   vite = await createViteServer({
   //     mode: 'production',
