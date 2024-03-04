@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
-import { createServer as createViteServer } from 'vite';
+// import { createServer as createViteServer } from 'vite';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -17,21 +17,21 @@ async function createServer() {
   // 'custom', disabling Vite's own HTML serving logic so parent server
   // can take control
   console.log('PROCESS ENV', process.env.NODE_ENV);
-  if (!IS_PROD) {
-    vite = await createViteServer({
-      mode: 'production',
-      server: { middlewareMode: true },
-      appType: 'custom',
-    });
+  // if (!IS_PROD) {
+  //   vite = await createViteServer({
+  //     mode: 'production',
+  //     server: { middlewareMode: true },
+  //     appType: 'custom',
+  //   });
 
-    // Use vite's connect instance as middleware. If you use your own
-    // express router (express.Router()), you should use router.use
-    // When the server restarts (for example after the user modifies
-    // vite.config.js), `vite.middlewares` is still going to be the same
-    // reference (with a new internal stack of Vite and plugin-injected
-    // middlewares). The following is valid even after restarts.
-    app.use(vite.middlewares);
-  }
+  //   // Use vite's connect instance as middleware. If you use your own
+  //   // express router (express.Router()), you should use router.use
+  //   // When the server restarts (for example after the user modifies
+  //   // vite.config.js), `vite.middlewares` is still going to be the same
+  //   // reference (with a new internal stack of Vite and plugin-injected
+  //   // middlewares). The following is valid even after restarts.
+  //   app.use(vite.middlewares);
+  // }
   app.use('*', async (req, res, next) => {
     const url = req.originalUrl;
 
@@ -49,10 +49,11 @@ async function createServer() {
       // // 3a. Load the server entry. ssrLoadModule automatically transforms
       // //    ESM source code to be usable in Node.js! There is no bundling
       // //    required, and provides efficient invalidation similar to HMR.
-      const imp =
-        process.env.NODE_ENV === 'production'
-          ? await import('../dist/server/entry-server.js')
-          : await vite.ssrLoadModule('/src/entry-server.tsx');
+      // const imp =
+      //   process.env.NODE_ENV === 'production'
+      //     ? await import('../dist/server/entry-server.js')
+      //     : await vite.ssrLoadModule('/src/entry-server.tsx');
+      const imp = await import('../dist/server/entry-server.js');
 
       // 4. render the app HTML. This assumes entry-server.js's exported
       //     `render` function calls appropriate framework SSR APIs,
@@ -71,9 +72,9 @@ async function createServer() {
       // to your actual source code.
       console.log('Error ', e);
 
-      if (!IS_PROD) {
-        vite.ssrFixStacktrace(e);
-      }
+      // if (!IS_PROD) {
+      //   vite.ssrFixStacktrace(e);
+      // }
       next(e);
     }
   });
