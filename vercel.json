@@ -6,8 +6,9 @@
       "use": "@vercel/node"
     },
     {
-      "src": "./dist/server/**/*.js",
-      "use": "@vercel/node"
+      "src": "/vercel/output/dist/server/**/*.js",
+      "use": "@vercel/node",
+      "config": { "output": { "root": "./dist/server" } }
     }
   ],
   "outputDirectory": ".",
