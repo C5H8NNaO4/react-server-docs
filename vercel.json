@@ -1,15 +1,11 @@
 {
   "rewrites": [{ "source": "/(.*)", "destination": "/api/index.js" }],
-  "builds": [
-    {
-      "src": "./api/index.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "./dist/**/*.js",
-      "use": "@vercel/static"
+  "functions": {
+    "./api/index.js": {
+      "runtime": "@vercel/node",
+      "includeFiles": "./dist/**/*.*"
     }
-  ],
+  },
   "outputDirectory": "/dist",
   "devCommand": "node api/index",
   "buildCommand": "yarn build:server && yarn build:client"
