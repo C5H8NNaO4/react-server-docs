@@ -7,7 +7,7 @@
     },
     {
       "src": "./dist/**/*.js",
-      "use": "@vercel/node"
+      "use": "@vercel/static"
     }
   ],
   "outputDirectory": ".",
