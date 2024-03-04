@@ -1,5 +1,11 @@
 {
   "rewrites": [{ "source": "/(.*)", "destination": "/" }],
-  "devCommand": "node server/index",
+  "builds": [
+    {
+      "src": "/api/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "devCommand": "node api/index",
   "buildCommand": "yarn build:server && yarn build:client"
 }
