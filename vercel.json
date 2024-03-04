@@ -2,7 +2,7 @@
   "rewrites": [{ "source": "/(.*)", "destination": "/api/index.js" }],
   "functions": {
     "./api/index.js": {
-      "runtime": "@vercel/node",
+      "runtime": "@vercel/node@18.x",
       "includeFiles": "./dist/**/*.*"
     }
   },
