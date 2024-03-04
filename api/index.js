@@ -16,8 +16,13 @@ async function createServer() {
   // Create Vite server in middleware mode and configure the app type as
   // 'custom', disabling Vite's own HTML serving logic so parent server
   // can take control
-  console.log('Using static path', import.meta.url, __dirname);
-  app.use(express.static('./dist/client'));
+  console.log(
+    'Using static path',
+    import.meta.url,
+    __dirname,
+    path.join(__dirname, '../dist/client')
+  );
+  app.use(path.join(__dirname, '../dist/client'));
   // if (!IS_PROD) {
   //   vite = await createViteServer({
   //     mode: 'production',
