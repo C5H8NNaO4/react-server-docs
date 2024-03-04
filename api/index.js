@@ -86,4 +86,4 @@ async function createServer() {
 }
 const app = createServer();
 
-module.exports = app;
+export default app;
