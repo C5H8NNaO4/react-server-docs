@@ -1,8 +1,10 @@
-const path = require('path');
-const { fileURLToPath } = require('url');
-const express = require('express');
-const { render } = require('./dist/server/entry-server.js');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import express from 'express';
+import { render } from './dist/server/entry-server.js';
 // import { createServer as createViteServer } from 'vite';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PORT = process.env.PORT || 5173;
 const IS_PROD = process.env === 'production';
@@ -84,4 +86,4 @@ async function createServer() {
 }
 const app = createServer();
 
-module.exports = app;
+export default app;
