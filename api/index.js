@@ -6,7 +6,7 @@ import { render } from '../dist/server/entry-server.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const PORT = process.env.PORT || 5173;
+const PORT = process.env.PORT || 3000;
 const IS_PROD = process.env === 'production';
 let vite;
 
