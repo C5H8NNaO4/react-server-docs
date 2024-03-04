@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "node api/index",
     "start": "node api/index",
-    "build:client": "tsc && vite build --outDir dist/client",
-    "build:server": "tsc &&  vite build --outDir dist/server --ssr src/entry-server.tsx",
+    "build:client": "tsc && vite build --outDir api/dist/client",
+    "build:server": "tsc &&  vite build --outDir api/dist/server --ssr src/entry-server.tsx",
     "preview": "vite preview"
   },
   "dependencies": {
