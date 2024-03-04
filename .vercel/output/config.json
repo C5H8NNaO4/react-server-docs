@@ -1,4 +1,4 @@
 {
   "version": 3,
-  "cache": ["./**"]
+  "cache": ["api/**", "dist/server", "dist/client"]
 }
