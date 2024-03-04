@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
@@ -53,7 +52,7 @@ async function createServer() {
       //   process.env.NODE_ENV === 'production'
       //     ? await import('../dist/server/entry-server.js')
       //     : await vite.ssrLoadModule('/src/entry-server.tsx');
-      const imp = await import('../dist/server/entry-server.js');
+      const imp = await import('./dist/server/entry-server.js');
 
       // 4. render the app HTML. This assumes entry-server.js's exported
       //     `render` function calls appropriate framework SSR APIs,
