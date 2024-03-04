@@ -16,7 +16,7 @@ async function createServer() {
   // Create Vite server in middleware mode and configure the app type as
   // 'custom', disabling Vite's own HTML serving logic so parent server
   // can take control
-  app.use(express.static('dist'));
+  app.use(express.static('public'));
   // if (!IS_PROD) {
   //   vite = await createViteServer({
   //     mode: 'production',
@@ -34,7 +34,7 @@ async function createServer() {
   // }
   app.use('*', async (req, res, next) => {
     const url = req.originalUrl;
-    console.log('Route called');
+    console.log('Route called', url);
     try {
       // 1. Read index.html
       // let template = fs.readFileSync(
