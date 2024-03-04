@@ -4,7 +4,7 @@ import express from 'express';
 import { render } from '../dist/server/entry-server.js';
 // import { createServer as createViteServer } from 'vite';
 
-// const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PORT = process.env.PORT || 3000;
 const IS_PROD = process.env === 'production';
@@ -16,8 +16,8 @@ async function createServer() {
   // Create Vite server in middleware mode and configure the app type as
   // 'custom', disabling Vite's own HTML serving logic so parent server
   // can take control
-  console.log('Using static path');
-  app.use(express.static('../dist/client'));
+  console.log('Using static path', import.meta.url, __dirname);
+  app.use(express.static('./dist/client'));
   // if (!IS_PROD) {
   //   vite = await createViteServer({
   //     mode: 'production',
