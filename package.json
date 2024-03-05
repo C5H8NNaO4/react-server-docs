@@ -19,7 +19,7 @@
     "@mui/material": "^5.11.13",
     "@mui/x-date-pickers": "^6.11.1",
     "@state-less/leap-frontend": "^0.0.6",
-    "@state-less/react-client": "^2.0.12",
+    "@state-less/react-client": "^2.0.13",
     "change-case": "^4.1.2",
     "clsx": "^1.2.1",
     "copy-to-clipboard": "^3.3.3",
