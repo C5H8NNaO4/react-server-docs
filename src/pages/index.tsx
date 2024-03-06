@@ -12,9 +12,6 @@ import { HelloWorldExample2 } from '../server-components/examples';
 import Favicon from '../assets/favicon.svg?react';
 
 export const IndexPage = () => {
-  useEffect(() => {
-    console.log('RENDERING INDEX');
-  }, []);
   return (
     <Container maxWidth="lg" disableGutters>
       <Grid container spacing={1}>
