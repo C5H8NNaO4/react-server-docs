@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useContext, useEffect, useMemo, createElement } from 'react';
 import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import SyntaxHighlighter from 'react-syntax-highlighter';
+import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter';
 import { IconButton, List, ListItem, ListItemText } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import copy from 'copy-to-clipboard';
@@ -24,8 +24,7 @@ import { Actions, stateContext } from '../provider/StateProvider';
 import { wrapPromise } from '../lib/util/SSR';
 
 import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
-SyntaxHighlighter.registerLanguage('tsx', tsx);
-
+registerLanguage('tsx', tsx);
 
 const getChildText = (props) => {
   const texts =
