@@ -217,6 +217,7 @@ export const Markdown = ({
   );
 
   if (promise && suspend && loading < 2) {
+    console.log('MARKDOWN SUSPENDING');
     promise();
   }
 
@@ -314,6 +315,7 @@ export const Markdown = ({
               fetchFn={FetchSOAnswerById(id, url)}
               cacheKey={id}
               preview={preview}
+              suspend={suspend}
             >
               {`*See this Stackoverflow answer: [${url}](${url})`}
             </Markdown>
@@ -440,6 +442,7 @@ export const Markdown = ({
             center={false}
             errorMD={trimmed}
             preview={preview}
+            suspend={suspend}
           >
             {`Loading Markdown from Github: ${url}`}
           </Markdown>

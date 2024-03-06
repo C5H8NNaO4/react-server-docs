@@ -37,11 +37,15 @@ export const ButtonPage = () => {
           on our server.
         </Alert>
         <Box sx={{ display: 'flex', justifyContent: 'center', paddingTop: 1 }}>
-          <HelloWorldExample2 />
+          <Suspense fallback="Button Loading">
+            <HelloWorldExample2 />
+          </Suspense>
         </Box>
-        <Markdown suspend src={getRawPath('src/pages/index/footer.md')}>
-          Loading...
-        </Markdown>
+        <Suspense fallback="Mardown 2 Loading">
+          <Markdown suspend src={getRawPath('src/pages/index/footer.md')}>
+            Loading...
+          </Markdown>
+        </Suspense>
         <Navigation />
       </Paper>
     </Container>
