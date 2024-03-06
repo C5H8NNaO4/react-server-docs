@@ -26,7 +26,7 @@ export const render = async (location, { req, res }) => {
       </SSRProvider>
     </Html>,
     {
-      bootstrapModules: ['src/main.tsx'],
+      // bootstrapModules: ['src/main.tsx'],
       onShellReady: () => {
         res.statusCode = didError ? 500 : 200;
         res.setHeader('Content-type', 'text/html');

@@ -17,15 +17,10 @@ async function createServer() {
   // Create Vite server in middleware mode and configure the app type as
   // 'custom', disabling Vite's own HTML serving logic so parent server
   // can take control
-  console.log(
-    'Using static path',
-    import.meta.url,
-    __dirname,
-    path.join(__dirname, '../dist/client')
-  );
+
   const handleRoute = async (req, res, next) => {
     const url = req.originalUrl;
-    console.log('Route called', url);
+
     try {
       // 1. Read index.html
       // let template = fs.readFileSync(
@@ -50,9 +45,8 @@ async function createServer() {
       //     `render` function calls appropriate framework SSR APIs,
       //    e.g. ReactDOMServer.renderToString()
       // const { render } = imp;
-      console.log('Calling render');
+
       await render({ pathname: req.originalUrl }, { req, res });
-      console.log('After calling render');
 
       // 5. Inject the app-rendered HTML into the template.
       // const html = template.replace(`<!--ssr-outlet-->`, appHtml);

@@ -25,7 +25,7 @@ function Html({ children, client }: HtmlProps) {
 
   // inject vite refresh script to avoid "React refresh preamble was not loaded"
   let viteScripts = <></>;
-  console.log('INDEX', index);
+
   if (import.meta.env.DEV) {
     viteScripts = (
       <>

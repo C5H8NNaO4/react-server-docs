@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useContext, useEffect, useMemo, createElement } from 'react';
 import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import SyntaxHighlighter from 'react-syntax-highlighter';
 import { IconButton, List, ListItem, ListItemText } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import copy from 'copy-to-clipboard';
@@ -22,6 +22,10 @@ import { v4 } from 'uuid';
 
 import { Actions, stateContext } from '../provider/StateProvider';
 import { wrapPromise } from '../lib/util/SSR';
+
+import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
+SyntaxHighlighter.registerLanguage('tsx', tsx);
+
 
 const getChildText = (props) => {
   const texts =
@@ -97,7 +101,7 @@ export const useFetch = (
   const atm =
     useFetchAtoms[key] ||
     (useFetchAtoms[key] = atom<FetchState>({
-      loading: fetchFn === null ? 2 : resultCache?.[cacheKey] ? 2 : 0,
+      loading: fetchFn === null ? 2 : resultCache?.[cacheKey] ? 3 : 0,
       error: null,
       result: resultValue,
       promise: null,
@@ -214,6 +218,10 @@ export const Markdown = ({
     cacheKey || '',
     { suspend }
   );
+
+  if (promise && suspend && loading < 2) {
+    promise();
+  }
 
   useEffect(() => {
     if (loading > 1 && hash) {
