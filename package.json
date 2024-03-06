@@ -21,7 +21,7 @@
     "@mui/material": "^5.11.13",
     "@mui/x-date-pickers": "^6.11.1",
     "@state-less/leap-frontend": "^0.0.6",
-    "@state-less/react-client": "state-less/react-client#feat/ssr",
+    "@state-less/react-client": "state-less/react-client",
     "change-case": "^4.1.2",
     "clsx": "^1.2.1",
     "cookie": "^0.6.0",

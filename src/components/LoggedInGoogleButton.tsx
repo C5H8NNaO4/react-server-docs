@@ -37,7 +37,7 @@ export const LoggedInGoogleButton = () => {
     return null;
   }
 
-  const decoded = session?.strategies?.google.decoded;
+  const decoded = session.strategies?.google.decoded;
 
   const theme = useTheme();
 

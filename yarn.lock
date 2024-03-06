@@ -2089,9 +2089,9 @@
     subscriptions-transport-ws "^0.11.0"
     uuid "^9.0.0"
 
-"@state-less/react-client@state-less/react-client#feat/ssr":
-  version "2.0.12"
-  resolved "https://codeload.github.com/state-less/react-client/tar.gz/16abcb4c2de292a19374ca3697324dc0ee3f958b"
+"@state-less/react-client@state-less/react-client":
+  version "2.0.13"
+  resolved "https://codeload.github.com/state-less/react-client/tar.gz/709af7dc305b6a37704cbf579af9d344fe66d591"
   dependencies:
     "@apollo/client" "^3.8.10"
     "@babel/plugin-transform-react-jsx" "^7.21.0"

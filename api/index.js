@@ -5,6 +5,7 @@ import { render } from '../dist/server/entry-server.js';
 // import { createServer as createViteServer } from 'vite';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const distPath = path.join(__dirname, '../dist/client/');
 
 const PORT = process.env.PORT || 3000;
 const IS_PROD = process.env === 'production';
@@ -22,23 +23,7 @@ async function createServer() {
     __dirname,
     path.join(__dirname, '../dist/client')
   );
-  app.use(express.static(path.join(__dirname, '../dist/client')));
-  // if (!IS_PROD) {
-  //   vite = await createViteServer({
-  //     mode: 'production',
-  //     server: { middlewareMode: true },
-  //     appType: 'custom',
-  //   });
-
-  //   // Use vite's connect instance as middleware. If you use your own
-  //   // express router (express.Router()), you should use router.use
-  //   // When the server restarts (for example after the user modifies
-  //   // vite.config.js), `vite.middlewares` is still going to be the same
-  //   // reference (with a new internal stack of Vite and plugin-injected
-  //   // middlewares). The following is valid even after restarts.
-  //   app.use(vite.middlewares);
-  // }
-  app.use('*', async (req, res, next) => {
+  const handleRoute = async (req, res, next) => {
     const url = req.originalUrl;
     console.log('Route called', url);
     try {
@@ -85,9 +70,42 @@ async function createServer() {
       // }
       next(e);
     }
+  };
+
+  const staticHandler = express.static(distPath);
+  app.use((req, res, next) => {
+    // Check if the requested path is '/'
+    if (req.url === '/') {
+      return handleRoute(req, res, next);
+    } else {
+      // Serve other static files
+      staticHandler(req, res, next);
+    }
   });
 
-  // app.listen(PORT);
+  // app.use(
+  //   '/assets',
+  //   express.static(path.join(__dirname, '../dist/client/assets'))
+  // );
+  // if (!IS_PROD) {
+  //   vite = await createViteServer({
+  //     mode: 'production',
+  //     server: { middlewareMode: true },
+  //     appType: 'custom',
+  //   });
+
+  //   // Use vite's connect instance as middleware. If you use your own
+  //   // express router (express.Router()), you should use router.use
+  //   // When the server restarts (for example after the user modifies
+  //   // vite.config.js), `vite.middlewares` is still going to be the same
+  //   // reference (with a new internal stack of Vite and plugin-injected
+  //   // middlewares). The following is valid even after restarts.
+  //   app.use(vite.middlewares);
+  // }
+
+  app.use('*', handleRoute);
+
+  app.listen(PORT);
   console.log('Listening on ', PORT);
 
   return app;
