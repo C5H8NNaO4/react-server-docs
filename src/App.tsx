@@ -57,7 +57,10 @@ function App({
         <AuthProvider>
           <StateProvider>
             <ThemeProvider>
-              <Router location={location || { pathname: '/' }}>
+              <Router
+                location={location || { pathname: '/' }}
+                future={{ v7_startTransition: true }}
+              >
                 <ScrollToTop />
                 <Layout />
               </Router>
