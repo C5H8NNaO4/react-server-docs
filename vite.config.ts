@@ -10,6 +10,7 @@ export default defineConfig({
   plugins: [
     svgr(),
     react(),
+    viteCompression(),
     VitePWA({
       workbox: {
         globPatterns: ['**/*.{js,css,html}'],
@@ -24,6 +25,5 @@ export default defineConfig({
         type: 'module',
       },
     }),
-    viteCompression(),
   ],
 });
