@@ -56,6 +56,24 @@ const docsRoutes = [
   />,
   <Route path="/faq" Component={React.lazy(() => import('./pages/faq'))} />,
   <Route
+    path="/ssr"
+    Component={() => {
+      return <GithubPage src="src/pages/ssr/index.md" />;
+    }}
+  />,
+  <Route
+    path="/ssr/vite"
+    Component={() => {
+      return <GithubPage src="src/pages/ssr/vite.md" />;
+    }}
+  />,
+  <Route
+    path="/next.js"
+    Component={() => {
+      return <GithubPage src="src/pages/ssr/next.js.md" />;
+    }}
+  />,
+  <Route
     path="/community"
     Component={() => {
       useEffect(() => {
@@ -104,12 +122,6 @@ const docsRoutes = [
     path="/additional-topics"
     Component={() => {
       return <GithubPage src="src/pages/Additional.md" />;
-    }}
-  />,
-  <Route
-    path="/SSR"
-    Component={() => {
-      return <GithubPage src="src/examples/SSR.md" />;
     }}
   />,
   <Route
