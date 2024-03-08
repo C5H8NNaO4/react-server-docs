@@ -31,6 +31,9 @@ import IndexPage from './pages/index';
 import { SL_DOMAIN } from './lib/config';
 import { Alert } from '@mui/material';
 
+import ViteLogp from './assets/vite.svg?react';
+import VercelLogo from './assets/vercel.svg?react';
+
 const docsRoutes = [
   <Route path="/" Component={IndexPage} />,
   <Route
@@ -68,7 +71,7 @@ const docsRoutes = [
     }}
   />,
   <Route
-    path="/next.js"
+    path="/ssr/next.js"
     Component={() => {
       return <GithubPage src="src/pages/ssr/next.js.md" />;
     }}
@@ -237,6 +240,21 @@ const docsNavigation: Navigation = [
     null,
     ({ color }) => <AppsIcon color={color} />,
   ],
+  ['/SSR', 'SSR', 'src/ssr/index.md', null, FlashOnIcon],
+  [
+    '/SSR/Vite',
+    'Vite',
+    'src/ssr/vite.md',
+    null,
+    () => <ViteLogp width={'24px'} height={'24px'} />,
+  ],
+  [
+    '/SSR/Next.js',
+    'Next.js',
+    'src/ssr/next.js.md',
+    null,
+    () => <VercelLogo width={'24px'} height={'24px'} />,
+  ],
   [
     '/react-server',
     'React Server',
@@ -280,7 +298,6 @@ const docsNavigation: Navigation = [
     null,
     LockIcon,
   ],
-  ['/SSR', 'SSR', 'src/examples/SSR.md', null, FlashOnIcon],
   ['/examples', 'Examples', 'src/examples', null, CodeIcon],
   [
     '/examples/comments',
