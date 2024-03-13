@@ -26,10 +26,9 @@ export default defineConfig({
   plugins: [
     svgr(),
     react(),
-    viteCompression(),
     VitePWA({
       workbox: {
-        globPatterns: ["**/*.{js,css,html}"],
+        globPatterns: ["**/*.{js,css,html,woff}"],
       },
       srcDir: "src",
       filename: "service-worker.js",
@@ -40,6 +39,7 @@ export default defineConfig({
         type: "module",
       },
     }),
+    viteCompression(),
   ],
   ssr: {
     noExternal,
