@@ -119,6 +119,8 @@ pre code {
 
 pre {
   width: 100%;
+  padding: 4px !important;
+  background: #ffffff99;
 }
 
 code {

@@ -3,7 +3,10 @@ import { clientsClaim } from 'workbox-core';
 
 self.skipWaiting();
 clientsClaim();
-precacheAndRoute(self.__WB_MANIFEST);
+const cache = self.__WB_MANIFEST.filter(
+  ({ url }) => url !== 'index.html'
+);
+precacheAndRoute(cache);
 
 let lastNotificationData = {};
 self.addEventListener('push', function (event) {

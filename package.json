@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node api/index",
+    "dev:ssr": "node api/index",
+    "dev:csr": "vite --mode=production",
     "start": "node api/index",
-    "build:client": "tsc && vite build --outDir dist/client",
-    "build:server": "tsc &&  vite build --outDir dist/server --ssr src/entry-server.tsx",
+    "build:client": "tsc && vite build --outDir ../dist/client",
+    "build:server": "tsc &&  vite build --outDir ../dist/server --ssr src/entry-server.tsx",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -42,8 +43,8 @@
     "react-markdown": "9.0.1",
     "react-router": "^6.22.1",
     "react-router-dom": "^6.22.1",
-    "react-syntax-highlighter": "^15.5.0",
     "recharts": "^2.5.0",
+    "rehype-highlight": "^7.0.0",
     "rehype-raw": "7.0.0",
     "rehype-stringify": "^9.0.3",
     "remark-gfm": "4.0.0",
