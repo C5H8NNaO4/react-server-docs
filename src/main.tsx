@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {PrismAsyncLight as SyntaxHighlighter} from 'react-syntax-highlighter'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import App from './App';
 
 if ('serviceWorker' in navigator) {
@@ -22,8 +23,8 @@ if ('serviceWorker' in navigator) {
  * @see https://github.com/react-syntax-highlighter/react-syntax-highlighter/issues/513
  */
 ReactDOM.createRoot(document.createElement('div')).render(
-  <SyntaxHighlighter language="" children={''} />
-)
+  <SyntaxHighlighter language="" children={''} style={a11yDark} />
+);
 
 // ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 //   <App />

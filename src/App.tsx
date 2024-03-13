@@ -6,7 +6,6 @@ import { StateProvider } from './provider/StateProvider';
 import { BrowserRouter } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 
-import './App.css';
 import { ApolloProvider, ApolloClient } from '@apollo/client/index.js';
 import { ThemeProvider } from './provider/ThemeProvider';
 import { Layout } from './container/Layout';
@@ -14,8 +13,6 @@ import ScrollToTop from './components/ScrollToTop';
 import { AuthProvider, useLocalStorage } from '@state-less/react-client';
 import { USE_PROD_CLIENT } from './lib/config';
 import { Meta } from './components/Meta';
-import { useFetch } from './components/Markdown';
-import { useEffect } from 'react';
 
 const Router = typeof window === 'undefined' ? StaticRouter : BrowserRouter;
 
