@@ -899,7 +899,7 @@
   C 661.35 300.09 659.99 303.99 660.54 308.33
   C 661.76 317.78 665.03 325.69 672.74 331.75
   Z"></path>
-<path fill="currentColor" stroke="#000000" stroke-width="2px" d="
+<path xmlns:foo="foo" fill="currentColor" stroke="#000000" stroke-width="2px" d="
   M 456.35 554.41
   C 449.39 548.17 442.81 541.09 438.79 532.59
   C 431.53 517.25 430.14 503.48 432.18 486.42

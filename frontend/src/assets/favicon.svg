@@ -899,7 +899,7 @@
   C 661.35 300.09 659.99 303.99 660.54 308.33
   C 661.76 317.78 665.03 325.69 672.74 331.75
   Z"></path>
-<path fill="currentColor" stroke="#000000" stroke-width="1px" d="
+<path class="center" fill="currentColor" stroke="#000000" stroke-width="1px" d="
   M 456.35 554.41
   C 449.39 548.17 442.81 541.09 438.79 532.59
   C 431.53 517.25 430.14 503.48 432.18 486.42
@@ -944,7 +944,7 @@
   Q 503.32 443.62 489.19 445.15
   C 483.27 445.80 477.28 450.02 472.03 452.54
   Z"></path>
-<path fill="currentColor" stroke="#000000" stroke-width="1px" d="
+<path class="center" fill="currentColor" stroke="#000000" stroke-width="1px" d="
   M 492.73 488.43
   C 492.78 482.29 491.93 474.40 493.12 468.50
   Q 493.21 468.04 493.56 467.71

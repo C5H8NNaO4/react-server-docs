@@ -301,3 +301,32 @@ pre {
 
 div.center {
 }
+
+.MuiListItem-root:hover #flash {
+  animation: infinite alternate 2s ease-in-out flash;
+}
+
+@keyframes flash {
+  0% {
+    filter: brightness(90%);
+  }
+
+  10% {
+    filter: brightness(120%);
+  }
+
+  15% {
+    filter: brightness(95%);
+  }
+
+  20% {
+    filter: brightness(120%);
+  }
+
+  25% {
+    filter: brightness(95%);
+  }
+  100% {
+    filter: brightness(120%);
+  }
+}

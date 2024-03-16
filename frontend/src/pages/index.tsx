@@ -35,6 +35,7 @@ export const IndexPage = () => {
             >
               <Grid item sx={{ marginLeft: 'auto', marginRight: 'auto' }}>
                 <Favicon
+                  className="favicon"
                   style={{
                     width: 256,
                     height: 256,
