@@ -1,5 +1,5 @@
 import { Routes } from 'react-router';
-import { useContext, useEffect, useRef, useState, Suspense } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import {
   Paper,
   Typography,
@@ -18,7 +18,6 @@ import {
   Tooltip,
   useTheme,
   useMediaQuery,
-  LinearProgress,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -29,7 +28,7 @@ import GroupsIcon from '@mui/icons-material/Group';
 import ChatIcon from '@mui/icons-material/Chat';
 import Snackbar from '@mui/material/Snackbar';
 import HeartIcon from '@mui/icons-material/Favorite';
-import { useComponent, useLocalStorage } from '@state-less/react-client';
+import { useLocalStorage } from '@state-less/react-client';
 
 import { SidebarNavigation } from '../components/SidebarNavigation';
 import { routes } from '../routes';
@@ -44,7 +43,8 @@ import { ViewCounter } from '../server-components/examples/ViewCounter';
 import { CONTACT_MAIL, GITHUB_CONTRIBUTE } from '../lib/const';
 
 import styles from './Layout.module.css';
-import { VIEWS_KEY } from '../lib/config';
+import { SL_DOMAIN, VIEWS_KEY } from '../lib/config';
+import MovedDomainWarning from '../components/alerts/Moved';
 declare let gtag: (
   _: string,
   __: string,
@@ -127,35 +127,11 @@ export const PrankButton = ({ children }) => {
 };
 export const Layout = () => {
   const { state, dispatch } = useContext(stateContext);
-  const [features] = useComponent('features', {
-    suspend: import.meta.env.SSR,
-  });
   // const { pathname } = useLocation();
   // const [_animated, setAnim] = useState(0);
   const _animated = state.animatedBackground || 0;
   const hasGtag = typeof window === 'undefined' ? false : 'gtag' in window;
   const [time, setTime] = useState(0);
-
-  useEffect(() => {
-    if (_animated) {
-      setTime(1000);
-    } else if (time < 1000) {
-      setTimeout(setTime, 100, time + 100);
-    }
-  }, [time, _animated]);
-
-  useEffect(() => {
-    localStorage.setItem('animatedBackground', features?.props?.animated);
-    if (
-      features?.props?.animated &&
-      !localStorage.getItem('animatedBackgroundUser') &&
-      !state.animatedBackground
-    ) {
-      dispatch({
-        type: Actions.TOGGLE_ANIMATED_BACKGROUND,
-      });
-    }
-  }, [features?.props?.animated, dispatch, state.animatedBackground]);
 
   const [cookieConsent, setCookieConsent] = useLocalStorage<boolean | null>(
     'cookie-consent',
@@ -175,6 +151,7 @@ export const Layout = () => {
       }, 0);
     }
   }, [cookieConsent, hasGtag]);
+
   const menuShift = useMenuShiftSx();
   return (
     <VantaBackground
@@ -187,7 +164,10 @@ export const Layout = () => {
         id="scroll"
         // key={pathname}
         sx={{
-          marginTop: '64px',
+          marginTop: {
+            xs: '48px',
+            sm: '64px',
+          },
           maxHeight: 'calc(100vh - 64px)',
           height: '100%',
           overflowY: 'auto',
@@ -263,9 +243,9 @@ export const Layout = () => {
               fallback="Loading"
             >
               {(MovedDomainWarning) => (
-                <MovedDomainWarning domain={SL_DOMAIN} />
-              )}
-            </ClientOnly> */}
+                )}
+              </ClientOnly> */}
+            {/* <MovedDomainWarning domain={SL_DOMAIN} /> */}
           </Box>
           <div id="app-warnings" />
 
@@ -294,9 +274,9 @@ export const Layout = () => {
           })}
           <SidebarNavigation />
           <Box sx={menuShift}>
-            <Suspense fallback={<LinearProgress variant="indeterminate" />}>
-              <Routes>{routes}</Routes>
-            </Suspense>
+            {/* <Suspense fallback={<LinearProgress variant="indeterminate" />}> */}
+            <Routes>{routes}</Routes>
+            {/* </Suspense> */}
           </Box>
         </main>
         {!state.fullscreen && (

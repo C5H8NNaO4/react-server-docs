@@ -54,7 +54,7 @@ export const IndexPage = () => {
             <div className="markdown landing center">
               <h2>Dynamic, Reactive, Full-Stack Framework</h2>
             </div>
-            <Suspense>
+            <Suspense fallback={<LinearProgress />}>
               <Markdown
                 src={getRawPath('src/pages/index.md')}
                 optimisticHeight="1057px"
