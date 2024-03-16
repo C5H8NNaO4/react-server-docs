@@ -69,7 +69,7 @@ export const IndexPage = () => {
             </Box>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={12} xl={12} sx={{ mt: 1, p: 1 }}>
+        <Grid item xs={12} md={12} xl={12} sx={{ mt: 1 }}>
           <Grid container spacing={1}>
             <Grid item xs={12} lg={6}>
               <Poll

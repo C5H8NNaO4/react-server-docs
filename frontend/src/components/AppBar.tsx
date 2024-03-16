@@ -54,10 +54,10 @@ export default function ButtonAppBar() {
         <IconButton
           size="large"
           edge="start"
-          color="inherit"
           aria-label="Toggle menu"
           sx={{ mr: 2 }}
           onClick={() => dispatch({ type: Actions.TOGGLE_MENU })}
+          color={state.menuOpen ? 'success' : 'inherit'}
         >
           <MenuIcon />
         </IconButton>
