@@ -10,7 +10,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet';
+
 enum Vanta {
   CLOUDS,
   WAVES,

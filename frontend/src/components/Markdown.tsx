@@ -22,7 +22,7 @@ import { v4 } from 'uuid';
 
 import { Actions, stateContext } from '../provider/StateProvider';
 import { wrapPromise } from '../lib/util/SSR';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet';
 
 const getChildText = (props) => {
   const texts =
