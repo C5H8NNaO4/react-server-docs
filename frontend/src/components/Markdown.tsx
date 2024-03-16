@@ -297,7 +297,14 @@ export const Markdown = ({
           const url = props?.children?.props?.children;
 
           return (
-            <Markdown src={url} key={url} center={false} preview={preview}>
+            <Markdown
+              src={url}
+              key={url}
+              center={false}
+              suspend={suspend}
+              landing={landing}
+              preview={preview}
+            >
               {`Loading Markdown from Github: ${url}`}
             </Markdown>
           );
@@ -315,6 +322,7 @@ export const Markdown = ({
               cacheKey={id}
               preview={preview}
               suspend={suspend}
+              landing={landing}
             >
               {`*See this Stackoverflow answer: [${url}](${url})`}
             </Markdown>
