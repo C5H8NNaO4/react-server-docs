@@ -209,6 +209,7 @@ export const Markdown = ({
   }
 
   let fetched;
+
   const { loading, result, error, promise } = useFetch(
     children,
     fetchFn || null,
@@ -251,7 +252,7 @@ export const Markdown = ({
 
       return createElement(props?.node?.tagName, {}, children);
     },
-    [preview]
+    []
   );
 
   const components = useMemo(() => {

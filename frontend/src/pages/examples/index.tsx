@@ -43,13 +43,21 @@ export const FunctionsPage = () => {
         <Markdown>## Poll</Markdown>
         <Poll />
 
-        <Markdown src={getRawPath(EXAMPLE_SRC_1)}>*Loading*</Markdown>
+        <Markdown suspend src={getRawPath(EXAMPLE_SRC_1)}>
+          *Loading*
+        </Markdown>
         <HelloWorldExample1 />
-        <Markdown src={getRawPath(EXAMPLE_SRC_2)}>*Loading*</Markdown>
+        <Markdown suspend src={getRawPath(EXAMPLE_SRC_2)}>
+          *Loading*
+        </Markdown>
         <HelloWorldExample2 />
-        <Markdown src={getRawPath(EXAMPLE_SRC_3)}>*Loading*</Markdown>
+        <Markdown suspend src={getRawPath(EXAMPLE_SRC_3)}>
+          *Loading*
+        </Markdown>
         <TodoApp />
-        <Markdown src={getRawPath(EXAMPLE_SRC_4)}>*Loading*</Markdown>
+        <Markdown suspend src={getRawPath(EXAMPLE_SRC_4)}>
+          *Loading*
+        </Markdown>
         <Poll />
         <Navigation />
       </Paper>

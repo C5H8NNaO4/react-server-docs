@@ -2,7 +2,10 @@ import { useComponent } from '@state-less/react-client';
 import { Alert, Button } from '@mui/material';
 
 export const HelloWorldExample1 = () => {
-  const [component, { loading, error }] = useComponent('hello-world-1', {});
+  const [component, { loading, error }] = useComponent('hello-world-1', {
+    suspend: true,
+    ssr: import.meta.env.SSR,
+  });
 
   return (
     <>
