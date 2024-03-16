@@ -15,10 +15,11 @@ import { ConnectionCounter } from '../server-components/examples/ConnectionCount
 import { BackgroundButton } from './BackgroundButton';
 import { GoogleLoginButton } from './LoggedInGoogleButton';
 import Favicon from '../assets/favicon.svg?react';
+import { navigation } from '../routes';
 
 const getBreadCrumbs = (pathName, getTitle) => {
-  const arr = ['', ...pathName.split('/').filter(Boolean)].map((e) =>
-    getTitle(e)
+  const arr = ['', ...pathName.split('/').filter(Boolean)].map((e, i, arr) =>
+    getTitle(e, i, arr)
   );
   for (let i = 0; i < arr.length; i++) {
     if (i % 2 !== 0) {
@@ -64,7 +65,6 @@ export default function ButtonAppBar() {
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <Favicon
               alt="React Server Logo"
-              src="/favicon.svg"
               style={{ width: 24, height: 24 }}
               loading="lazy"
             />
@@ -75,22 +75,32 @@ export default function ButtonAppBar() {
               sx={{ flexGrow: 1, color: 'white' }}
             >
               {getBreadCrumbs(pathname, (part, i, arr) => {
-                if (part.includes('post-'))
+                if (i == 0)
                   return (
                     <Link
-                      sx={{ color: 'white' }}
-                      to={pathname}
                       component={RouterLink}
+                      sx={{ color: 'white' }}
+                      to={'/'}
                     >
-                      {component?.props?.title || 'Post'}
+                      {arr.length > 1 ? 'Home' : 'React Server'}
                     </Link>
                   );
+
+                const partialPath = pathname
+                  .split('/')
+                  .slice(0, i + 1)
+                  .join('/');
                 return (
-                  <Link component={RouterLink} sx={{ color: 'white' }} to={'/'}>
-                    Forum
+                  <Link
+                    sx={{ color: 'white' }}
+                    to={partialPath}
+                    component={RouterLink}
+                  >
+                    {navigation.find((nav) => nav[0] === partialPath)?.[1] ||
+                      part}
                   </Link>
                 );
-              }).slice(0, state?.showBC ? 3 : 1)}
+              })}
             </Typography>
           </Box>
         )}
