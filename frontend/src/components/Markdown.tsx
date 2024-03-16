@@ -300,7 +300,7 @@ export const Markdown = ({
             <Markdown
               src={url}
               key={url}
-              center={false}
+              center={center}
               suspend={suspend}
               landing={landing}
               preview={preview}
@@ -316,7 +316,7 @@ export const Markdown = ({
           return (
             <Markdown
               key={id}
-              center={false}
+              center={center}
               disablePadding
               fetchFn={FetchSOAnswerById(id, url)}
               cacheKey={id}
