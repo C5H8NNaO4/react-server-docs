@@ -223,6 +223,7 @@ const docsNavigation: Navigation = [
     null,
     ({ color }) => <InstallDesktopIcon color={color} />,
   ],
+  ['/SSR', 'SSR', 'src/examples/SSR.md', null, FlashOnIcon],
   [
     '/components',
     'Components',
@@ -274,7 +275,6 @@ const docsNavigation: Navigation = [
     null,
     LockIcon,
   ],
-  ['/SSR', 'SSR', 'src/examples/SSR.md', null, FlashOnIcon],
   ['/examples', 'Examples', 'src/examples', null, CodeIcon],
   [
     '/examples/comments',
