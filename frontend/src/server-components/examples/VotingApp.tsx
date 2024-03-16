@@ -83,6 +83,7 @@ export const UpDownButtons = ({
       }}
     >
       <IconButton
+        aria-label="Upvote"
         color={voted === 1 ? 'success' : 'default'}
         onClick={() => component?.props.upvote()}
         disabled={voted === -1 && policies.includes('single-vote')}
@@ -92,6 +93,7 @@ export const UpDownButtons = ({
       </IconButton>
       {loading ? <CircularProgress size="1rem"></CircularProgress> : sum}
       <IconButton
+        aria-label="Downvote"
         sx={{ pt: 0 }}
         color={voted === -1 ? 'error' : 'default'}
         onClick={() => component?.props.downvote()}

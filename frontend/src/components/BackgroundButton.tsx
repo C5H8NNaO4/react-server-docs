@@ -17,6 +17,7 @@ export const BackgroundButton = () => {
   return (
     <>
       <IconButton
+        aria-aria-label="Choose background"
         color={state.animatedBackground > 0 ? 'info' : 'inherit'}
         onClick={(e) => {
           if (anchor) {

@@ -78,6 +78,7 @@ export const NotificationButton = () => {
 
   return (
     <IconButton
+      aria-label="Notification"
       disabled={permission.notification === 'denied'}
       color={
         permission.notification === 'granted'

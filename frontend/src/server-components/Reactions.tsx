@@ -77,6 +77,7 @@ export const Reactions = ({ data }) => {
 
       {!voted && (
         <IconButton
+          aria-label="Reactions"
           ref={iconButtonRef}
           color={anchor ? 'success' : 'default'}
           onClick={(e) => setAnchor(!anchor)}
@@ -158,6 +159,7 @@ const ReactionPopper = ({ anchor, id, onClose, react }) => {
                 const Icon = ReactionIcons[reaction];
                 return (
                   <IconButton
+                    aria-label={`${reaction} reaction`}
                     key={reaction}
                     onClick={() => react(reaction)}
                     sx={{ pl: '4px' }}

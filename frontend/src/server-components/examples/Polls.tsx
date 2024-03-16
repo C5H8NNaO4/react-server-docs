@@ -72,6 +72,7 @@ export const Poll = ({
                     component?.props?.voted !== i
                   }
                   color={component.props.voted === i ? 'error' : 'default'}
+                  aria-label={`Vote for option ${i}`}
                 >
                   <HeartIcon />
                 </IconButton>

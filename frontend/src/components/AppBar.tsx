@@ -53,7 +53,7 @@ export default function ButtonAppBar() {
           size="large"
           edge="start"
           color="inherit"
-          aria-label="menu"
+          aria-label="Toggle menu"
           sx={{ mr: 2 }}
           onClick={() => dispatch({ type: Actions.TOGGLE_MENU })}
         >

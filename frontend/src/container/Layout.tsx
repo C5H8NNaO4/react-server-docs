@@ -440,11 +440,11 @@ export const Layout = () => {
                               </Link>
                             </ListItemText>
                           </ListItem>
-                          <ViewCounter
-                            textColor="primary.main"
-                            componentKey={VIEWS_KEY}
-                          />
                         </List>
+                        <ViewCounter
+                          textColor="primary.main"
+                          componentKey={VIEWS_KEY}
+                        />
                       </div>
                     </CardContent>
                   </Card>

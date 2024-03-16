@@ -23,6 +23,12 @@ if (isProd) {
 export default defineConfig({
   root: "frontend",
   envPrefix: "REACT_APP_",
+  build: {
+    sourcemap: true,
+    rollupOptions: {
+      external: ["node_modules/jsonwebtoken/index.js"],
+    },
+  },
   plugins: [
     svgr(),
     react(),
@@ -44,10 +50,5 @@ export default defineConfig({
   ],
   ssr: {
     noExternal,
-  },
-  build: {
-    rollupOptions: {
-      external: ["node_modules/jsonwebtoken/index.js"],
-    },
   },
 });

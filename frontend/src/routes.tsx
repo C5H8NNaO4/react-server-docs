@@ -32,7 +32,7 @@ import { SL_DOMAIN } from './lib/config';
 import { Alert } from '@mui/material';
 
 const docsRoutes = [
-  <Route path="/" Component={IndexPage} />,
+  <Route path="/" key="/" Component={IndexPage} />,
   <Route
     path="/button"
     key="/button"
@@ -270,6 +270,7 @@ const docsNavigation: Navigation = [
     ({ color }) => (
       <img
         src="/favicon.svg"
+        alt="React Server Logo"
         style={{ width: 24, height: 24 }}
         loading="lazy"
       />

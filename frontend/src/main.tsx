@@ -16,11 +16,13 @@ if ('serviceWorker' in navigator) {
   register();
 }
 
-// ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-//   <App />
-// );
-
 window.React = React;
-ReactDOM.hydrateRoot(document.getElementById('root')!, <App />);
+if (!import.meta.env.SSR && !window.__APOLLO_STATE__) {
+  ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+    <App />
+  );
+} else {
+  ReactDOM.hydrateRoot(document.getElementById('root')!, <App />);
+}
 
 export {};

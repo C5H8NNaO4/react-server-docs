@@ -334,6 +334,7 @@ export const Markdown = ({
           <>
             <Box sx={{ width: '100%', display: 'flex' }}>
               <IconButton
+                aria-label="Copy markdown content."
                 sx={{ ml: 'auto', mb: -7, color: 'white' }}
                 onClick={() => {
                   copy(props?.children?.props.children);
@@ -358,19 +359,13 @@ export const Markdown = ({
         return (
           <Link
             to={props.href}
-            component={(props) => {
-              return (
-                <RouterLink
-                  {...props}
-                  onClick={() => {
-                    document
-                      .querySelector(hash)
-                      ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
-                  }}
-                />
-              );
-            }}
+            component={RouterLink}
             sx={{ color: 'info.main' }}
+            onClick={() => {
+              document
+                .querySelector(hash)
+                ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }}
           >
             {props.children}
           </Link>

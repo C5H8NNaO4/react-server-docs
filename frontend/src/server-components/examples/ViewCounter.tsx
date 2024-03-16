@@ -10,6 +10,7 @@ import {
   ListItemIcon,
   Chip,
   CardProps,
+  List,
 } from '@mui/material';
 
 export type ViewCounterProps = {
@@ -68,32 +69,34 @@ export const ViewCounterItem = ({
           ...sx,
         }}
       >
-        {!clientOnly && (
-          <ListItem dense sx={{ color: textColor }}>
+        <List disablePadding sx={{ display: 'flex' }}>
+          {!clientOnly && (
+            <ListItem dense sx={{ color: textColor }}>
+              <ListItemIcon>
+                <VisibilityIcon />
+              </ListItemIcon>
+              <ListItemText
+                sx={{ color: textColor }}
+                primary={loading ? '-' : component?.props?.views}
+              ></ListItemText>
+            </ListItem>
+          )}
+          <ListItem dense>
             <ListItemIcon>
-              <VisibilityIcon />
+              {clientOnly ? <VisibilityIcon /> : <GroupIcon />}
             </ListItemIcon>
             <ListItemText
               sx={{ color: textColor }}
-              primary={loading ? '-' : component?.props?.views}
-            ></ListItemText>
+              primary={
+                loading
+                  ? '-'
+                  : clientOnly
+                  ? component?.props?.views
+                  : component?.props?.clients
+              }
+            />
           </ListItem>
-        )}
-        <ListItem dense>
-          <ListItemIcon>
-            {clientOnly ? <VisibilityIcon /> : <GroupIcon />}
-          </ListItemIcon>
-          <ListItemText
-            sx={{ color: textColor }}
-            primary={
-              loading
-                ? '-'
-                : clientOnly
-                ? component?.props?.views
-                : component?.props?.clients
-            }
-          />
-        </ListItem>
+        </List>
       </Box>
     </Tooltip>
   );

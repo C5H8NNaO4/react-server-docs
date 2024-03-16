@@ -47,6 +47,7 @@ export const LoggedInGoogleButton = () => {
     <>
       <MDButton
         id="basic-button"
+        aria-label="User profile actions"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
