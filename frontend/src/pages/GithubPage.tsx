@@ -23,7 +23,7 @@ export const GithubPage = ({
           },
         }}
       >
-        <Markdown landing={landing} src={getRawPath(src)}>
+        <Markdown landing={landing} suspend src={getRawPath(src)}>
           *Loading*
         </Markdown>
         <Navigation />

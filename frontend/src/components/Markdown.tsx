@@ -217,7 +217,6 @@ export const Markdown = ({
   );
 
   if (promise && suspend && loading < 2) {
-    console.log('MARKDOWN SUSPENDING');
     promise();
   }
 
