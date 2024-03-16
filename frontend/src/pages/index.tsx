@@ -52,7 +52,7 @@ export const IndexPage = () => {
               </Grid>
             </Grid>
             <div className="markdown landing center">
-              <h2>Dynamic, Reactive, Full-Stack Framework</h2>
+              <h2>Modular, Reactive, Full-Stack Framework</h2>
             </div>
             <Suspense fallback={<LinearProgress />}>
               <Markdown
