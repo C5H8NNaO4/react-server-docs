@@ -19,7 +19,10 @@ import { useComponent } from '@state-less/react-client';
 import { useEffect, useState } from 'react';
 
 export const TodoApp = (props) => {
-  const [component, { loading, error }] = useComponent('todos', {});
+  const [component, { loading, error }] = useComponent('todos', {
+    suspend: true,
+    ssr: import.meta.env.SSR,
+  });
   const [title, setTitle] = useState('');
   const [edit, setEdit] = useState(false);
 
