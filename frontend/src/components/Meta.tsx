@@ -8,11 +8,11 @@ export const DefaultMeta = (props) => {
       <link rel="canonical" href="https://reactserver.dev/" />
       <meta
         name="description"
-        content="Unlock the power of React Server! Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
+        content="React + Vite + React Server: Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
       />
       <meta
         name="keywords"
-        content="Moritz Roessler, CV, TypeScript, JavaScript Development, GraphQL Development, React, TSX, Vue, Components, Component Driven, Server-side Components, React Server, MUI, Vite, Modern Web Development, React Server-Side Rendering, Performance Optimization"
+        content="Server Components, React + Vite + React Server, Moritz Roessler, CV, TypeScript, JavaScript Development, GraphQL Development, React, TSX, Vue, Components, Component Driven, Server-side Components, React Server, MUI, Vite, Modern Web Development, React Server-Side Rendering, Performance Optimization"
       />
 
       <meta
@@ -21,7 +21,7 @@ export const DefaultMeta = (props) => {
       />
       <meta
         property="og:description"
-        content="Unlock the power of React Server! Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
+        content="React + Vite + React Server: Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
       />
       <meta
         property="og:image"
@@ -36,7 +36,7 @@ export const DefaultMeta = (props) => {
       />
       <meta
         name="twitter:description"
-        content="Unlock the power of React Server! Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
+        content="React + Vite + React Server: Effortlessly create server-side components with JSX/TSX and embrace a reactive coding style inspired by React. Dive into components, hooks, effects, and more."
       />
       <meta
         name="twitter:image"
