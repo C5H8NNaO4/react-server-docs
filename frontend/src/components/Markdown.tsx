@@ -476,12 +476,12 @@ export const Markdown = ({
           alignContent: 'center',
         }}
       >
-        <Helmet>
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css"
-          />
-        </Helmet>
+        {/* <Helmet> */}
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css"
+        />
+        {/* </Helmet> */}
         <ReactMarkdown
           className={clsx({ 'markdown-small': small })}
           rehypePlugins={[rehypeRaw, rehypeHighlight]}
