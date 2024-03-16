@@ -14,6 +14,7 @@ import { ConnectionCounter } from '../server-components/examples/ConnectionCount
 
 import { BackgroundButton } from './BackgroundButton';
 import { GoogleLoginButton } from './LoggedInGoogleButton';
+import Favicon from '../assets/favicon.svg?react';
 
 const getBreadCrumbs = (pathName, getTitle) => {
   const arr = ['', ...pathName.split('/').filter(Boolean)].map((e) =>
@@ -61,7 +62,8 @@ export default function ButtonAppBar() {
         </IconButton>
         {!lessThanSmall && (
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <img
+            <Favicon
+              alt="React Server Logo"
               src="/favicon.svg"
               style={{ width: 24, height: 24 }}
               loading="lazy"

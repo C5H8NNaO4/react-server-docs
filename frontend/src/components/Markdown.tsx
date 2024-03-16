@@ -360,7 +360,7 @@ export const Markdown = ({
           <Link
             to={props.href}
             component={RouterLink}
-            sx={{ color: 'info.main' }}
+            sx={{ color: 'info.dark' }}
             onClick={() => {
               document
                 .querySelector(hash)
