@@ -208,7 +208,7 @@ type Navigation = [
  * TODO: This needs to be used in order to justify leaving it.
  * We need a list of urls for the sitemap generator.
  * */
-const urls = [
+export const urls = [
   '/',
   '/button',
   '/more',

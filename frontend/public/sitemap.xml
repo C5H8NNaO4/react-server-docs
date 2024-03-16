@@ -4,10 +4,19 @@
 	    <loc>https://reactserver.dev/</loc>
     </url>
     <url>
+	    <loc>https://reactserver.dev/button</loc>
+    </url>
+    <url>
+	    <loc>https://reactserver.dev/more</loc>
+    </url>
+    <url>
 	    <loc>https://reactserver.dev/why</loc>
     </url>
     <url>
 	    <loc>https://reactserver.dev/installation</loc>
+    </url>
+    <url>
+	    <loc>https://reactserver.dev/installation/forum</loc>
     </url>
     <url>
 	    <loc>https://reactserver.dev/components</loc>

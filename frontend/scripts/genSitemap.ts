@@ -1,31 +1,34 @@
 import fs from 'fs';
 import path from 'path';
 
+import urls from '../src/urls.js';
+
 const domain = 'reactserver.dev';
-const urls = [
-  '/',
-  '/why',
-  '/installation',
-  '/components',
-  '/react-server',
-  '/react-server/states',
-  '/react-server/hooks',
-  'https://github.com/state-less/clean-starter/',
-  '/stores',
-  '/server',
-  '/authentication',
-  '/SSR',
-  '/examples',
-  '/examples/comments',
-  '/examples/votings',
-  '/additional-topics',
-  '/faq',
-  '/changes',
-  '/collaborating',
-  'https://blogs.state-less.cloud/',
-  'https://lists.state-less.cloud',
-  'https://javascript.forum/',
-];
+// const urls = [
+//   '/',
+//   '/button',
+//   '/why',
+//   '/installation',
+//   '/components',
+//   '/react-server',
+//   '/react-server/states',
+//   '/react-server/hooks',
+//   'https://github.com/state-less/clean-starter/',
+//   '/stores',
+//   '/server',
+//   '/authentication',
+//   '/SSR',
+//   '/examples',
+//   '/examples/comments',
+//   '/examples/votings',
+//   '/additional-topics',
+//   '/faq',
+//   '/changes',
+//   '/collaborating',
+//   'https://blogs.state-less.cloud/',
+//   'https://lists.state-less.cloud',
+//   'https://javascript.forum/',
+// ];
 const header = `<?xml version="1.0" encoding="UTF-8"?>
 		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 
@@ -49,4 +52,4 @@ ${content}
 ${footer}`;
 
 // console.log('Writing sitemap.xml', output);
-fs.writeFileSync(path.resolve('./public/sitemap.xml'), output);
+fs.writeFileSync(path.resolve('./frontend/public/sitemap.xml'), output);
