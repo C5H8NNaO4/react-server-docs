@@ -31,41 +31,53 @@ import IndexPage from './pages/index';
 import { SL_DOMAIN } from './lib/config';
 import { Alert } from '@mui/material';
 
+import ViteLogp from './assets/vite.svg?react';
+import VercelLogo from './assets/vercel.svg?react';
+
 const docsRoutes = [
-  <Route path="/" key="/" Component={IndexPage} />,
+  <Route path="/" Component={IndexPage} />,
   <Route
     path="/button"
-    key="/button"
     Component={React.lazy(() => import('./pages/ButtonPage') as any)}
   />,
   <Route
     path="/more"
-    key="/more"
     Component={React.lazy(() => import('./pages/MorePage') as any)}
   />,
-  <Route path="/why" key="/why" Component={WhyPage} />,
+  <Route path="/why" Component={WhyPage} />,
   <Route
     path="/installation"
-    key="/installation"
     Component={() => {
       return <GithubPage src="src/pages/Installation.md" landing />;
     }}
   />,
   <Route
     path="/installation/forum"
-    key="/installation/forum"
     Component={() => {
       return <GithubPage src="src/pages/installation/forum.md" landing />;
     }}
   />,
+  <Route path="/faq" Component={React.lazy(() => import('./pages/faq'))} />,
   <Route
-    path="/faq"
-    key="/faq"
-    Component={React.lazy(() => import('./pages/faq'))}
+    path="/ssr"
+    Component={() => {
+      return <GithubPage src="src/pages/ssr/index.md" />;
+    }}
+  />,
+  <Route
+    path="/ssr/vite"
+    Component={() => {
+      return <GithubPage src="src/pages/ssr/vite.md" />;
+    }}
+  />,
+  <Route
+    path="/ssr/nextjs"
+    Component={() => {
+      return <GithubPage src="src/pages/ssr/next.js.md" />;
+    }}
   />,
   <Route
     path="/community"
-    key="/community"
     Component={() => {
       useEffect(() => {
         document.location.href = 'https://blogs.state-less.cloud';
@@ -76,7 +88,6 @@ const docsRoutes = [
   />,
   <Route
     path="/community/:post"
-    key="/community/:post"
     Component={() => {
       const params = useParams();
       useEffect(() => {
@@ -102,77 +113,49 @@ const docsRoutes = [
   />,
   <Route
     path="/changes"
-    key="/changes"
     Component={React.lazy(() => import('./pages/changelog'))}
   />,
   <Route
     path="/collaborating"
-    key="/collaborating"
     Component={() => {
       return <GithubPage src="src/pages/Collaborating.md" />;
     }}
   />,
   <Route
     path="/additional-topics"
-    key="/additional-topics"
     Component={() => {
       return <GithubPage src="src/pages/Additional.md" />;
     }}
   />,
   <Route
-    path="/SSR"
-    key="/SSR"
-    Component={() => {
-      return <GithubPage src="src/pages/ssr/index.md" />;
-    }}
-  />,
-  <Route
     path="/components"
-    key="/components"
     Component={lazy(() => import('./pages/components'))}
   />,
   <Route
     path="/react-server"
-    key="/react-server"
     Component={lazy(() => import('./pages/react-server'))}
   />,
   <Route
     path="/react-server/states"
-    key="/react-server/states"
     Component={lazy(() => import('./pages/states'))}
   />,
   <Route
     path="/react-server/hooks"
-    key="/react-server/hooks"
     Component={lazy(() => import('./pages/react-server/hooks'))}
   />,
 
-  <Route
-    path="/stores"
-    key="/stores"
-    Component={lazy(() => import('./pages/stores'))}
-  />,
-  <Route
-    path="/server"
-    key="/server"
-    Component={lazy(() => import('./pages/server'))}
-  />,
+  <Route path="/stores" Component={lazy(() => import('./pages/stores'))} />,
+  <Route path="/server" Component={lazy(() => import('./pages/server'))} />,
   <Route
     path="/authentication"
-    key="/authentication"
     Component={lazy(() => import('./pages/authentication'))}
   />,
-  <Route
-    path="/examples"
-    key="/examples"
-    Component={lazy(() => import('./pages/examples'))}
-  />,
+  <Route path="/examples" Component={lazy(() => import('./pages/examples'))} />,
   <Route
     path="/examples/comments"
-    key="/examples/comments"
     Component={lazy(() => import('./pages/examples/comments'))}
   />,
-  <Route path="/examples/chat" key="/examples/chat" Component={ChatPage} />,
+  <Route path="/examples/chat" Component={ChatPage} />,
   // <Route path="/examples/cms" Component={CMSPage} />,
   // <Route path="/examples/cms/pages" Component={PagesPage} />,
   // <Route path="/examples/cms/rendering" Component={NavigationPage} />,
@@ -186,14 +169,9 @@ const docsRoutes = [
   // />,
   <Route
     path="/examples/votings"
-    key="/examples/votings"
     Component={lazy(() => import('./pages/examples/voting'))}
   />,
-  <Route
-    path="/admin"
-    key="/admin"
-    Component={lazy(() => import('./pages/admin'))}
-  />,
+  <Route path="/admin" Component={lazy(() => import('./pages/admin'))} />,
 ];
 
 type Navigation = [
@@ -203,6 +181,38 @@ type Navigation = [
   string | null,
   ({ color }: { color: any }) => any
 ][];
+
+/**
+ * TODO: This needs to be used in order to justify leaving it.
+ * We need a list of urls for the sitemap generator.
+ * */
+const urls = [
+  '/',
+  '/button',
+  '/more',
+  '/why',
+  '/installation',
+  '/installation/forum',
+  '/components',
+  '/react-server',
+  '/react-server/states',
+  '/react-server/hooks',
+  'https://github.com/state-less/clean-starter/',
+  '/stores',
+  '/server',
+  '/authentication',
+  '/SSR',
+  '/examples',
+  '/examples/comments',
+  '/examples/votings',
+  '/additional-topics',
+  '/faq',
+  '/changes',
+  '/collaborating',
+  'https://blogs.state-less.cloud/',
+  'https://lists.state-less.cloud',
+  'https://javascript.forum/',
+];
 
 const docsNavigation: Navigation = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
@@ -223,13 +233,27 @@ const docsNavigation: Navigation = [
     null,
     ({ color }) => <InstallDesktopIcon color={color} />,
   ],
-  ['/SSR', 'SSR', 'src/pages/ssr/index.md', null, FlashOnIcon],
   [
     '/components',
     'Components',
     'src/pages/Components.md',
     null,
     ({ color }) => <AppsIcon color={color} />,
+  ],
+  ['/ssr', 'SSR', 'src/ssr/index.md', null, FlashOnIcon],
+  [
+    '/ssr/vite',
+    'Vite',
+    'src/ssr/vite.md',
+    null,
+    () => <ViteLogp width={'24px'} height={'24px'} />,
+  ],
+  [
+    '/ssr/nextjs',
+    'Next.js',
+    'src/ssr/next.js.md',
+    null,
+    () => <VercelLogo width={'24px'} height={'24px'} />,
   ],
   [
     '/react-server',
@@ -239,7 +263,6 @@ const docsNavigation: Navigation = [
     ({ color }) => (
       <img
         src="/favicon.svg"
-        alt="React Server Logo"
         style={{ width: 24, height: 24 }}
         loading="lazy"
       />
@@ -355,16 +378,8 @@ const blogsNavigation: Navigation = [
 ];
 
 const blogsRoutes = [
-  <Route
-    path="/"
-    key="/"
-    Component={lazy(() => import('./pages/ForumPage'))}
-  />,
-  <Route
-    path="/:post"
-    key="/:post"
-    Component={lazy(() => import('./pages/PostPage'))}
-  />,
+  <Route path="/" Component={lazy(() => import('./pages/ForumPage'))} />,
+  <Route path="/:post" Component={lazy(() => import('./pages/PostPage'))} />,
 ];
 
 const routes =
