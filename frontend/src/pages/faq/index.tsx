@@ -15,6 +15,9 @@ const getMDFromSD = (data) => {
 };
 const PAGE_SRC = 'src/pages/FAQ.md';
 
+const md = `# Vite + React + React Server FAQ
+## Answers to frequently asked questions.
+${getMDFromSD(sd)}`;
 export const FAQPage = () => {
   return (
     <Container maxWidth="lg" disableGutters>
@@ -32,7 +35,7 @@ export const FAQPage = () => {
         <script type="application/ld+json">{JSON.stringify(sd)}</script>
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
         <Markdown suspend center={false} landing>
-          {getMDFromSD(sd)}
+          {md}
         </Markdown>
         <Navigation />
       </Paper>
