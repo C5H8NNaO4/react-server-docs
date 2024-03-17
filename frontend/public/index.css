@@ -303,11 +303,11 @@ div.center {
 }
 
 .MuiListItem-root:hover #flash {
-  animation: infinite alternate 2s ease-in-out flash;
+  animation: 2s ease-in flash forwards;
 }
 
 .active #flash {
-  filter: brightness(115%);
+  filter: brightness(110%);
 }
 
 #flash {
@@ -333,6 +333,17 @@ div.center {
 
   25% {
     filter: brightness(95%);
+  }
+
+  30% {
+    filter: brightness(120%);
+  }
+
+  35% {
+    filter: brightness(95%);
+  }
+  75% {
+    filter: brightness(120%);
   }
   100% {
     filter: brightness(120%);
