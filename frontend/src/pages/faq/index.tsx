@@ -18,6 +18,7 @@ const PAGE_SRC = 'src/pages/FAQ.md';
 const md = `# Vite + React + React Server FAQ
 ## Answers to frequently asked questions.
 ${getMDFromSD(sd)}`;
+
 export const FAQPage = () => {
   return (
     <Container maxWidth="lg" disableGutters>
