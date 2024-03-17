@@ -1,14 +1,15 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import express from 'express';
-import { render } from '../dist/server/entry-server.js';
+import path from "path";
+import { fileURLToPath } from "url";
+import express from "express";
+import { render } from "../dist/server/entry-server.js";
+import { genSiteMap } from "./sitemap.js";
 // import { createServer as createViteServer } from 'vite';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const distPath = path.join(__dirname, '../dist/client/');
+const distPath = path.join(__dirname, "../dist/client/");
 
 const PORT = process.env.PORT || 3000;
-const IS_PROD = process.env === 'production';
+const IS_PROD = process.env === "production";
 let vite;
 
 async function createServer() {
@@ -57,7 +58,7 @@ async function createServer() {
     } catch (e) {
       // If an error is caught, let Vite fix the stack trace so it maps back
       // to your actual source code.
-      console.log('Error ', e);
+      console.log("Error ", e);
 
       // if (!IS_PROD) {
       //   vite.ssrFixStacktrace(e);
@@ -68,9 +69,13 @@ async function createServer() {
 
   const staticHandler = express.static(distPath);
   app.use((req, res, next) => {
+    console.log("URL", req.url);
     // Check if the requested path is '/'
-    if (req.url === '/') {
+    if (req.url === "/") {
       return handleRoute(req, res, next);
+    } else if (req.url === "/sitemap.xml") {
+      res.setHeader("Content-Type", "text/xml");
+      res.send(genSiteMap());
     } else {
       // Serve other static files
       staticHandler(req, res, next);
@@ -97,10 +102,10 @@ async function createServer() {
   //   app.use(vite.middlewares);
   // }
 
-  app.use('*', handleRoute);
+  app.use("*", handleRoute);
 
   app.listen(PORT);
-  console.log('Listening on ', PORT);
+  console.log("Listening on ", PORT);
 
   return app;
 }

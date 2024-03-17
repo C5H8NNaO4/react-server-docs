@@ -4,7 +4,7 @@
  * */
 const urls = [
   '/',
-  '/button',
+  '/code',
   '/more',
   '/why',
   '/installation',
