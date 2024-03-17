@@ -29,10 +29,11 @@ import InfoIcon from '@mui/icons-material/Info';
 import SmartButtonIcon from '@mui/icons-material/SmartButton';
 import IndexPage from './pages/index';
 import { SL_DOMAIN } from './lib/config';
-import { Alert } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 
 import ViteLogp from './assets/vite.svg?react';
 import VercelLogo from './assets/vercel.svg?react';
+import Favicon from './assets/favicon.svg?react';
 
 const docsRoutes = [
   <Route path="/" Component={IndexPage} />,
@@ -247,7 +248,17 @@ const docsNavigation: Navigation = [
     'src/ssr/vite.md',
     null,
     ({ color }) => (
-      <ViteLogp width={'24px'} height={'24px'} className={color} />
+      <Box
+        sx={{
+          color: color === 'primary' ? undefined : color + '.main',
+        }}
+      >
+        <ViteLogp
+          width={'24px'}
+          height={'24px'}
+          className={color === 'secondary' ? 'active' : ''}
+        />
+      </Box>
     ),
   ],
   [
@@ -255,7 +266,11 @@ const docsNavigation: Navigation = [
     'Next.js',
     'src/ssr/next.js.md',
     null,
-    () => <VercelLogo width={'24px'} height={'24px'} />,
+    ({ color }) => (
+      <Box sx={{ color: color + '.main' }}>
+        <VercelLogo width={'24px'} height={'24px'} />
+      </Box>
+    ),
   ],
   [
     '/react-server',
@@ -263,11 +278,13 @@ const docsNavigation: Navigation = [
     'src/pages/react-server/index.md',
     null,
     ({ color }) => (
-      <img
-        src="/favicon.svg"
-        style={{ width: 24, height: 24 }}
-        loading="lazy"
-      />
+      <Box sx={{ color: color + '.main' }}>
+        <Favicon
+          alt="React Server Logo"
+          style={{ width: 24, height: 24 }}
+          loading="lazy"
+        />
+      </Box>
     ),
   ],
   [
