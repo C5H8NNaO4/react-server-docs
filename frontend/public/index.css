@@ -306,6 +306,10 @@ div.center {
   animation: infinite alternate 2s ease-in-out flash;
 }
 
+.secondary #flash {
+  filter: brightness(115%);
+}
+
 @keyframes flash {
   0% {
     filter: brightness(90%);

@@ -37,7 +37,7 @@ import VercelLogo from './assets/vercel.svg?react';
 const docsRoutes = [
   <Route path="/" Component={IndexPage} />,
   <Route
-    path="/button"
+    path="/code"
     Component={React.lazy(() => import('./pages/ButtonPage') as any)}
   />,
   <Route
@@ -188,7 +188,7 @@ type Navigation = [
  * */
 const urls = [
   '/',
-  '/button',
+  '/code',
   '/more',
   '/why',
   '/installation',
@@ -216,7 +216,7 @@ const urls = [
 
 const docsNavigation: Navigation = [
   ['/', 'Home', null, null, ({ color }) => <HomeIcon color={color} />],
-  ['/button', 'Demo Button', null, null, SmartButtonIcon],
+  ['/code', 'Code', null, null, SmartButtonIcon],
   ['/more', 'More Info', null, null, InfoIcon],
   ['/why', 'Why', null, null, QuestionMarkIcon],
   [
@@ -246,7 +246,9 @@ const docsNavigation: Navigation = [
     'Vite',
     'src/ssr/vite.md',
     null,
-    () => <ViteLogp width={'24px'} height={'24px'} />,
+    ({ color }) => (
+      <ViteLogp width={'24px'} height={'24px'} className={color} />
+    ),
   ],
   [
     '/ssr/nextjs',

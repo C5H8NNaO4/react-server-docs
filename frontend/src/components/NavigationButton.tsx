@@ -39,16 +39,21 @@ export const NavigationButton2D = ({
   const { pathname } = useLocation();
   const index = navigation.findIndex((e) => e[0] === pathname);
 
-  const nextPath =
-    navigation[
-      next ? (index + 1) % navigation.length : Math.max(0, index - 1)
-    ][0];
+  const nextIndex = next
+    ? (index + 1) % navigation.length
+    : Math.max(0, index - 1);
+  const nextPath = navigation[nextIndex][0];
+  const nextTitle = navigation[nextIndex][1];
+  navigation[
+    next ? (index + 1) % navigation.length : Math.max(0, index - 1)
+  ][0];
+  
   return (
     <Link to={nextPath} component={RouterLink}>
-      <Button color='info'>
+      <Button color="info">
         {nextPath == '/' && <HomeIcon sx={{ pr: 1 }} />}
         {prev && nextPath !== '/' && <ArrowBackIcon sx={{ pr: 1 }} />}
-        {children || nextPath == '/' ? 'Home' : nextPath}
+        {children || nextPath == '/' ? 'Home' : nextTitle}
         {next && nextPath !== '/' && <ArrowForwardIcon sx={{ pl: 1 }} />}
       </Button>
     </Link>
