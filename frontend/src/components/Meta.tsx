@@ -25,7 +25,7 @@ export const DefaultMeta = (props) => {
       />
       <meta
         property="og:image"
-        content="https://state-less.cloud/preview.png"
+        content="https://reactserver.dev/preview.png"
       />
       <meta property="og:url" content="https://state-less.cloud" />
       <meta property="og:type" content="website" />
@@ -40,7 +40,7 @@ export const DefaultMeta = (props) => {
       />
       <meta
         name="twitter:image"
-        content="https://state-less.cloud/preview.png"
+        content="https://reactserver.dev/preview.png"
       />
       {props.children}
     </Helmet>
@@ -117,7 +117,7 @@ export const BlogsMeta = (props) => {
       />
       <meta
         property="og:image"
-        content="https://state-less.cloud/preview.png"
+        content="https://reactserver.dev/preview.png"
       />
       <meta property="og:url" content="https://state-less.cloud" />
       <meta property="og:type" content="website" />
@@ -132,7 +132,7 @@ export const BlogsMeta = (props) => {
       />
       <meta
         name="twitter:image"
-        content="https://state-less.cloud/preview.png"
+        content="https://reactserver.dev/preview.png"
       />
       {props.children}
     </Helmet>

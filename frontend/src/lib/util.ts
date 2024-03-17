@@ -11,3 +11,7 @@ export const urlB64ToUint8Array = (base64String) => {
   return outputArray;
 };
 
+export const scrollToTop = () => {
+  const target = document.querySelector('#scroll') || window;
+  target.scrollTo(0, 0);
+};

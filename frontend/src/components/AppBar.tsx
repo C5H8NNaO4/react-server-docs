@@ -16,6 +16,7 @@ import { BackgroundButton } from './BackgroundButton';
 import { GoogleLoginButton } from './LoggedInGoogleButton';
 import Favicon from '../assets/favicon.svg?react';
 import { navigation } from '../routes';
+import { scrollToTop } from '../lib/util';
 
 const getBreadCrumbs = (pathName, getTitle) => {
   const arr = ['', ...pathName.split('/').filter(Boolean)].map((e, i, arr) =>
@@ -73,6 +74,7 @@ export default function ButtonAppBar() {
               variant="h6"
               component="div"
               sx={{ flexGrow: 1, color: 'white' }}
+              onClick={() => scrollToTop()}
             >
               {getBreadCrumbs(pathname, (part, i, arr) => {
                 if (i == 0)
