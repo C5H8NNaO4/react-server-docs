@@ -127,6 +127,14 @@ export const useFetch = (
   }, [fetchFn, setState, state?.loading]);
 
   if (suspend) {
+    if (fetchFn === null && resultValue) {
+      return {
+        result: resultValue,
+        loading: 3,
+        promise: null,
+        error: null,
+      };
+    }
     if (!wrappedCache?.[cacheKey] && !resultCache?.[cacheKey]) {
       const promise = fetchFn?.();
       if (promise) {
