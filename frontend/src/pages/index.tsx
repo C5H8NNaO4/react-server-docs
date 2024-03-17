@@ -1,4 +1,4 @@
-import { Paper, Grid, Container, LinearProgress } from '@mui/material';
+import { Paper, Grid, Container, LinearProgress, Button } from '@mui/material';
 import { Suspense, useEffect } from 'react';
 import { Alert, Box } from '@mui/material';
 
@@ -10,6 +10,7 @@ import { Poll } from '../server-components/examples/Polls';
 import { Comments } from '../server-components/examples/Comments';
 import { HelloWorldExample2 } from '../server-components/examples';
 import Favicon from '../assets/favicon.svg?react';
+import { Link } from 'react-router-dom';
 
 export const IndexPage = () => {
   return (
@@ -65,6 +66,13 @@ export const IndexPage = () => {
                 Loading...
               </Markdown>
             </Suspense>
+            <Box sx={{ mx: 'auto', display: 'flex', justifyContent: 'center' }}>
+              <Link to="/installation">
+                <Button variant="outlined" size="large">
+                  Get Started
+                </Button>
+              </Link>
+            </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <NavigationButton2D next animate />
             </Box>
