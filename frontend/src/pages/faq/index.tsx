@@ -8,7 +8,9 @@ import sd from './structuredData';
 
 const getMDFromSD = (data) => {
   return data.mainEntity.reduce((acc, cur) => {
-    return acc + '> ' + cur.name + '\n  \n  ' + cur.acceptedAnswer.text + '  \n';
+    return (
+      acc + '> ' + cur.name + '\n  \n  ' + cur.acceptedAnswer.text + '  \n'
+    );
   }, '');
 };
 const PAGE_SRC = 'src/pages/FAQ.md';
@@ -29,7 +31,9 @@ export const FAQPage = () => {
       >
         <script type="application/ld+json">{JSON.stringify(sd)}</script>
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
-        <Markdown>{getMDFromSD(sd)}</Markdown>
+        <Markdown suspend center={false} landing>
+          {getMDFromSD(sd)}
+        </Markdown>
         <Navigation />
       </Paper>
     </Container>
