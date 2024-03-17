@@ -349,3 +349,17 @@ div.center {
     filter: brightness(120%);
   }
 }
+
+.bounce-right {
+  animation: 450ms ease-in-out alternate 4 bounceRight;
+}
+
+@keyframes bounceRight {
+  0% {
+    transform: translateX(0px);
+  }
+
+  100% {
+    transform: translateX(8px);
+  }
+}

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
 export const useSyncedState = (
   defValue,
@@ -47,7 +47,36 @@ export const useSyncedState = (
   return [localValue, setValue, { loading }];
 };
 
-export const useIsOffScreen = () => {
+export const useIsOnScreen = <T>(): [
+  MutableRefObject<T>,
+  boolean
+] => {
+  const [isOffScreen, setIsOffScreen] = useState(false);
+
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    if (!ref?.current) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setIsOffScreen(true);
+        } else if (entries[0]?.boundingClientRect?.y > 0) {
+          setIsOffScreen(false);
+        }
+      },
+      {
+        root: document.body,
+        // rootMargin: '0px 0px -100%',
+        threshold: 0.0,
+      }
+    );
+    obs.observe(ref?.current);
+  }, [setIsOffScreen]);
+
+  return [ref, isOffScreen];
+};
+export const useIsOffScreen = (): [MutableRefObject<HTMLElement>, boolean] => {
   const [isOffScreen, setIsOffScreen] = useState(false);
 
   const ref = useRef(null);
@@ -56,6 +85,7 @@ export const useIsOffScreen = () => {
     if (!ref?.current) return;
     const obs = new IntersectionObserver(
       (entries) => {
+        console.log('ENTR', entries);
         if (entries[0]?.isIntersecting) {
           setIsOffScreen(true);
         } else if (entries[0]?.boundingClientRect?.y > 0) {

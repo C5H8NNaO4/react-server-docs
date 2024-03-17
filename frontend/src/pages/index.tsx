@@ -66,7 +66,7 @@ export const IndexPage = () => {
               </Markdown>
             </Suspense>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <NavigationButton2D next />
+              <NavigationButton2D next animate />
             </Box>
           </Paper>
         </Grid>

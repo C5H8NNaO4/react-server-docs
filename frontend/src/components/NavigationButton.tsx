@@ -6,8 +6,10 @@ import HomeIcon from '@mui/icons-material/Home';
 import { useLocation } from 'react-router-dom';
 import { navigation } from '../routes';
 import { pascalCase } from 'change-case';
-import { ReactNode } from 'react';
+import { PropsWithChildren, ReactNode, useEffect, useRef } from 'react';
 import { CollabEditButton, getGHPath } from './CollabEditButton';
+import { useIsInterSecting, useIsOffScreen, useIsOnScreen } from '../lib/hooks';
+import clsx from 'clsx';
 
 export const Navigation = ({}) => {
   const { pathname } = useLocation();
@@ -30,10 +32,12 @@ export const Navigation = ({}) => {
 export const NavigationButton2D = ({
   next,
   prev,
+  animate,
   children,
 }: {
   next?: boolean;
   prev?: boolean;
+  animate?: boolean;
   children?: ReactNode;
 }) => {
   const { pathname } = useLocation();
@@ -47,15 +51,43 @@ export const NavigationButton2D = ({
   navigation[
     next ? (index + 1) % navigation.length : Math.max(0, index - 1)
   ][0];
-  
+
   return (
     <Link to={nextPath} component={RouterLink}>
       <Button color="info">
         {nextPath == '/' && <HomeIcon sx={{ pr: 1 }} />}
         {prev && nextPath !== '/' && <ArrowBackIcon sx={{ pr: 1 }} />}
         {children || nextPath == '/' ? 'Home' : nextTitle}
-        {next && nextPath !== '/' && <ArrowForwardIcon sx={{ pl: 1 }} />}
+        {next && nextPath !== '/' && (
+          <Bounce enabled={animate} onEnterScreen direction="right">
+            <ArrowForwardIcon sx={{ pl: 1 }} />
+          </Bounce>
+        )}
       </Button>
     </Link>
+  );
+};
+
+export const Bounce = ({
+  children,
+  onEnterScreen,
+  enabled,
+  direction,
+}: PropsWithChildren<{
+  onEnterScreen: boolean;
+  enabled: boolean;
+  direction: 'right';
+}>) => {
+  const [ref, isOnScreen] = useIsOnScreen<HTMLDivElement>();
+
+  return (
+    <div
+      ref={ref}
+      className={clsx({
+        ['bounce-' + direction]: (enabled && isOnScreen) || !onEnterScreen,
+      })}
+    >
+      {children}
+    </div>
   );
 };
