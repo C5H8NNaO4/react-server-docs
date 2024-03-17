@@ -54,7 +54,7 @@ export const NavigationButton2D = ({
 
   return (
     <Link to={nextPath} component={RouterLink}>
-      <Button color="info">
+      <Button color="info" sx={{ alignItems: 'center' }}>
         {nextPath == '/' && <HomeIcon sx={{ pr: 1 }} />}
         {prev && nextPath !== '/' && <ArrowBackIcon sx={{ pr: 1 }} />}
         {children || nextPath == '/' ? 'Home' : nextTitle}
@@ -81,13 +81,14 @@ export const Bounce = ({
   const [ref, isOnScreen] = useIsOnScreen<HTMLDivElement>();
 
   return (
-    <div
+    <Box
       ref={ref}
+      sx={{ display: 'flex' }}
       className={clsx({
         ['bounce-' + direction]: (enabled && isOnScreen) || !onEnterScreen,
       })}
     >
       {children}
-    </div>
+    </Box>
   );
 };
